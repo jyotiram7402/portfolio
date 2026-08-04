@@ -5,7 +5,7 @@ import {
   contactSchema,
   toFieldErrors,
 } from "@/services/contact.schema";
-import type { ServiceResult } from "@/types/api";
+import type { ServiceError, ServiceResult } from "@/types/api";
 import type { ContactTransportId } from "@/types/contact";
 
 /**
@@ -192,7 +192,9 @@ export async function sendContactMessage(
     new UnconfiguredTransport(),
   ];
 
-  let lastError: ServiceResult<never>["error"] | undefined;
+  // `ServiceError` directly, not `ServiceResult<never>["error"]`. Indexing a discriminated
+  // union requires the key to exist on every member, and the success branch has no `error`.
+  let lastError: ServiceError | undefined;
 
   for (const transport of transports) {
     if (!transport.available) continue;
