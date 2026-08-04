@@ -1,0 +1,161 @@
+/* ==========================================================================
+   Theme layer — semantic values only.
+
+   Every colour the product code touches is declared here, exactly once, per
+   theme. Components never reference a raw hex; they reference a role
+   (`bg-card`, `text-muted`, `border-border`). Swapping a theme therefore
+   never requires touching a component.
+
+   Dark is the default: it lives on `:root` so the very first paint is dark
+   even before `next-themes` has resolved a preference. `.light` overrides.
+   ========================================================================== */
+
+:root,
+:root.dark {
+  color-scheme: dark;
+
+  /* --- Surfaces -------------------------------------------------------- */
+  --background: #030712;
+  --surface: #0f172a;
+  --card: #111827;
+  --elevated: #172033;
+  --overlay: rgb(3 7 18 / 0.78);
+
+  /* --- Lines & focus --------------------------------------------------- */
+  --border: rgb(255 255 255 / 0.08);
+  --border-strong: rgb(255 255 255 / 0.16);
+  --input: rgb(255 255 255 / 0.06);
+  --ring: #3b82f6;
+
+  /* --- Text ------------------------------------------------------------ */
+  --foreground: #ffffff;
+  --muted: #94a3b8;
+  --subtle: #64748b;
+  --faint: rgb(148 163 184 / 0.55);
+
+  /* --- Brand ----------------------------------------------------------- */
+  --primary: #3b82f6;
+  --primary-hover: #60a5fa;
+  --primary-foreground: #030712;
+  --secondary: #8b5cf6;
+  --secondary-hover: #a78bfa;
+  --secondary-foreground: #030712;
+  --accent: #06b6d4;
+  --accent-hover: #22d3ee;
+  --accent-foreground: #030712;
+
+  /* --- Status ---------------------------------------------------------- */
+  --success: #10b981;
+  --success-foreground: #022c22;
+  --warning: #f59e0b;
+  --warning-foreground: #271500;
+  --danger: #ef4444;
+  --danger-foreground: #2b0707;
+
+  /* --- Glass / decorative --------------------------------------------- */
+  --glass: rgb(255 255 255 / 0.04);
+  --glass-strong: rgb(255 255 255 / 0.07);
+  --glass-border: rgb(255 255 255 / 0.09);
+  --highlight: rgb(255 255 255 / 0.14);
+  --selection: rgb(59 130 246 / 0.32);
+  --scrollbar-track: transparent;
+  --scrollbar-thumb: rgb(255 255 255 / 0.14);
+  --scrollbar-thumb-hover: rgb(255 255 255 / 0.24);
+
+  /* --- Ambient light (aurora / orbs / mesh) --------------------------- */
+  --aurora-1: rgb(59 130 246 / 0.28);
+  --aurora-2: rgb(139 92 246 / 0.24);
+  --aurora-3: rgb(6 182 212 / 0.2);
+  --grid-line: rgb(255 255 255 / 0.045);
+  --noise-opacity: 0.035;
+  --spotlight: rgb(255 255 255 / 0.06);
+}
+
+:root.light {
+  color-scheme: light;
+
+  --background: #ffffff;
+  --surface: #f8fafc;
+  --card: #ffffff;
+  --elevated: #ffffff;
+  --overlay: rgb(2 6 23 / 0.45);
+
+  --border: rgb(2 6 23 / 0.09);
+  --border-strong: rgb(2 6 23 / 0.18);
+  --input: rgb(2 6 23 / 0.04);
+  --ring: #2563eb;
+
+  --foreground: #030712;
+  --muted: #475569;
+  --subtle: #64748b;
+  --faint: rgb(71 85 105 / 0.6);
+
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --primary-foreground: #ffffff;
+  --secondary: #7c3aed;
+  --secondary-hover: #6d28d9;
+  --secondary-foreground: #ffffff;
+  --accent: #0891b2;
+  --accent-hover: #0e7490;
+  --accent-foreground: #ffffff;
+
+  --success: #059669;
+  --success-foreground: #ffffff;
+  --warning: #b45309;
+  --warning-foreground: #ffffff;
+  --danger: #dc2626;
+  --danger-foreground: #ffffff;
+
+  --glass: rgb(255 255 255 / 0.72);
+  --glass-strong: rgb(255 255 255 / 0.88);
+  --glass-border: rgb(2 6 23 / 0.08);
+  --highlight: rgb(2 6 23 / 0.06);
+  --selection: rgb(37 99 235 / 0.18);
+  --scrollbar-thumb: rgb(2 6 23 / 0.16);
+  --scrollbar-thumb-hover: rgb(2 6 23 / 0.28);
+
+  --aurora-1: rgb(37 99 235 / 0.16);
+  --aurora-2: rgb(124 58 237 / 0.14);
+  --aurora-3: rgb(8 145 178 / 0.12);
+  --grid-line: rgb(2 6 23 / 0.05);
+  --noise-opacity: 0.02;
+  --spotlight: rgb(2 6 23 / 0.05);
+}
+
+/* ==========================================================================
+   Non-colour runtime tokens.
+
+   These are not part of a Tailwind namespace, so they are consumed either in
+   handwritten CSS or through arbitrary values, e.g.
+   `duration-[var(--duration-normal)]`.
+   ========================================================================== */
+
+:root {
+  /* --- Motion durations ----------------------------------------------- */
+  --duration-instant: 90ms;
+  --duration-fast: 160ms;
+  --duration-normal: 280ms;
+  --duration-slow: 480ms;
+  --duration-slower: 720ms;
+  --duration-slowest: 1200ms;
+
+  /* --- Stacking order (mirrors constants/z-index.ts) ------------------ */
+  --z-behind: -1;
+  --z-base: 0;
+  --z-decoration: 10;
+  --z-content: 20;
+  --z-sticky: 30;
+  --z-header: 40;
+  --z-drawer: 50;
+  --z-overlay: 60;
+  --z-modal: 70;
+  --z-popover: 80;
+  --z-toast: 90;
+  --z-cursor: 100;
+  --z-loader: 110;
+
+  /* --- Layout ---------------------------------------------------------- */
+  --header-height: 4.5rem;
+  --scrollbar-width: 10px;
+}

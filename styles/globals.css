@@ -1,0 +1,30 @@
+/* ==========================================================================
+   Single stylesheet entry point.
+
+   Import order is load-bearing:
+     1. tailwindcss  — preflight + the engine
+     2. themes       — semantic custom properties (dark on :root, .light override)
+     3. tokens       — @theme mapping utilities onto those properties
+     4. base         — element defaults, focus, scrollbars, motion policy
+     5. utilities    — custom composable utilities
+     6. prose        — long-form MDX typography
+     7. code         — Shiki token colours and code-block chrome
+   ========================================================================== */
+
+@import "tailwindcss";
+@import "./themes.css";
+@import "./tokens.css";
+@import "./base.css";
+@import "./utilities.css";
+@import "./prose.css";
+@import "./code.css";
+
+/* `next-themes` is configured with attribute="class", so dark mode is driven
+   by a class on <html> rather than the OS media query. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Opt-in variants for the two capability checks that gate our motion and
+   pointer features, so components can express them declaratively. */
+@custom-variant motion-ok (@media (prefers-reduced-motion: no-preference));
+@custom-variant pointer-fine (@media (pointer: fine));
+@custom-variant pointer-coarse (@media (pointer: coarse));

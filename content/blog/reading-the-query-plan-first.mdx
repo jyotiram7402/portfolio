@@ -1,0 +1,171 @@
+Every Hibernate performance complaint I have investigated has been one of four
+things, and only one of them was Hibernate's fault. The other three were a missing
+index, a query that should never have been written, or a fetch strategy that was
+correct in isolation and wrong in a loop.
+
+So before touching an annotation, I read the plan.
+
+## The order I check things in
+
+1. **What SQL actually ran?** Not what you think ran.
+2. **How many times did it run?** This is where the N+1 lives.
+3. **What does `EXPLAIN` say about the slow one?**
+4. **Only then**, is this a mapping problem?
+
+Skipping to step four is how people end up sprinkling `FetchType.LAZY` across an
+entity and making things slower.
+
+## Step one: see the SQL
+
+Turn on statistics, not just SQL logging. The log tells you what ran; the statistics
+tell you how much.
+
+```yaml
+spring:
+  jpa:
+    properties:
+      hibernate:
+        generate_statistics: true
+        session:
+          events:
+            log:
+              LOG_QUERIES_SLOWER_THAN_MS: 25
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.orm.jdbc.bind: trace
+```
+
+`generate_statistics` prints a summary per session. The number to look at is
+`statements prepared`. If a request that returns twenty rows prepared forty-one
+statements, you have found your problem and you have not read a single line of SQL
+yet.
+
+## Step two: count the queries
+
+The N+1 is not subtle once you are counting. This is the shape:
+
+```java
+// One query for the orders...
+var orders = orderRepository.findByCustomerId(customerId);
+
+// ...and one more per order, for as long as the list is.
+return orders.stream()
+    .map(order -> new OrderSummary(order, order.getItems().size()))
+    .toList();
+```
+
+`order.getItems()` is a lazy collection. Touching it inside a stream is a query per
+iteration, which is invisible in the code and obvious in the statistics.
+
+Three fixes, in order of how often they are the right one:
+
+**A projection**, when you do not need the entities at all:
+
+```java
+public interface OrderSummaryView {
+  Long getId();
+  String getReference();
+  long getItemCount();
+}
+
+@Query("""
+    select o.id as id, o.reference as reference, count(i.id) as itemCount
+    from OrderEntity o
+      left join o.items i
+    where o.customer.id = :customerId
+    group by o.id, o.reference
+    """)
+List<OrderSummaryView> findSummaries(@Param("customerId") Long customerId);
+```
+
+**An entity graph**, when you do need them and you need the association:
+
+```java
+@EntityGraph(attributePaths = "items")
+List<OrderEntity> findByCustomerId(Long customerId);
+```
+
+**A batch size**, when the association is used sometimes and you cannot predict when:
+
+```java
+@BatchSize(size = 50)
+@OneToMany(mappedBy = "order")
+private Set<OrderItemEntity> items;
+```
+
+That turns N queries into `ceil(N / 50)`. It is the least precise of the three and the
+one that needs the least thought, which is exactly why it is last.
+
+## Step three: read the plan
+
+Now you have one slow query instead of forty fast ones. Take the SQL from the log —
+the real SQL, with the bound parameters — and run it.
+
+```sql
+EXPLAIN ANALYZE
+SELECT o.id, o.reference, o.created_at
+FROM orders o
+WHERE o.customer_id = 4821
+  AND o.status = 'SETTLED'
+ORDER BY o.created_at DESC
+LIMIT 20;
+```
+
+Three things to look for, in order.
+
+**Is it a full scan?** `type: ALL` in MySQL, `Seq Scan` in Postgres. On a table of any
+size, that is your answer.
+
+**Is the index the one you expected?** An index on `(customer_id)` will be used here,
+and it will still be the wrong index. The query filters on two columns and sorts on a
+third.
+
+**Is there a sort step?** `Using filesort` means the database is ordering rows in
+memory after fetching them. With a `LIMIT`, that means it fetched everything to throw
+most of it away.
+
+The index that answers all three:
+
+```sql
+CREATE INDEX idx_orders_customer_status_created
+  ON orders (customer_id, status, created_at DESC);
+```
+
+Column order is the whole game: equality predicates first, then the sort column. Get
+it backwards and the index is used for the filter and ignored for the sort, which is
+half a fix.
+
+## Step four: is it actually the mapping?
+
+Sometimes, yes. The cases where Hibernate genuinely is the problem:
+
+- **`FetchType.EAGER` on a `@ManyToOne`** that is loaded in a list context. Default it
+  to lazy and fetch explicitly where you need it.
+- **`MultipleBagFetchException`** from two `List` associations in one entity graph. Use
+  `Set`, or fetch one association per query.
+- **Cartesian products** from joining two collections in a single query. You get
+  `items × payments` rows and you deduplicate in memory.
+
+All three are real. None of them is what you have if you have not read the plan yet.
+
+## What to keep
+
+Two habits are worth more than the specific fixes.
+
+Turn on `generate_statistics` in your integration tests and assert the query count.
+An N+1 is a regression that no functional test catches — the endpoint still returns
+the right JSON. A count assertion catches it in review, which is where it is cheap.
+
+```java
+@Test
+void listingOrdersIssuesOneQuery() {
+  statistics.clear();
+  orderService.summaries(customerId);
+  assertThat(statistics.getPrepareStatementCount()).isEqualTo(1);
+}
+```
+
+And write the index migration in the same pull request as the query. An index added
+three sprints later, by someone reading a slow-query log, is an index nobody can
+explain the shape of.

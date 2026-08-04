@@ -1,0 +1,116 @@
+A customer taps **Pay** on a flaky connection. The request reaches your server. The
+response never reaches their phone. The app retries. They are charged twice.
+
+Nothing failed. The network did exactly what networks do, the gateway did exactly
+what gateways do, and your service did exactly what you told it to. The bug is that
+you told it to create an order every time it was asked, and "every time it was
+asked" is not the same as "every time the customer decided".
+
+## The mistake is treating it as a retry problem
+
+The instinct is to make retries smarter — cap them, add jitter, dedupe on the client.
+All of that is worth doing and none of it fixes this. The client cannot know whether
+its first request succeeded, which is the entire problem. Any design that depends on
+the client knowing is a design that charges people twice.
+
+The fix is to make the operation safe to repeat. That is a property of your data
+model, not of your HTTP layer.
+
+## Where it has to be enforced
+
+Three places, and skipping any one of them leaves a window open.
+
+### 1. At the request boundary
+
+The client generates a key once, when the user commits to the action, and reuses it
+across every retry of that same intent.
+
+```java
+@PostMapping("/orders")
+ResponseEntity<OrderResponse> create(
+    @RequestHeader("Idempotency-Key") @NotBlank String key,
+    @RequestBody @Valid CreateOrderRequest request
+) {
+  return orderService.create(key, request)
+      .map(created -> ResponseEntity.status(CREATED).body(created))
+      .orElseGet(() -> ResponseEntity.ok(orderService.replay(key)));
+}
+```
+
+Two details matter more than they look.
+
+The key comes from the client, not the server. A server-generated key is created
+per request, which means it is different on the retry, which means it is useless.
+
+And the replay returns `200` with the original response body, not `409`. A conflict
+status tells the client something went wrong. Nothing went wrong — it is asking the
+same question again and deserves the same answer.
+
+### 2. At the write
+
+The uniqueness has to be enforced by the database, not by a check-then-insert in
+application code. Between your `SELECT` and your `INSERT` there is a window, and
+under real traffic something will land in it.
+
+```sql
+CREATE TABLE idempotency_record (
+  key            VARCHAR(64)  NOT NULL PRIMARY KEY,
+  request_hash   CHAR(64)     NOT NULL,
+  response_body  JSON         NOT NULL,
+  created_at     TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+Insert the record and the order in one transaction. If the insert violates the
+primary key, you are on a retry: roll back, read the stored response, return it.
+
+Store `request_hash` too. If the same key arrives with a *different* payload, that is
+a genuine client bug — two different intents sharing a key — and it should fail
+loudly with `422` rather than silently replaying the wrong order.
+
+### 3. At settlement
+
+The gateway will send you a webhook. It will sometimes send it twice, occasionally
+out of order, and once in a while not at all.
+
+- **Verify the signature** before parsing the body, and reject anything you cannot
+  verify rather than logging it and moving on.
+- **Key on the gateway's event id**, not on your order id. Two events about one
+  order are two events.
+- **Reconcile on a schedule** and report the delta. A nightly job that diffs
+  settlements against orders and *silently corrects* is a job that hides a bug. One
+  that reports the difference is a job that finds one.
+
+## What this buys you
+
+The property you now have is stronger than "we do not double-charge". It is that
+the same request produces the same outcome regardless of how many times it arrives.
+That makes retries safe, which makes timeouts safe, which means you can set an
+aggressive client timeout without inventing a new failure mode.
+
+That is worth more than the bug it fixed.
+
+## The part people skip
+
+Write the test that sends the request twice concurrently. Not sequentially —
+concurrently, against a real database, with the same key.
+
+```java
+@Test
+void concurrentRetriesCreateOneOrder() throws Exception {
+  var key = UUID.randomUUID().toString();
+  var latch = new CountDownLatch(1);
+
+  var results = executor.invokeAll(List.of(
+      submitOrder(key, latch),
+      submitOrder(key, latch)
+  ));
+  latch.countDown();
+
+  assertThat(orderRepository.countByIdempotencyKey(key)).isEqualTo(1);
+  assertThat(results).allMatch(future -> statusOf(future) < 300);
+}
+```
+
+Sequential retries pass against a check-then-insert. Concurrent ones do not. If you
+only write the sequential test, you have tested that your code compiles.

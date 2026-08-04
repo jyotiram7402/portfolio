@@ -1,0 +1,135 @@
+The first version of our internal assistant was a good demo and a bad feature. Ask it
+something covered by the documentation and it answered well. Ask it something that was
+not, and it answered just as confidently, in the same tone, with the same formatting.
+
+That is the failure mode that matters. A retrieval system that cannot decline is worse
+than no retrieval system, because it teaches people to trust it.
+
+## The rule that fixed it
+
+**No citation, no answer.**
+
+Not "prefer to cite". Not "cite where possible". If the retrieval step returns nothing
+above the relevance threshold, the request does not reach the model at all — the
+response is a refusal with a suggestion of what to search for instead.
+
+```java
+public AssistantReply answer(String question) {
+  var retrieved = retriever.search(question, TOP_K);
+
+  if (retrieved.bestScore() < MIN_RELEVANCE) {
+    return AssistantReply.declined(
+        "I could not find this in the documentation.",
+        retriever.suggestTopics(question)
+    );
+  }
+
+  var reply = model.complete(promptTemplate.render(question, retrieved));
+  return verifyCitations(reply, retrieved);
+}
+```
+
+The last line is the one people skip. The model is *asked* to cite, and it usually
+does, and "usually" is not a guarantee you can put in front of colleagues. So the
+citations come back as structured references, every one is checked against the
+documents that were actually retrieved, and a reply that cites something not in that
+set is rejected rather than shown.
+
+That check has fired in production. Not often. Often enough to justify existing.
+
+## Chunking is a document problem, not a character count
+
+The default advice is to split on a fixed size with an overlap. It is a reasonable
+starting point and it was wrong for our corpus, because our corpus is structured: API
+references, runbooks and decision records, all with meaningful headings.
+
+Splitting a runbook every 800 characters cuts steps in half. Retrieval then returns
+"step 4 through the first half of step 5", which reads like an answer and is missing
+the part that matters.
+
+What worked:
+
+- **Split on headings first**, then on size only if a section is genuinely too long.
+- **Carry the heading path into the chunk text** — `Runbook › Payment reconciliation ›
+  Manual replay` — so a chunk retrieved without its neighbours still knows where it
+  came from.
+- **Never split a code block or a table.** If it does not fit, the chunk is oversized
+  and that is fine.
+
+Retrieval quality moved more from this than from any embedding model change.
+
+## Hybrid retrieval, then rerank
+
+Vector search finds things that mean the same. Keyword search finds things that *say*
+the same. Both matter, and which one matters depends on the query.
+
+Someone searching for an error code wants an exact match. `PAYMENT_STATE_INVALID` has
+no useful embedding neighbourhood — it is a token, and BM25 finds it instantly while
+vector search returns "things about payments". Someone asking "why did the refund not
+go through" has no exact terms at all, and vector search is the only thing that will
+help.
+
+So: run both, merge, rerank.
+
+```java
+var lexical = openSearch.search(question, CANDIDATES);
+var semantic = vectorStore.similaritySearch(embed(question), CANDIDATES);
+
+var merged = reciprocalRankFusion(lexical, semantic);
+var ranked = reranker.rerank(question, merged, TOP_K);
+```
+
+Reciprocal rank fusion is the boring choice and the right one — it needs no score
+normalisation between two systems whose scores are not comparable. The reranker then
+does a proper relevance pass over ~40 candidates to pick the 5 that go in the prompt.
+
+Cutting from 40 candidates to 5 was also the single biggest quality win, which is
+counter-intuitive. More context made answers worse: the model had more to be
+distracted by, and the citations got vaguer.
+
+## Prompts belong in version control
+
+Ours live in the repository as templates, are rendered with typed parameters, and are
+reviewed in pull requests like any other code.
+
+```
+prompts/
+  assistant/
+    system.v4.md
+    answer.v4.md
+    decline.v2.md
+```
+
+Versioned in the filename rather than only in git history, because two versions
+sometimes need to coexist while an evaluation runs.
+
+## The evaluation set is the actual product
+
+Fifty questions with known-correct source documents. Not model-generated — written by
+the people who ask the real questions, including the awkward ones.
+
+Each entry records the question, which documents *should* be retrieved, and whether
+the correct behaviour is to answer or to decline. Roughly a fifth of the set is
+questions that must be declined, and that fifth catches more regressions than the
+rest combined.
+
+The pipeline runs on every prompt or retrieval change and reports three numbers:
+
+| Metric | What it catches |
+| --- | --- |
+| Retrieval recall @5 | Chunking and hybrid-weighting regressions |
+| Citation validity | Answers that cite something not retrieved |
+| Correct refusal rate | The model getting more confident, not more right |
+
+A change that improves the first two and hurts the third does not ship. That has
+happened twice.
+
+## What I would tell someone starting
+
+Build the evaluation set before the pipeline. It feels backwards and it is not — it is
+the only artefact that tells you whether your next change was an improvement or a
+coincidence.
+
+And decide, on day one, what your system does when it does not know. That decision
+shapes everything downstream: your relevance threshold, your prompt, your UI copy, and
+whether anyone still trusts the thing in six months.

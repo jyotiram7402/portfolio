@@ -1,0 +1,69 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# A new push to the same branch cancels the in-flight run. Without this, a series of
+# quick pushes queues five builds and the useful one finishes last.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Read-only by default. Any job needing more requests it explicitly.
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Typecheck, lint and build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          # Read from .nvmrc, so CI and local development cannot drift.
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        # `npm ci` rather than `npm install`: it installs exactly the lockfile and
+        # fails if the lockfile and package.json disagree, which is a real class of bug.
+        run: npm ci
+
+      # Typecheck first. It is the fastest of the three and catches the most, so a
+      # broken type does not wait behind a two-minute build to be reported.
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Check formatting
+        run: npm run format:check
+
+      - name: Build
+        # A deliberately empty environment. The whole point of the fallback design is
+        # that the build succeeds with no credentials — if this step needs a secret,
+        # something has become a hard dependency that should not be one.
+        env:
+          NEXT_PUBLIC_SITE_URL: https://example.com
+          NEXT_TELEMETRY_DISABLED: "1"
+        run: npm run build
+
+      - name: Report bundle size
+        # Informational, and never a gate. A size budget that fails a build gets
+        # removed within a week; a number in the log gets noticed.
+        run: |
+          echo "### Build output" >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          du -sh .next 2>/dev/null >> "$GITHUB_STEP_SUMMARY" || true
+          du -sh .next/static/chunks 2>/dev/null >> "$GITHUB_STEP_SUMMARY" || true
+          echo '```' >> "$GITHUB_STEP_SUMMARY"

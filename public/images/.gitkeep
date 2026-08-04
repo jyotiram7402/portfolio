@@ -1,0 +1,4 @@
+# Raster and vector assets served as-is.
+#
+# Anything rendered through `next/image` belongs here so Next can read its
+# intrinsic dimensions at build time and reserve the correct space.

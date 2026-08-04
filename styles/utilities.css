@@ -1,0 +1,362 @@
+/* ==========================================================================
+   Custom utilities.
+
+   Anything here is composable with the rest of Tailwind (variants, arbitrary
+   values, responsive prefixes) because it is registered through `@utility`.
+   These exist so components never need inline styles or one-off CSS files.
+   ========================================================================== */
+
+/* --- Glass surfaces ------------------------------------------------------ */
+
+@utility glass {
+  background-color: var(--glass);
+  backdrop-filter: blur(var(--blur-xl)) saturate(160%);
+  -webkit-backdrop-filter: blur(var(--blur-xl)) saturate(160%);
+  border: 1px solid var(--glass-border);
+}
+
+@utility glass-strong {
+  background-color: var(--glass-strong);
+  backdrop-filter: blur(var(--blur-2xl)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--blur-2xl)) saturate(180%);
+  border: 1px solid var(--glass-border);
+}
+
+/* A 1px inner highlight along the top edge — the detail that makes a dark
+   card read as a physical surface instead of a flat rectangle. */
+@utility surface-sheen {
+  box-shadow: var(--shadow-inset);
+}
+
+/* --- Text treatments ----------------------------------------------------- */
+
+@utility text-gradient {
+  background-image: linear-gradient(
+    110deg,
+    var(--foreground) 0%,
+    var(--foreground) 34%,
+    var(--muted) 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+@utility text-gradient-brand {
+  background-image: linear-gradient(
+    110deg,
+    var(--primary) 0%,
+    var(--secondary) 48%,
+    var(--accent) 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Animated brand sweep. Pair with `animate-gradient`. */
+@utility text-gradient-animated {
+  background-image: linear-gradient(
+    110deg,
+    var(--primary),
+    var(--secondary),
+    var(--accent),
+    var(--secondary),
+    var(--primary)
+  );
+  background-size: 200% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+@utility eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  font-weight: 500;
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* --- Borders & glow ------------------------------------------------------ */
+
+/* Gradient hairline border that survives a border-radius, implemented with a
+   masked pseudo-element so it works on any background. */
+@utility border-gradient {
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      140deg,
+      var(--highlight) 0%,
+      transparent 42%,
+      transparent 58%,
+      var(--highlight) 100%
+    );
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    pointer-events: none;
+  }
+}
+
+@utility glow-ambient {
+  box-shadow: var(--shadow-glow-lg);
+}
+
+/* --- Backgrounds --------------------------------------------------------- */
+
+@utility bg-grid {
+  background-image:
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+/* Film-grain overlay. The SVG is inlined as a data URI so the texture costs no
+   network request, and `--noise-opacity` is themed — grain that reads as
+   luxurious on near-black is dirt on white. */
+@utility noise-layer {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: var(--noise-opacity);
+  mix-blend-mode: overlay;
+}
+
+@utility bg-dots {
+  background-image: radial-gradient(var(--grid-line) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Pointer-tracked spotlight. `--glow-x`/`--glow-y`/`--glow-opacity` are written
+   by `useMouseGlow`; the fallbacks keep it inert before the first pointer event
+   and on touch devices, so no inline style is ever needed. */
+@utility spotlight {
+  background: radial-gradient(
+    24rem circle at var(--glow-x, 50%) var(--glow-y, -20%),
+    var(--spotlight),
+    transparent 70%
+  );
+  opacity: var(--glow-opacity, 0);
+  transition: opacity var(--duration-slow) var(--ease-out-quint);
+}
+
+/* --- Masks --------------------------------------------------------------- */
+
+@utility mask-fade-b {
+  mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
+}
+
+@utility mask-fade-t {
+  mask-image: linear-gradient(to top, #000 55%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to top, #000 55%, transparent 100%);
+}
+
+@utility mask-fade-x {
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 12%,
+    #000 88%,
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 12%,
+    #000 88%,
+    transparent
+  );
+}
+
+@utility mask-radial {
+  mask-image: radial-gradient(ellipse at center, #000 40%, transparent 78%);
+  -webkit-mask-image: radial-gradient(ellipse at center, #000 40%, transparent 78%);
+}
+
+/* --- Interaction --------------------------------------------------------- */
+
+@utility focus-ring {
+  outline: none;
+
+  &:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+}
+
+/* For a composite field — an input wrapped in a bordered container with leading and
+   trailing content. The ring belongs on the wrapper so it surrounds the whole
+   control, and the shorthand is written out here rather than composed from
+   `outline-2` utilities so the style is never left unset. */
+@utility focus-ring-within {
+  &:focus-within {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+}
+
+@utility press {
+  transition:
+    transform var(--duration-fast) var(--ease-out-quint),
+    opacity var(--duration-fast) var(--ease-out-quint);
+
+  &:active {
+    transform: scale(0.975);
+  }
+}
+
+/* Reveals an animated sheen on hover. Requires `overflow-hidden` + `relative`
+   on the host element. */
+@utility shine {
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(
+      100deg,
+      transparent 20%,
+      var(--highlight) 50%,
+      transparent 80%
+    );
+    transform: translateX(-110%);
+    pointer-events: none;
+  }
+
+  &:hover::after {
+    animation: shine-sweep 900ms var(--ease-out-quint);
+  }
+}
+
+/* Declared outside `@theme` so it is always emitted, independent of whether
+   any `animate-*` utility happens to reference it. */
+@keyframes shine-sweep {
+  from {
+    transform: translateX(-110%);
+  }
+  to {
+    transform: translateX(210%);
+  }
+}
+
+/* --- Layout helpers ------------------------------------------------------ */
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility full-bleed {
+  width: 100vw;
+  margin-inline: calc(50% - 50vw);
+}
+
+@utility stack-center {
+  display: grid;
+  place-items: center;
+}
+
+/* Fills the parent, sits behind content, and never intercepts input.
+   Every decorative background layer uses this. */
+@utility layer-behind {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-behind);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* --- Orbit geometry ------------------------------------------------------
+   Used by the hero's technology orbit. Three nested transforms, one per
+   element, because a single element cannot hold both a static rotation and a
+   keyframed one:
+
+     orbit-node          places the node on the ring
+     orbit-upright       cancels the placement rotation, so text sits level
+     (animation)         cancels the ring's spin, applied by the caller
+
+   `--orbit-radius` is authored in `cqw`, so the whole assembly scales with its
+   container rather than with the viewport. `--orbit-angle` is per-node data and
+   is the only value passed inline. */
+
+@utility orbit-node {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(var(--orbit-angle, 0deg))
+    translateY(calc(-1 * var(--orbit-radius, 0px)));
+}
+
+@utility orbit-upright {
+  display: block;
+  transform: rotate(calc(-1 * var(--orbit-angle, 0deg)));
+}
+
+/* Typing caret for the assistant's streaming reply. Declared here rather than in
+   `@theme` because it is referenced through an arbitrary `animate-[...]` value,
+   which Tailwind cannot trace back to a theme key. */
+@keyframes caret {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Declared outside `@theme` so it is always emitted, and animating the
+   independent `rotate` property rather than `transform` so it can never clobber
+   a positioning transform on the same element. */
+@keyframes orbit-spin {
+  from {
+    rotate: 0deg;
+  }
+  to {
+    rotate: 360deg;
+  }
+}
+
+/* --- Accessibility ------------------------------------------------------- */
+
+@utility sr-only-focusable {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border-width: 0;
+
+  &:focus-visible {
+    position: fixed;
+    width: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    clip-path: none;
+    white-space: normal;
+  }
+}

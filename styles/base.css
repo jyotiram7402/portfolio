@@ -1,0 +1,206 @@
+/* ==========================================================================
+   Base layer — element defaults, focus, selection, scrollbars, motion policy.
+   ========================================================================== */
+
+@layer base {
+  /* Tailwind v4 defaults border-color to `currentColor`. Restore the v3
+     behaviour so an unqualified `border` picks up the theme line colour. */
+  *,
+  *::before,
+  *::after {
+    border-color: var(--border);
+  }
+
+  * {
+    min-width: 0;
+  }
+
+  html {
+    /* Lenis owns scrolling; native smooth scroll would fight it. */
+    scroll-behavior: auto;
+    -webkit-tap-highlight-color: transparent;
+    text-size-adjust: 100%;
+    scrollbar-gutter: stable;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    font-feature-settings:
+      "cv11", "ss01", "ss03", "calt" 1;
+    font-variant-numeric: tabular-nums;
+    font-synthesis-weight: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    /* `clip` (not `hidden`) avoids creating a scroll container, which would
+       break `position: sticky` on the header. */
+    overflow-x: clip;
+  }
+
+  /* --- Headings ------------------------------------------------------- */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-weight: 600;
+    letter-spacing: var(--tracking-tight);
+    text-wrap: balance;
+  }
+
+  p,
+  li {
+    text-wrap: pretty;
+  }
+
+  /* --- Forms inherit typography --------------------------------------- */
+  input,
+  textarea,
+  select,
+  button {
+    font: inherit;
+    color: inherit;
+    letter-spacing: inherit;
+  }
+
+  ::placeholder {
+    color: var(--subtle);
+    opacity: 1;
+  }
+
+  /* --- Focus ----------------------------------------------------------- */
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+    border-radius: var(--radius-xs);
+  }
+
+  /* Never remove focus rings globally — only suppress the non-keyboard one. */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  /* --- Selection ------------------------------------------------------- */
+  ::selection {
+    background-color: var(--selection);
+    color: var(--foreground);
+  }
+
+  /* --- Anchor jump offset (sticky header) ------------------------------ */
+  :target {
+    scroll-margin-top: calc(var(--header-height) + 1.5rem);
+  }
+
+  /* --- Scrollbars ------------------------------------------------------ */
+  @supports selector(::-webkit-scrollbar) {
+    ::-webkit-scrollbar {
+      width: var(--scrollbar-width);
+      height: var(--scrollbar-width);
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--scrollbar-track);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--scrollbar-thumb);
+      border: 3px solid transparent;
+      border-radius: 999px;
+      background-clip: content-box;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--scrollbar-thumb-hover);
+      background-clip: content-box;
+    }
+  }
+
+  @supports not selector(::-webkit-scrollbar) {
+    html {
+      scrollbar-width: thin;
+      scrollbar-color: var(--scrollbar-thumb) transparent;
+    }
+  }
+
+  /* --- Media defaults -------------------------------------------------- */
+  img,
+  svg,
+  video,
+  canvas {
+    display: block;
+    max-width: 100%;
+  }
+
+  /* Decorative canvases (three.js, particles) must never trap the pointer. */
+  canvas[data-decorative="true"] {
+    pointer-events: none;
+    touch-action: none;
+  }
+}
+
+/* ==========================================================================
+   Lenis — required stylesheet, inlined so there is no extra network request.
+   ========================================================================== */
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   Custom cursor — hide the native cursor only where the custom one renders.
+   ========================================================================== */
+
+@media (pointer: fine) {
+  html[data-cursor="custom"],
+  html[data-cursor="custom"] * {
+    cursor: none;
+  }
+
+  /* Text entry always keeps a real caret cursor. */
+  html[data-cursor="custom"] :is(input, textarea, [contenteditable="true"]) {
+    cursor: text;
+  }
+}
+
+/* ==========================================================================
+   Motion policy.
+
+   One global escape hatch. Every JS animation additionally checks
+   `prefers-reduced-motion` via `useReducedMotion`, but this guarantees that
+   even a stylesheet-only animation respects the preference.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  [data-motion-decorative] {
+    display: none !important;
+  }
+}

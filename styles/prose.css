@@ -1,0 +1,151 @@
+/* ==========================================================================
+   Long-form typography for MDX content.
+
+   Applied via `<article className="prose-content">`. Deliberately hand-rolled
+   instead of pulling in @tailwindcss/typography: the scale, rhythm and colour
+   roles already exist as tokens, and a plugin would fight them.
+   ========================================================================== */
+
+.prose-content {
+  font-family: var(--font-body);
+  font-size: var(--text-lg);
+  line-height: var(--leading-relaxed);
+  color: var(--muted);
+  max-width: var(--container-reading);
+}
+
+.prose-content > * + * {
+  margin-top: 1.5em;
+}
+
+.prose-content :is(h2, h3, h4) {
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  scroll-margin-top: calc(var(--header-height) + 2rem);
+}
+
+.prose-content h2 {
+  margin-top: 2.75em;
+  font-size: var(--text-3xl);
+  letter-spacing: var(--tracking-tight);
+}
+
+.prose-content h3 {
+  margin-top: 2.25em;
+  font-size: var(--text-2xl);
+}
+
+.prose-content h4 {
+  margin-top: 2em;
+  font-size: var(--text-xl);
+}
+
+.prose-content :is(h2, h3, h4) > a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.prose-content strong {
+  color: var(--foreground);
+  font-weight: 600;
+}
+
+.prose-content a:not(:is(h2, h3, h4) > a) {
+  color: var(--foreground);
+  text-decoration: underline;
+  text-decoration-color: var(--primary);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: text-decoration-color var(--duration-fast) var(--ease-out-quint);
+}
+
+.prose-content a:not(:is(h2, h3, h4) > a):hover {
+  text-decoration-color: var(--foreground);
+}
+
+.prose-content :is(ul, ol) {
+  padding-left: 1.5em;
+}
+
+.prose-content ul {
+  list-style: disc;
+}
+
+.prose-content ol {
+  list-style: decimal;
+}
+
+.prose-content li::marker {
+  color: var(--subtle);
+}
+
+.prose-content li + li {
+  margin-top: 0.5em;
+}
+
+.prose-content blockquote {
+  border-left: 2px solid var(--primary);
+  padding-left: 1.25em;
+  color: var(--foreground);
+  font-style: normal;
+}
+
+.prose-content :not(pre) > code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  color: var(--foreground);
+  background-color: var(--input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.15em 0.4em;
+}
+
+.prose-content pre {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 1.25rem 1.5rem;
+  overflow-x: auto;
+  tab-size: 2;
+}
+
+.prose-content hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin-block: 3em;
+}
+
+.prose-content :is(img, video) {
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--border);
+}
+
+.prose-content figcaption {
+  margin-top: 0.75em;
+  font-size: var(--text-sm);
+  color: var(--subtle);
+  text-align: center;
+}
+
+.prose-content table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+  display: block;
+  overflow-x: auto;
+}
+
+.prose-content :is(th, td) {
+  border: 1px solid var(--border);
+  padding: 0.625rem 0.875rem;
+  text-align: left;
+}
+
+.prose-content th {
+  color: var(--foreground);
+  font-weight: 600;
+  background-color: var(--surface);
+}
