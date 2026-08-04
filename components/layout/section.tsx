@@ -1,7 +1,8 @@
 import { type VariantProps, cva } from "class-variance-authority";
 import type { ReactNode } from "react";
 
-import { Container, containerVariants } from "@/components/layout/container";
+import { Container } from "@/components/layout/container";
+import type { ContainerSize } from "@/components/layout/container";
 import { cn } from "@/lib/utils";
 
 const sectionVariants = cva("relative", {
@@ -15,10 +16,6 @@ const sectionVariants = cva("relative", {
   },
   defaultVariants: { spacing: "md" },
 });
-
-type ContainerSize = NonNullable<
-  VariantProps<typeof containerVariants>["size"]
->;
 
 export interface SectionProps extends VariantProps<typeof sectionVariants> {
   children: ReactNode;

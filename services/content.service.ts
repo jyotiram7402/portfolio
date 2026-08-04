@@ -56,8 +56,10 @@ export async function loadPostBody(
   const loader = postModules[slug as keyof typeof postModules];
   if (!loader) return undefined;
 
-  const module = await loader();
-  return module.default;
+  // Not named `module`: webpack treats that identifier as the CommonJS module object,
+  // and Next lints against shadowing it because doing so can break the bundle.
+  const mdx = await loader();
+  return mdx.default;
 }
 
 /* -------------------------------------------------------------------------- */

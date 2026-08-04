@@ -1,5 +1,4 @@
 import {
-  BookOpen,
   Code2,
   Github,
   Linkedin,
@@ -26,15 +25,26 @@ import type { SocialLink } from "@/types/navigation";
  * invented profile URL that 404s is the single most checkable mistake a portfolio can make.
  * Filling in a handle and removing `planned` is the whole activation step.
  */
+/**
+ * Handles, not URLs.
+ *
+ * Each value is the bare identifier — the platform's base URL is added by the entry below. Pasting
+ * a full profile URL here produces a doubled address like
+ * `linkedin.com/in/https://linkedin.com/in/name`, which is a live-looking 404.
+ *
+ * An empty string marks a platform as `planned`: it appears in the social grid as a muted chip
+ * rather than a link, and is excluded from the `sameAs` structured data. Filling in the handle is
+ * the whole activation step.
+ */
 const HANDLES = {
   github: "jyotiram7402",
-  x: "jkamble",
-  linkedin: "https://www.linkedin.com/in/jyotiram-kamble/",
-  /** Confirm these before removing `planned` from the entries below. */
+  linkedin: "jyotiram-kamble",
+  leetcode: "jyotiramkamble7402",
+  /** Confirm before filling in — an unverified handle is a 404 in the footer. */
+  x: "",
   youtube: "",
   medium: "",
   devto: "",
-  leetcode: "https://leetcode.com/u/jyotiramkamble7402/",
   hackerrank: "",
   codechef: "",
 } as const;
@@ -82,10 +92,13 @@ export const platformLinks: readonly PlatformLink[] = [
   {
     id: "x",
     label: "X",
-    href: `https://x.com/${HANDLES.x}`,
+    href: HANDLES.x ? `https://x.com/${HANDLES.x}` : "#",
     handle: HANDLES.x,
     icon: Twitter,
     primary: true,
+    // Follows the same rule as every other platform now, so blanking the handle
+    // removes the link rather than leaving a broken one.
+    planned: HANDLES.x.length === 0,
     category: "writing",
   },
   {
@@ -165,6 +178,9 @@ export const socialConfig = {
   sameAs: socialLinks
     .filter((link) => link.id !== "email")
     .map((link) => link.href),
-  /** Used by the Twitter card. */
-  twitterHandle: `@${HANDLES.x}`,
+  /**
+   * Used by the Twitter card. Undefined when there is no handle — an empty `@` in a
+   * `twitter:creator` tag is worse than omitting the tag, which `buildMetadata` handles.
+   */
+  twitterHandle: HANDLES.x ? `@${HANDLES.x}` : undefined,
 } as const;

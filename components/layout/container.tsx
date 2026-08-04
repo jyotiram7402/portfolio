@@ -28,6 +28,16 @@ export type ContainerProps<TElement extends ElementType = "div"> =
   PolymorphicProps<TElement, VariantProps<typeof containerVariants>>;
 
 /**
+ * The measure options, as a standalone type.
+ *
+ * Exported so consumers that forward a size — `Section`, mainly — can type the prop without
+ * importing `containerVariants` as a value purely to read its type off it.
+ */
+export type ContainerSize = NonNullable<
+  VariantProps<typeof containerVariants>["size"]
+>;
+
+/**
  * Horizontal measure and gutter.
  *
  * The only component allowed to set a max-width or a horizontal page inset.

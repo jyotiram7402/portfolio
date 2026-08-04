@@ -71,7 +71,7 @@ export default function ResumePage() {
             as="h1"
             size="lg"
             immediate
-            description={`Three versions of the same history, each ordered for a different reader. Rendered as a page rather than trapped in a PDF — it reflows on a phone, it is searchable, and a screen reader can read it.`}
+            description="Three versions of the same history, each ordered for a different reader. Rendered as a page rather than trapped in a PDF — it reflows on a phone, it is searchable, and a screen reader can read it."
             descriptionClassName="max-w-2xl text-lg"
           >
             {`${resumeVariants.length} versions, one history.`}

@@ -1,7 +1,7 @@
 export { BackToTop } from "./back-to-top";
 export type { BackToTopProps } from "./back-to-top";
 export { Container, containerVariants } from "./container";
-export type { ContainerProps } from "./container";
+export type { ContainerProps, ContainerSize } from "./container";
 export { Footer } from "./footer";
 export type { FooterProps } from "./footer";
 export { Logo } from "./logo";
