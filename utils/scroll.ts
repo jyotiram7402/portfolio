@@ -1,11 +1,16 @@
+import { getLenisInstance } from "@/lib/lenis-store";
 import { isBrowser, prefersReducedMotion } from "@/utils/dom";
 
 /**
  * Scroll control.
  *
- * Every function routes through `window.lenis` when it exists so programmatic
- * scrolling shares the same easing as wheel scrolling. Without Lenis — touch
- * devices, reduced motion — they degrade to the native API.
+ * Every function routes through the active Lenis instance when one exists, so programmatic
+ * scrolling shares the same easing as wheel scrolling. Without Lenis — touch devices, reduced
+ * motion — they degrade to the native API.
+ *
+ * The instance comes from `lib/lenis-store`, a module-scoped singleton written by `LenisProvider`.
+ * These functions are called from event handlers and from the command palette, so they cannot use a
+ * React context.
  */
 
 export interface ScrollToOptions {
@@ -34,8 +39,9 @@ export function scrollToTop(options: ScrollToOptions = {}): void {
   if (!isBrowser) return;
   const immediate = options.immediate ?? prefersReducedMotion();
 
-  if (window.lenis) {
-    window.lenis.scrollTo(0, { immediate, duration: options.duration });
+  const lenis = getLenisInstance();
+  if (lenis) {
+    lenis.scrollTo(0, { immediate, duration: options.duration });
     return;
   }
   window.scrollTo({ top: 0, behavior: immediate ? "auto" : "smooth" });
@@ -59,8 +65,9 @@ export function scrollToElement(
   const immediate = options.immediate ?? prefersReducedMotion();
   const offset = -(options.offset ?? getHeaderOffset() + 24);
 
-  if (window.lenis) {
-    window.lenis.scrollTo(element, {
+  const lenis = getLenisInstance();
+  if (lenis) {
+    lenis.scrollTo(element, {
       offset,
       immediate,
       duration: options.duration,
@@ -75,12 +82,12 @@ export function scrollToElement(
 /** Freezes scrolling — used while a modal or drawer owns the viewport. */
 export function stopScroll(): void {
   if (!isBrowser) return;
-  window.lenis?.stop();
+  getLenisInstance()?.stop();
 }
 
 export function startScroll(): void {
   if (!isBrowser) return;
-  window.lenis?.start();
+  getLenisInstance()?.start();
 }
 
 /** 0–1 progress through the document. Returns 0 when there is nothing to scroll. */

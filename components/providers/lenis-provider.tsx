@@ -7,6 +7,7 @@ import { LENIS_CONFIG } from "@/config/animations";
 import { LenisContext } from "@/components/providers/lenis-context";
 import { useIsTouchDevice } from "@/hooks/use-is-mobile";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
+import { setLenisInstance } from "@/lib/lenis-store";
 
 export interface LenisProviderProps {
   children: ReactNode;
@@ -28,9 +29,10 @@ export interface LenisProviderProps {
  *    rather than a library-internal one we cannot see — and the place a future
  *    scroll-linked effect can be added without a second loop.
  *
- * 4. **Exposed on `window`.** `utils/scroll` and the GSAP bridge need the
- *    instance from outside React. The context is the supported path; `window` is
- *    the escape hatch for non-React callers.
+ * 4. **Published two ways.** The context serves React consumers; `lib/lenis-store`
+ *    serves `utils/scroll`, which runs in event handlers and in the command palette
+ *    where no context is reachable. That was a `window.lenis` global until Sprint 4 —
+ *    the store's own comment records why a module binding replaced it.
  */
 export function LenisProvider({ children }: LenisProviderProps) {
   const [lenis, setLenis] = useState<Lenis | null>(null);
@@ -55,7 +57,9 @@ export function LenisProvider({ children }: LenisProviderProps) {
       autoRaf: LENIS_CONFIG.autoRaf,
     });
 
-    window.lenis = instance;
+    // The module-scoped store is how `utils/scroll` reaches the instance from outside
+    // React; the context below is how components reach it.
+    setLenisInstance(instance);
     setLenis(instance);
 
     let frame = 0;
@@ -80,7 +84,7 @@ export function LenisProvider({ children }: LenisProviderProps) {
       cancelAnimationFrame(frame);
       disconnect?.();
       instance.destroy();
-      if (window.lenis === instance) delete window.lenis;
+      setLenisInstance(null);
       setLenis(null);
     };
   }, [enabled]);
