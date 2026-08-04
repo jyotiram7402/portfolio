@@ -27,6 +27,7 @@ import {
   BUDGET_RANGES,
   CONTACT_LIMITS,
   type ContactErrors,
+  type ContactField,
   type ContactInput,
   PROJECT_TYPES,
   contactSchema,
@@ -105,22 +106,31 @@ export function ContactForm({ className }: ContactFormProps) {
         >,
       ) => {
         const next = event.target.value;
-        setValues((previous) => ({ ...previous, [field]: next }));
+
+        setValues((previous) => {
+          const updated: FormValues = { ...previous };
+          updated[field] = next;
+          return updated;
+        });
 
         // Only re-check a field that is already showing an error. Validating a pristine
         // field on every keystroke reports "invalid email" halfway through typing one.
         setErrors((previous) => {
           if (!(field in previous)) return previous;
 
-          const candidate = { ...values, [field]: next };
+          const candidate: FormValues = { ...values };
+          candidate[field] = next;
+
           const parsed = contactSchema.safeParse(buildPayload(candidate, 0, ""));
           if (parsed.success) return {};
 
           const fresh = toFieldErrors(parsed.error);
-          if (fresh[field as keyof ContactErrors]) return previous;
+          const key = field as ContactField;
+          if (fresh[key]) return previous;
 
-          const { [field as keyof ContactErrors]: _cleared, ...rest } = previous;
-          return rest;
+          const cleared: ContactErrors = { ...previous };
+          delete cleared[key];
+          return cleared;
         });
       },
     [values],

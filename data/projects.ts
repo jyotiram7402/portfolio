@@ -153,8 +153,15 @@ export function getProjectsByDomain(domain: ProjectDomain): readonly Project[] {
   return projects.filter((project) => project.domains.includes(domain));
 }
 
-/** Used by the project filter, which offers only domains that have entries. */
-export const projectDomains: readonly { id: ProjectDomain; label: string }[] = [
+/**
+ * Every filterable domain, in display order.
+ *
+ * `as const satisfies` rather than a type annotation, and the distinction matters: an annotation on
+ * the *filtered* result does not reach the array literal, so each `id` widens to `string` and no
+ * longer satisfies `ProjectDomain`. `satisfies` validates the literal in place while keeping its
+ * narrow types.
+ */
+const ALL_PROJECT_DOMAINS = [
   { id: "backend", label: "Backend" },
   { id: "java", label: "Java" },
   { id: "spring", label: "Spring" },
@@ -162,4 +169,10 @@ export const projectDomains: readonly { id: ProjectDomain; label: string }[] = [
   { id: "commerce", label: "Commerce" },
   { id: "frontend", label: "Frontend" },
   { id: "mern", label: "MERN" },
-].filter((domain) => getProjectsByDomain(domain.id).length > 0);
+] as const satisfies readonly { id: ProjectDomain; label: string }[];
+
+/** Used by the project filter, which offers only domains that have entries. */
+export const projectDomains: readonly { id: ProjectDomain; label: string }[] =
+  ALL_PROJECT_DOMAINS.filter(
+    (domain) => getProjectsByDomain(domain.id).length > 0,
+  );

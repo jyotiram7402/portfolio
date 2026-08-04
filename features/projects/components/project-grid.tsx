@@ -12,6 +12,7 @@ import { getProjectsByDomain, projectDomains, projects } from "@/data/projects";
 import { ProjectCard } from "@/features/projects/components/project-card";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { cn } from "@/lib/utils";
+import type { ProjectDomain } from "@/types/projects";
 
 export interface ProjectGridProps {
   className?: string;
@@ -53,7 +54,9 @@ export function ProjectGrid({ className }: ProjectGridProps) {
     () =>
       activeId === ALL
         ? projects
-        : getProjectsByDomain(activeId as (typeof projectDomains)[number]["id"]),
+        : // `activeId` is a string because `Tabs` is generic over tab ids. It can only
+          // ever hold a value that came from `projectDomains`, so the narrowing is safe.
+          getProjectsByDomain(activeId as ProjectDomain),
     [activeId],
   );
 
