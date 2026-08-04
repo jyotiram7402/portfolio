@@ -21,7 +21,7 @@ export type { GlassCardProps } from "./glass-card";
 export { GlowBorder } from "./glow-border";
 export type { GlowBorderProps } from "./glow-border";
 export { GradientText, gradientTextVariants } from "./gradient-text";
-export type { GradientTextProps } from "./gradient-text";
+export type { GradientTextProps, GradientTextTag } from "./gradient-text";
 export { IconButton } from "./icon-button";
 export type { IconButtonProps } from "./icon-button";
 export { Input } from "./input";

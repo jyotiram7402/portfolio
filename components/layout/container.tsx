@@ -1,8 +1,7 @@
 import { type VariantProps, cva } from "class-variance-authority";
-import type { ElementType } from "react";
+import type { HTMLAttributes } from "react";
 
 import { cn } from "@/lib/utils";
-import type { PolymorphicProps } from "@/types/common";
 
 const containerVariants = cva("mx-auto w-full", {
   variants: {
@@ -24,8 +23,9 @@ const containerVariants = cva("mx-auto w-full", {
   defaultVariants: { size: "content", gutter: true },
 });
 
-export type ContainerProps<TElement extends ElementType = "div"> =
-  PolymorphicProps<TElement, VariantProps<typeof containerVariants>>;
+export interface ContainerProps
+  extends HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof containerVariants> {}
 
 /**
  * The measure options, as a standalone type.
@@ -40,30 +40,22 @@ export type ContainerSize = NonNullable<
 /**
  * Horizontal measure and gutter.
  *
- * The only component allowed to set a max-width or a horizontal page inset.
- * Everything else composes it, which is what keeps the left edge of the site
- * aligned from the navbar to the footer without any of them knowing the number.
+ * The only component allowed to set a max-width or a horizontal page inset. Everything else
+ * composes it, which is what keeps the left edge of the site aligned from the navbar to the
+ * footer without any of them knowing the number.
  *
- * Widths come from the `--container-*` tokens, so an ultra-wide display gets more
- * measure without every component being touched.
+ * Widths come from the `--container-*` tokens, so an ultra-wide display gets more measure without
+ * every component being touched.
+ *
+ * Always a `<div>`, deliberately. It carried a polymorphic `as` prop through Sprint 3 and no
+ * caller ever used it — semantics belong on `Section`, which owns the landmark, while this owns
+ * only the measure. Removing it also removes a real typing hazard: React 19's types mark void
+ * elements' `children` as `never`, so a prop typed as the full `ElementType` union resolves
+ * `children` to `never` and fails to compile the moment anything is nested inside.
  */
-export function Container<TElement extends ElementType = "div">({
-  as,
-  size,
-  gutter,
-  className,
-  children,
-  ...props
-}: ContainerProps<TElement>) {
-  const Component = (as ?? "div") as ElementType;
-
+export function Container({ size, gutter, className, ...props }: ContainerProps) {
   return (
-    <Component
-      className={cn(containerVariants({ size, gutter }), className)}
-      {...props}
-    >
-      {children}
-    </Component>
+    <div className={cn(containerVariants({ size, gutter }), className)} {...props} />
   );
 }
 

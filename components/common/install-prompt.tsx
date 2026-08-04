@@ -24,6 +24,18 @@ interface BeforeInstallPromptEvent extends Event {
 }
 
 /**
+ * Neither event is in `lib.dom.d.ts` — both are install-related and Chromium-only — so
+ * `addEventListener` would reject the names without this. Declaring them on `WindowEventMap`
+ * rather than casting each listener keeps the handler parameters correctly typed.
+ */
+declare global {
+  interface WindowEventMap {
+    beforeinstallprompt: BeforeInstallPromptEvent;
+    appinstalled: Event;
+  }
+}
+
+/**
  * Add-to-home-screen prompt.
  *
  * The browser fires `beforeinstallprompt` only when the site is genuinely installable — served
@@ -60,11 +72,11 @@ export function InstallPrompt() {
 
     let timer = 0;
 
-    const onBeforeInstall = (event: Event) => {
+    const onBeforeInstall = (event: BeforeInstallPromptEvent) => {
       // Suppressing the browser's own mini-infobar is the point of capturing this —
       // it lets the prompt appear in the site's own design language, at a better moment.
       event.preventDefault();
-      setDeferred(event as BeforeInstallPromptEvent);
+      setDeferred(event);
       timer = window.setTimeout(() => setVisible(true), 12_000);
     };
 

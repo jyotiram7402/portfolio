@@ -1,4 +1,4 @@
-import type { ComponentPropsWithoutRef, ElementType, ReactNode } from "react";
+import type { ReactNode } from "react";
 
 export type Maybe<T> = T | null | undefined;
 
@@ -9,17 +9,15 @@ export type WithClassName<T = unknown> = T & { className?: string };
 
 export type WithChildren<T = unknown> = T & { children?: ReactNode };
 
-/**
- * Props for a component that can render as a different element via `as`.
- * Own props win over the intrinsic ones they collide with.
+/*
+ * A generic `PolymorphicProps<TElement extends ElementType>` helper lived here through Sprint 3
+ * and was removed in Sprint 4. React 19's types mark void elements' `children` as `never`, so any
+ * component using it and rendering children resolved `children` to `never` and failed to compile.
+ *
+ * Components that genuinely need to vary their tag now declare a closed union of tags instead —
+ * see `GradientTextTag` in components/ui/gradient-text.tsx, or the `as` prop on `Section`. That is
+ * both type-safe and more honest about the handful of elements each component is designed for.
  */
-export type PolymorphicProps<
-  TElement extends ElementType,
-  TOwnProps = unknown,
-> = TOwnProps &
-  Omit<ComponentPropsWithoutRef<TElement>, keyof TOwnProps | "as"> & {
-    as?: TElement;
-  };
 
 /* -------------------------------------------------------------------------- */
 /*  Shared design-system scales                                               */
