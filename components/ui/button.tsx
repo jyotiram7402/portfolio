@@ -102,27 +102,46 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref,
   ) {
-    const Component = asChild ? Slot : "button";
+    const classes = cn(buttonVariants({ variant, size, fullWidth }), className);
+
+    /**
+     * Two explicit branches rather than one polymorphic element.
+     *
+     * Radix `Slot` counts every child, including a `null` produced by a false
+     * conditional, and throws unless it receives exactly one. So the `asChild` branch
+     * renders `children` alone — no spinner sibling, and no `type` or `disabled`, since
+     * the forwarded element may be an anchor that accepts neither.
+     */
+    if (asChild) {
+      return (
+        <Slot
+          ref={ref}
+          // An anchor cannot be natively disabled, so the state is conveyed to
+          // assistive tech and the styles handle pointer events.
+          aria-disabled={disabled || loading ? true : undefined}
+          aria-busy={loading || undefined}
+          data-loading={loading || undefined}
+          className={classes}
+          {...props}
+        >
+          {children}
+        </Slot>
+      );
+    }
 
     return (
-      <Component
+      <button
         ref={ref}
-        // `asChild` forwards to an arbitrary element, which may not accept `type`.
-        {...(asChild ? {} : { type })}
-        disabled={asChild ? undefined : (disabled ?? loading)}
-        aria-disabled={asChild && (disabled || loading) ? true : undefined}
+        type={type}
+        disabled={disabled ?? loading}
         aria-busy={loading || undefined}
         data-loading={loading || undefined}
-        className={cn(buttonVariants({ variant, size, fullWidth }), className)}
+        className={classes}
         {...props}
       >
-        {/* Slot clones a single child, so the spinner is only ever added when
-            this renders its own element. */}
-        {loading && !asChild ? (
-          <Spinner label={loadingLabel} className="size-4" />
-        ) : null}
+        {loading ? <Spinner label={loadingLabel} className="size-4" /> : null}
         {children}
-      </Component>
+      </button>
     );
   },
 );
