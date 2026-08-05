@@ -26,6 +26,7 @@ export type { SubscribeInput } from "./newsletter.schema";
 export { newsletterService, subscribe } from "./newsletter.service";
 export type { SubscribeResult } from "./newsletter.service";
 
-// `github.service` is deliberately absent: it imports `server-only`, and re-exporting
-// it here would make this barrel unusable from client components. Import it directly
-// from "@/services/github.service" in server code.
+// `github.service` and `projects.service` are deliberately absent: both import `server-only`,
+// and re-exporting them here would make this barrel unusable from client components. Import
+// them directly from "@/services/github.service" and "@/services/projects.service" in server
+// code.

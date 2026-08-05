@@ -8,13 +8,21 @@ import { ease } from "@/animations/easings";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Tabs, type TabDefinition } from "@/components/ui/tabs";
 import { DURATION, STAGGER } from "@/config/animations";
-import { getProjectsByDomain, projectDomains, projects } from "@/data/projects";
+import { projectDomains } from "@/data/projects";
 import { ProjectCard } from "@/features/projects/components/project-card";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { cn } from "@/lib/utils";
-import type { ProjectDomain } from "@/types/projects";
+import type { Project, ProjectDomain } from "@/types/projects";
 
 export interface ProjectGridProps {
+  /**
+   * The resolved project list, passed down from the server.
+   *
+   * Deliberately a prop rather than a module import. Projects are now discovered from the GitHub
+   * API by a server-only service, so this component cannot fetch them itself — and taking them as
+   * a prop is also what makes the grid reusable for a future `/work` page.
+   */
+  projects: readonly Project[];
   className?: string;
 }
 
@@ -23,41 +31,51 @@ const ALL = "all";
 /**
  * Filterable project grid.
  *
- * Uses the shared `Tabs` primitive, so the keyboard model here is identical to the one in
- * Resources and the blog filter — arrow keys move, one tab in the page's tab order.
+ * The tab list is built from the projects actually present, so a domain with nothing in it is never
+ * offered. That matters more now than it did with a hardcoded list: which domains have entries
+ * depends on what is tagged on GitHub, and can change without a deploy.
  *
- * Only the filtered set is mounted, and each card carries a tilt hook and pointer
- * listeners, so filtering genuinely reduces work rather than just hiding nodes with CSS.
+ * Only the filtered set is mounted, and each card carries a tilt hook and pointer listeners, so
+ * filtering genuinely reduces work rather than hiding nodes with CSS.
  *
- * `layout` on the list animates the reflow when the filter changes. That is the one place
- * a layout animation earns its cost here: without it, cards teleport into new positions
- * and the grid reads as a page change rather than as a filter.
+ * `layout` on the list animates the reflow when the filter changes — the one place a layout
+ * animation earns its cost here, because without it cards teleport and the grid reads as a page
+ * change rather than a filter.
  */
-export function ProjectGrid({ className }: ProjectGridProps) {
+export function ProjectGrid({ projects, className }: ProjectGridProps) {
   const idPrefix = useId();
   const reduceMotion = useReducedMotion();
   const [activeId, setActiveId] = useState<string>(ALL);
 
-  const tabs = useMemo<TabDefinition[]>(
-    () => [
+  const tabs = useMemo<TabDefinition[]>(() => {
+    const counts = new Map<ProjectDomain, number>();
+    for (const project of projects) {
+      for (const domain of project.domains) {
+        counts.set(domain, (counts.get(domain) ?? 0) + 1);
+      }
+    }
+
+    return [
       { id: ALL, label: "All", count: projects.length },
-      ...projectDomains.map((domain) => ({
-        id: domain.id,
-        label: domain.label,
-        count: getProjectsByDomain(domain.id).length,
-      })),
-    ],
-    [],
-  );
+      // Only domains with entries, in the canonical display order.
+      ...projectDomains
+        .filter((domain) => (counts.get(domain.id) ?? 0) > 0)
+        .map((domain) => ({
+          id: domain.id,
+          label: domain.label,
+          count: counts.get(domain.id) ?? 0,
+        })),
+    ];
+  }, [projects]);
 
   const visible = useMemo(
     () =>
       activeId === ALL
         ? projects
-        : // `activeId` is a string because `Tabs` is generic over tab ids. It can only
-          // ever hold a value that came from `projectDomains`, so the narrowing is safe.
-          getProjectsByDomain(activeId as ProjectDomain),
-    [activeId],
+        : projects.filter((project) =>
+            project.domains.includes(activeId as ProjectDomain),
+          ),
+    [activeId, projects],
   );
 
   const onSelect = useCallback((id: string) => setActiveId(id), []);
@@ -89,8 +107,8 @@ export function ProjectGrid({ className }: ProjectGridProps) {
             className={cn(
               "grid gap-5",
               "sm:grid-cols-2 lg:grid-cols-3",
-              // Featured projects claim two columns, which is what stops a
-              // three-column grid from reading as three equal things.
+              // The lead project claims two columns, which is what stops a three-column
+              // grid from reading as three equal things.
               "[&>li:first-child]:sm:col-span-2 [&>li:first-child]:lg:col-span-2",
             )}
           >

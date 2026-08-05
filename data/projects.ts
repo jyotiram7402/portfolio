@@ -1,17 +1,21 @@
-import { Bot, Boxes, CreditCard, Search, Server, ShoppingCart } from "lucide-react";
-
 import type { Project, ProjectDomain } from "@/types/projects";
 
 /**
- * Selected build work.
+ * Curated projects — work with no public repository.
  *
- * Backfilled here because Sprint 3 needs it: the AI assistant answers "show Java
- * projects", the command palette indexes projects, and global search ranks them.
- * Treat this file as the Sprint 2 deliverable it belongs to — the shape is final,
- * the entries are yours to expand.
+ * Since Sprint 5 the Projects section is driven by GitHub discovery
+ * (`services/projects.service.ts`). Repositories tagged with the discovery topic are fetched live,
+ * so this file is no longer the main source.
  *
- * `links` are intentionally sparse. A card with a dead "Live demo" button is worse
- * than a card with no button, so only links that exist are listed.
+ * What stays here is the work discovery can never find: client projects at an employer, where the
+ * code is not public. These are always appended to the discovered set.
+ *
+ * If a project *does* have a repository, it does not belong here — tag the repository instead, and
+ * add an entry to `data/project-overrides.ts` if you want to write a better tagline for it.
+ *
+ * This list is also what the AI assistant and the command palette index, because both run in the
+ * browser and cannot reach a server-only service. Promoting a discovered repository into search
+ * therefore means adding an override entry, not editing this file.
  */
 export const projects: readonly Project[] = [
   {
@@ -31,7 +35,7 @@ export const projects: readonly Project[] = [
     status: "shipped",
     period: "2025",
     links: [],
-    icon: CreditCard,
+    source: "curated",
     featured: true,
   },
   {
@@ -51,62 +55,15 @@ export const projects: readonly Project[] = [
     status: "shipped",
     period: "2025",
     links: [],
-    icon: Search,
-    featured: true,
-  },
-  {
-    id: "rag-assistant",
-    slug: "retrieval-augmented-assistant",
-    name: "Retrieval-Augmented Assistant",
-    tagline: "An internal assistant that answers from company documents, with citations.",
-    summary:
-      "A retrieval pipeline over internal documentation: chunking tuned to document structure, hybrid retrieval with reranking, and answers that cite the source they came from. Prompts are versioned in the repository and every change runs against a fixed evaluation set before it ships.",
-    domains: ["ai", "backend"],
-    stack: ["Java", "Spring Boot", "OpenAI API", "Claude API", "Vector Databases", "RAG"],
-    highlights: [
-      "Citations are mandatory — an answer with no retrieved source is refused rather than hallucinated.",
-      "Prompts under version control with a regression set, so a prompt edit is reviewable like code.",
-      "Hybrid retrieval combining keyword and vector search, reranked before it reaches the model.",
-    ],
-    status: "active",
-    period: "2025 — Present",
-    links: [],
-    icon: Bot,
-    featured: true,
-  },
-  {
-    id: "spring-service-template",
-    slug: "spring-service-template",
-    name: "Spring Service Template",
-    tagline: "The Spring Boot starting point I reach for, with the boring parts already right.",
-    summary:
-      "An opinionated Spring Boot template: layered package structure, Spring Security with JWT, Flyway migrations, testcontainers-backed integration tests, actuator health checks, and a CI pipeline that gates on the checks that actually catch regressions.",
-    domains: ["java", "spring", "backend"],
-    stack: [
-      "Java",
-      "Spring Boot",
-      "Spring Security",
-      "Spring Data JPA",
-      "PostgreSQL",
-      "Docker",
-      "GitHub Actions",
-    ],
-    highlights: [
-      "Migrations run before the code that needs them, so a deploy is reversible.",
-      "Integration tests against a real database in a container, not against an in-memory imitation of one.",
-      "Method-level authorisation rather than controller-level, so a new endpoint is closed by default.",
-    ],
-    status: "active",
-    period: "2025 — Present",
-    links: [],
-    icon: Server,
+    source: "curated",
     featured: true,
   },
   {
     id: "commerce-toolkit",
     slug: "magento-module-toolkit",
     name: "Magento Module Toolkit",
-    tagline: "Custom storefront modules for a catalogue where a careless query is felt by everyone.",
+    tagline:
+      "Custom storefront modules for a catalogue where a careless query is felt by everyone.",
     summary:
       "A set of custom Magento modules covering storefront features, admin tooling and catalogue performance work. The recurring theme is query discipline: every listing page has a bounded query plan, and none of them fan out per product.",
     domains: ["commerce", "backend", "frontend"],
@@ -119,26 +76,7 @@ export const projects: readonly Project[] = [
     status: "shipped",
     period: "2024 — 2025",
     links: [],
-    icon: ShoppingCart,
-  },
-  {
-    id: "portfolio-platform",
-    slug: "portfolio-platform",
-    name: "This Portfolio Platform",
-    tagline: "A Next.js platform with a design system, motion layer and a local AI assistant.",
-    summary:
-      "Built in sprints as a real product rather than a template: tokens as CSS custom properties, a motion layer split across Framer Motion, GSAP and Lenis by responsibility, and an assistant whose engine is swappable for an LLM without touching the interface.",
-    domains: ["frontend", "mern", "ai"],
-    stack: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Node.js"],
-    highlights: [
-      "Pointer effects write to MotionValues and CSS custom properties, so hovering a grid of cards costs zero re-renders.",
-      "The assistant's engine is an async-iterable interface, so a local knowledge base and an SSE endpoint are interchangeable.",
-      "WebGL is gated on device tier, viewport and motion preference, so a phone never downloads three.js.",
-    ],
-    status: "active",
-    period: "2026 — Present",
-    links: [],
-    icon: Boxes,
+    source: "curated",
   },
 ];
 
@@ -157,11 +95,13 @@ export function getProjectsByDomain(domain: ProjectDomain): readonly Project[] {
  * Every filterable domain, in display order.
  *
  * `as const satisfies` rather than a type annotation, and the distinction matters: an annotation on
- * the *filtered* result does not reach the array literal, so each `id` widens to `string` and no
- * longer satisfies `ProjectDomain`. `satisfies` validates the literal in place while keeping its
- * narrow types.
+ * a filtered result does not reach the array literal, so each `id` would widen to `string` and no
+ * longer satisfy `ProjectDomain`.
+ *
+ * Not filtered by whether entries exist any more — the grid builds its own tab list from the
+ * projects it was actually given, which now includes discovered repositories.
  */
-const ALL_PROJECT_DOMAINS = [
+export const projectDomains = [
   { id: "backend", label: "Backend" },
   { id: "java", label: "Java" },
   { id: "spring", label: "Spring" },
@@ -170,9 +110,3 @@ const ALL_PROJECT_DOMAINS = [
   { id: "frontend", label: "Frontend" },
   { id: "mern", label: "MERN" },
 ] as const satisfies readonly { id: ProjectDomain; label: string }[];
-
-/** Used by the project filter, which offers only domains that have entries. */
-export const projectDomains: readonly { id: ProjectDomain; label: string }[] =
-  ALL_PROJECT_DOMAINS.filter(
-    (domain) => getProjectsByDomain(domain.id).length > 0,
-  );

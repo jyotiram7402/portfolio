@@ -7,6 +7,7 @@ import { InlineMarkdown } from "@/components/markdown/inline-markdown";
 import { Badge } from "@/components/ui/badge";
 import { CopyButton } from "@/components/ui/copy-button";
 import { getProject } from "@/data/projects";
+import { getProjectIcon } from "@/lib/project-icon";
 import { cn } from "@/lib/utils";
 import type { ChatAction, ResponseBlock } from "@/types/ai";
 import { scrollToElement } from "@/utils/scroll";
@@ -86,7 +87,9 @@ function ChatProjectCard({ id }: { id: string }) {
   const project = getProject(id);
   if (!project) return null;
 
-  const Icon = project.icon;
+  // Derived rather than stored: `Project` carries no icon, because discovered entries cross a
+  // server-to-client boundary and a component cannot be serialised.
+  const Icon = getProjectIcon(project);
 
   return (
     <li>

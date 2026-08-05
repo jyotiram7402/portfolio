@@ -56,6 +56,13 @@ export const serverEnv = {
     },
   },
 
+  /**
+   * Shared secret for `POST /api/revalidate`, which drops the GitHub fetch cache so a newly tagged
+   * repository appears immediately. Absent: the endpoint returns 501 and the hourly revalidation
+   * window applies as normal.
+   */
+  revalidateSecret: process.env.REVALIDATE_SECRET ?? "",
+
   vercel: {
     env: process.env.VERCEL_ENV,
     url: process.env.VERCEL_URL,

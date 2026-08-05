@@ -1,12 +1,14 @@
 "use client";
 
-import { ExternalLink, Github } from "lucide-react";
+import { ExternalLink, Github, Star } from "lucide-react";
 
 import { TiltCard } from "@/components/animation/tilt-card";
 import { Badge } from "@/components/ui/badge";
 import { GlassCard } from "@/components/ui/glass-card";
+import { getProjectIcon } from "@/lib/project-icon";
 import { cn } from "@/lib/utils";
 import type { Project } from "@/types/projects";
+import { formatCompactNumber, formatRelativeTime } from "@/utils/format";
 
 export interface ProjectCardProps {
   project: Project;
@@ -24,16 +26,21 @@ const STATUS_TONE = {
 /**
  * One project.
  *
- * Props-driven so the same card serves the home preview, the filtered grid and — later —
- * a `/work` index. `featured` is the only branch, and it controls whether the highlights
- * are shown; a grid where every card lists three bullet points is a wall.
+ * Renders identically whether the entry was discovered from GitHub or hand-written, because
+ * `services/projects.service.ts` normalises both into the same shape. The only visible difference is
+ * that discovered entries carry live figures — stars, language, last push — and curated ones do not,
+ * so those rows are conditional rather than showing a zero.
  *
- * There are no links on most of these projects, and the card renders honestly when a
- * project has none rather than showing a disabled "Live demo" button. A dead affordance
- * costs more trust than a missing one.
+ * The icon is derived from the project's domain rather than stored on it. A Lucide icon is a React
+ * component, and components cannot cross a server-to-client boundary as props — which discovered
+ * projects have to do.
+ *
+ * There are no links on client work, and the card says so plainly rather than rendering a disabled
+ * "Live demo" button. A dead affordance costs more trust than a missing one.
  */
 export function ProjectCard({ project, featured = false, className }: ProjectCardProps) {
-  const Icon = project.icon;
+  const Icon = getProjectIcon(project);
+  const isLive = project.source !== "curated";
 
   return (
     <TiltCard maxRotation={featured ? 4 : 6} className={cn("h-full", className)}>
@@ -62,6 +69,14 @@ export function ProjectCard({ project, featured = false, className }: ProjectCar
           </span>
 
           <div className="flex flex-wrap items-center justify-end gap-2">
+            {/* Stars only when there are some. A "0 stars" badge is worse than none. */}
+            {isLive && (project.stars ?? 0) > 0 ? (
+              <Badge tone="default" size="sm" className="font-mono">
+                <Star aria-hidden="true" className="size-3" />
+                {formatCompactNumber(project.stars ?? 0)}
+              </Badge>
+            ) : null}
+
             <Badge tone={STATUS_TONE[project.status]} size="sm">
               {project.status}
             </Badge>
@@ -80,7 +95,9 @@ export function ProjectCard({ project, featured = false, className }: ProjectCar
           </p>
         </div>
 
-        {featured ? (
+        {/* Highlights exist only where someone wrote them — an override, or a curated entry.
+            A discovered repository with none renders nothing here rather than filler. */}
+        {featured && project.highlights.length > 0 ? (
           <ul className="flex flex-col gap-2.5">
             {project.highlights.map((highlight) => (
               <li
@@ -114,30 +131,38 @@ export function ProjectCard({ project, featured = false, className }: ProjectCar
           </ul>
 
           {project.links.length > 0 ? (
-            <ul className="flex flex-wrap gap-2">
-              {project.links.map((link) => (
-                <li key={link.href}>
-                  <a
-                    href={link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={cn(
-                      "inline-flex items-center gap-1.5 rounded-full border border-border",
-                      "bg-elevated px-3 py-1.5 text-xs font-medium text-foreground",
-                      "transition-colors hover:border-border-strong focus-ring",
-                    )}
-                  >
-                    {link.kind === "repo" ? (
-                      <Github aria-hidden="true" className="size-3" />
-                    ) : (
-                      <ExternalLink aria-hidden="true" className="size-3" />
-                    )}
-                    {link.label}
-                    <span className="sr-only">(opens in a new tab)</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
+            <div className="flex flex-wrap items-center gap-3">
+              <ul className="flex flex-wrap gap-2">
+                {project.links.map((link) => (
+                  <li key={link.href}>
+                    <a
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={cn(
+                        "inline-flex items-center gap-1.5 rounded-full border border-border",
+                        "bg-elevated px-3 py-1.5 text-xs font-medium text-foreground",
+                        "transition-colors hover:border-border-strong focus-ring",
+                      )}
+                    >
+                      {link.kind === "repo" ? (
+                        <Github aria-hidden="true" className="size-3" />
+                      ) : (
+                        <ExternalLink aria-hidden="true" className="size-3" />
+                      )}
+                      {link.label}
+                      <span className="sr-only">(opens in a new tab)</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+
+              {isLive && project.updatedAt ? (
+                <p className="font-mono text-2xs text-subtle">
+                  Updated {formatRelativeTime(project.updatedAt)}
+                </p>
+              ) : null}
+            </div>
           ) : (
             <p className="text-2xs leading-relaxed text-subtle">
               Client work — the code is not public. Happy to walk through the design.

@@ -16,6 +16,7 @@ import { experience } from "@/data/experience";
 import { projects } from "@/data/projects";
 import { resourceGroups } from "@/data/resources";
 import { allTechnologies, skillCategories } from "@/data/skills";
+import { getProjectIcon } from "@/lib/project-icon";
 import { renderablePosts } from "@/services/content.service";
 import type { SearchDocument, SearchResult } from "@/types/search";
 import { fuzzyMatchFields } from "@/utils/fuzzy";
@@ -46,6 +47,13 @@ function sectionDocuments(): SearchDocument[] {
   }));
 }
 
+/**
+ * Indexes the curated projects only.
+ *
+ * The palette runs in the browser and cannot reach `services/projects.service.ts`, which is
+ * server-only. Discovered repositories therefore appear in the Projects section but not in search —
+ * adding an entry to `data/project-overrides.ts` is what promotes one into both.
+ */
 function projectDocuments(): SearchDocument[] {
   return projects.map((project) => ({
     id: `project:${project.id}`,
@@ -54,7 +62,7 @@ function projectDocuments(): SearchDocument[] {
     description: project.tagline,
     href: "/#projects",
     keywords: [...project.stack, ...project.domains, project.status, "project"],
-    icon: project.icon,
+    icon: getProjectIcon(project),
   }));
 }
 
