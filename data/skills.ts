@@ -1,12 +1,12 @@
 import {
-  Blocks,
+  Braces,
   Brain,
   Cloud,
   Database,
+  MonitorSmartphone,
   Server,
   Terminal,
   Wrench,
-  MonitorSmartphone,
 } from "lucide-react";
 
 import type {
@@ -18,14 +18,17 @@ import type {
 /**
  * The technology explorer's content.
  *
+ * Ordered by positioning, not alphabetically: Core Java first, then the Spring backend, then data
+ * and messaging — because those are what a Java backend screen asks about. AI comes next because it
+ * is the differentiator, and the JavaScript stack last because it is real but secondary.
+ *
  * Two rules held throughout:
  *
- * 1. **No percentages.** Depth is a three-band `proficiency`, and each band means
- *    something specific (see `PROFICIENCY_META`). "Exploring" is used honestly —
- *    a grid where everything is "core" tells the reader nothing.
- *
- * 2. **Descriptions say what it is used for**, not what it is. A reader already
- *    knows what Docker is; what they want to know is what was built with it.
+ * 1. **No percentages.** Depth is a three-band `proficiency`, and each band means something
+ *    specific. "Exploring" is used honestly — a grid where everything is "core" tells a reader
+ *    nothing.
+ * 2. **Descriptions say what it is used for**, not what it is. A reader already knows what Kafka is;
+ *    what they want to know is what was built with it.
  */
 
 export const PROFICIENCY_META = {
@@ -48,19 +51,70 @@ export const PROFICIENCY_META = {
 
 export const skillCategories: readonly SkillCategory[] = [
   {
+    id: "core-java",
+    label: "Core Java",
+    summary:
+      "The language itself, not just the frameworks on top of it. This is what a backend interview actually probes, so it is held to the highest standard here.",
+    icon: Braces,
+    technologies: [
+      {
+        id: "java",
+        name: "Java 8 / 17",
+        description:
+          "Primary language. Records, sealed types and pattern matching used where they remove a class of bug rather than for their own sake.",
+        proficiency: "core",
+      },
+      {
+        id: "collections",
+        name: "Collections",
+        description:
+          "Choosing the structure for the access pattern — and knowing the cost of the one already in the code.",
+        proficiency: "core",
+      },
+      {
+        id: "streams",
+        name: "Streams & Lambda",
+        description:
+          "Collectors and pipelines where they clarify intent, and a plain loop where they would not.",
+        proficiency: "core",
+      },
+      {
+        id: "optional",
+        name: "Optional",
+        description:
+          "Used at API boundaries to make absence explicit, not sprinkled through fields where null was the honest answer.",
+        proficiency: "core",
+      },
+      {
+        id: "concurrency",
+        name: "Multithreading & Concurrency",
+        description:
+          "Executors, futures and CompletableFuture — and the understanding that shared mutable state is the actual problem.",
+        proficiency: "working",
+      },
+      {
+        id: "jvm",
+        name: "JVM & GC",
+        description:
+          "Enough of the memory model and collector behaviour to read a heap profile and know which knob matters.",
+        proficiency: "working",
+      },
+      {
+        id: "dsa",
+        name: "Data Structures & Algorithms",
+        description:
+          "Complexity reasoned about before the code is written, which is when it is cheap.",
+        proficiency: "core",
+      },
+    ],
+  },
+  {
     id: "backend",
-    label: "Backend",
+    label: "Spring & Backend",
     summary:
       "Where most of my time goes. Typed domains, explicit boundaries, and APIs designed to outlive their first consumer.",
     icon: Server,
     technologies: [
-      {
-        id: "java",
-        name: "Java",
-        description:
-          "Primary language. Records, streams and the type system used to make invalid states unrepresentable.",
-        proficiency: "core",
-      },
       {
         id: "spring-boot",
         name: "Spring Boot",
@@ -69,244 +123,61 @@ export const skillCategories: readonly SkillCategory[] = [
         proficiency: "core",
       },
       {
-        id: "spring-data-jpa",
-        name: "Spring Data JPA",
+        id: "spring-mvc",
+        name: "Spring MVC",
         description:
-          "Repositories, projections and specifications — with an eye on the SQL each one actually generates.",
+          "Controller design, validation and exception handling that returns a useful body rather than a stack trace.",
         proficiency: "core",
-      },
-      {
-        id: "rest-api",
-        name: "REST API",
-        description:
-          "Resource modelling, correct status codes, pagination, idempotency keys and versioning that does not break clients.",
-        proficiency: "core",
-      },
-      {
-        id: "hibernate",
-        name: "Hibernate",
-        description:
-          "Entity mapping, fetch strategies and closing the N+1 queries an ORM makes easy to write by accident.",
-        proficiency: "working",
       },
       {
         id: "spring-security",
         name: "Spring Security",
         description:
-          "Filter chains, JWT and role-based authorisation wired at the method boundary rather than the controller.",
-        proficiency: "working",
+          "Filter chains, JWT and OAuth2, with authorisation at the method boundary so a new endpoint is closed by default.",
+        proficiency: "core",
+      },
+      {
+        id: "rest-api",
+        name: "REST API Design",
+        description:
+          "Resource modelling, correct status codes, pagination, idempotency keys and versioning that does not break clients.",
+        proficiency: "core",
+      },
+      {
+        id: "hibernate-jpa",
+        name: "Hibernate & JPA",
+        description:
+          "Entity mapping, fetch strategies and closing the N+1 queries an ORM makes easy to write by accident.",
+        proficiency: "core",
       },
       {
         id: "microservices",
         name: "Microservices",
         description:
-          "Boundaries drawn around ownership. Async messaging where coupling would otherwise become a cascade.",
+          "Boundaries drawn around data ownership. Built independent driver, merchant and notification services talking over REST and Kafka.",
         proficiency: "working",
       },
       {
-        id: "node",
-        name: "Node.js",
+        id: "event-driven",
+        name: "Event-Driven Architecture",
         description:
-          "Tooling, scripts and lightweight services where the event loop is the right shape for the workload.",
+          "Async messaging where a synchronous call would turn one outage into three.",
         proficiency: "working",
       },
       {
-        id: "express",
-        name: "Express",
+        id: "fastapi",
+        name: "FastAPI",
         description:
-          "Small HTTP surfaces and webhook receivers when a full framework would be more ceremony than value.",
+          "Python services where the workload suited it — the AI search layer and a containerised rules engine.",
         proficiency: "working",
       },
     ],
   },
   {
-    id: "frontend",
-    label: "Frontend",
+    id: "data",
+    label: "Data & Messaging",
     summary:
-      "Enough depth to build the interface a backend deserves — accessible, fast and free of layout shift.",
-    icon: MonitorSmartphone,
-    technologies: [
-      {
-        id: "react",
-        name: "React",
-        description:
-          "Composition over configuration. Server Components by default, state pushed down to the leaf that needs it.",
-        proficiency: "working",
-      },
-      {
-        id: "nextjs",
-        name: "Next.js",
-        description:
-          "App Router, streaming, metadata and image optimisation. This site is the working example.",
-        proficiency: "working",
-      },
-      {
-        id: "typescript",
-        name: "TypeScript",
-        description:
-          "Strict mode, discriminated unions and no unchecked index access — types as the first test suite.",
-        proficiency: "core",
-      },
-      {
-        id: "javascript",
-        name: "JavaScript",
-        description:
-          "The language underneath the frameworks: closures, promises, the event loop and the DOM as it really behaves.",
-        proficiency: "core",
-      },
-      {
-        id: "tailwind",
-        name: "Tailwind CSS",
-        description:
-          "Design tokens as CSS custom properties, so a whole theme is one file and zero runtime.",
-        proficiency: "core",
-      },
-      {
-        id: "html",
-        name: "HTML",
-        description:
-          "Semantics first. Landmarks, headings and native controls before a single ARIA attribute is reached for.",
-        proficiency: "core",
-      },
-      {
-        id: "css",
-        name: "CSS",
-        description:
-          "Grid, container queries, custom properties and the cascade used deliberately instead of fought.",
-        proficiency: "core",
-      },
-    ],
-  },
-  {
-    id: "ai",
-    label: "AI",
-    summary:
-      "Applied, not decorative. Retrieval that cites its sources, prompts under version control, evaluation before rollout.",
-    icon: Brain,
-    technologies: [
-      {
-        id: "llms",
-        name: "LLMs",
-        description:
-          "Context windows, token budgets, structured output and the failure modes that only appear at scale.",
-        proficiency: "working",
-      },
-      {
-        id: "prompt-engineering",
-        name: "Prompt Engineering",
-        description:
-          "Prompts treated as code: versioned, diffed and regression-tested against a fixed evaluation set.",
-        proficiency: "working",
-      },
-      {
-        id: "rag",
-        name: "RAG",
-        description:
-          "Chunking strategy, hybrid retrieval and reranking — with citations, so an answer can be checked.",
-        proficiency: "working",
-      },
-      {
-        id: "langchain",
-        name: "LangChain",
-        description:
-          "Orchestration for multi-step chains and tool calls, kept thin enough to debug when it misbehaves.",
-        proficiency: "exploring",
-      },
-      {
-        id: "openai",
-        name: "OpenAI API",
-        description:
-          "Function calling, JSON mode and streaming responses behind a typed service boundary.",
-        proficiency: "working",
-      },
-      {
-        id: "claude",
-        name: "Claude API",
-        description:
-          "Long-context reasoning and tool use, including agentic loops for internal developer tooling.",
-        proficiency: "working",
-      },
-      {
-        id: "vector-db",
-        name: "Vector Databases",
-        description:
-          "Embedding pipelines, similarity search and the metadata filtering that makes results relevant, not just near.",
-        proficiency: "exploring",
-      },
-    ],
-  },
-  {
-    id: "cloud",
-    label: "Cloud",
-    summary:
-      "Deploy it, observe it, and be able to explain the bill. Infrastructure as a consequence of the architecture.",
-    icon: Cloud,
-    technologies: [
-      {
-        id: "azure",
-        name: "Azure",
-        description:
-          "App Service and container deployments with environment parity between staging and production.",
-        proficiency: "working",
-      },
-      {
-        id: "aws",
-        name: "AWS",
-        description:
-          "EC2, S3 and RDS for the workloads where managed services remove more risk than they add.",
-        proficiency: "exploring",
-      },
-      {
-        id: "vercel",
-        name: "Vercel",
-        description:
-          "Edge delivery, preview deployments per pull request, and Speed Insights read rather than ignored.",
-        proficiency: "core",
-      },
-    ],
-  },
-  {
-    id: "devops",
-    label: "DevOps",
-    summary:
-      "A pipeline that gates on the checks that actually catch regressions, and nothing that merely looks thorough.",
-    icon: Terminal,
-    technologies: [
-      {
-        id: "docker",
-        name: "Docker",
-        description:
-          "Multi-stage builds, small final images, and local environments that match what ships.",
-        proficiency: "working",
-      },
-      {
-        id: "github-actions",
-        name: "GitHub Actions",
-        description:
-          "Typecheck, lint and build on every pull request, with caching that keeps the feedback loop under a minute.",
-        proficiency: "working",
-      },
-      {
-        id: "ci-cd",
-        name: "CI/CD",
-        description:
-          "Trunk-based delivery, reversible deploys and migrations written to run before the code that needs them.",
-        proficiency: "working",
-      },
-      {
-        id: "kubernetes",
-        name: "Kubernetes",
-        description:
-          "Deployments, services and probes — learning where an orchestrator earns its operational cost.",
-        proficiency: "exploring",
-      },
-    ],
-  },
-  {
-    id: "database",
-    label: "Database",
-    summary:
-      "The schema is the architecture. Most performance problems are decided here, long before the profiler runs.",
+      "The schema is the architecture. Most performance problems are decided here, long before a profiler runs.",
     icon: Database,
     technologies: [
       {
@@ -315,6 +186,27 @@ export const skillCategories: readonly SkillCategory[] = [
         description:
           "Normalised schemas, composite indexes and reading `EXPLAIN` before blaming the ORM.",
         proficiency: "core",
+      },
+      {
+        id: "sql",
+        name: "SQL",
+        description:
+          "Joins, window functions and aggregation written by hand when the generated query is the problem.",
+        proficiency: "core",
+      },
+      {
+        id: "kafka",
+        name: "Apache Kafka",
+        description:
+          "Event streams for real-time order updates across services, with key design that preserves the ordering the domain needs.",
+        proficiency: "working",
+      },
+      {
+        id: "redis",
+        name: "Redis",
+        description:
+          "Caching with deliberate invalidation — cut repeated database reads on a streaming API under load.",
+        proficiency: "working",
       },
       {
         id: "postgresql",
@@ -331,57 +223,256 @@ export const skillCategories: readonly SkillCategory[] = [
         proficiency: "working",
       },
       {
-        id: "redis",
-        name: "Redis",
+        id: "query-optimisation",
+        name: "Query Optimisation",
         description:
-          "Caching with deliberate invalidation, rate limiting and short-lived locks around critical sections.",
+          "Execution plans read first, indexes added second, and the migration written in the same pull request as the query.",
+        proficiency: "working",
+      },
+      {
+        id: "hikaricp",
+        name: "HikariCP",
+        description:
+          "Pool sizing set from measurement rather than from a default that happened to work locally.",
         proficiency: "working",
       },
     ],
   },
   {
-    id: "cms",
-    label: "Commerce & CMS",
+    id: "ai",
+    label: "AI & GenAI",
     summary:
-      "Platform work on systems that were already live, already large, and already someone's revenue.",
-    icon: Blocks,
+      "The differentiator. I lead the AI-first initiative at Southco as a board member of the AI team — this is applied engineering, not prompt collecting.",
+    icon: Brain,
     technologies: [
       {
-        id: "magento",
-        name: "Magento",
+        id: "claude-code",
+        name: "Claude Code",
         description:
-          "Custom modules, storefront work and catalogue performance on a store with real traffic behind it.",
+          "Agentic development. Led the R&D, presented findings to the CTO, and made it the standard workflow for 20 developers.",
         proficiency: "core",
       },
       {
-        id: "sfmc",
-        name: "Salesforce Marketing Cloud",
+        id: "mcp",
+        name: "MCP",
         description:
-          "Journey Builder, data extensions, AMPscript and the SQL activities that feed them.",
-        proficiency: "core",
-      },
-      {
-        id: "opensearch",
-        name: "OpenSearch",
-        description:
-          "Index mappings, analysers and synonym sets tuned so catalogue search matches intent, not spelling.",
+          "Model Context Protocol for wiring tools to models with typed inputs and bounded permissions.",
         proficiency: "working",
       },
       {
-        id: "optimizely",
-        name: "Optimizely",
+        id: "secure-ai-tooling",
+        name: "Secure AI Tooling",
         description:
-          "Experiment setup and content delivery, with results read as evidence rather than confirmation.",
+          "Isolating agentic tools from legacy customer data — the risk I found, and the DevContainer that answered it.",
+        proficiency: "core",
+      },
+      {
+        id: "prompt-engineering",
+        name: "Prompt Engineering",
+        description:
+          "Prompts treated as code: versioned, diffed and regression-tested rather than tuned by feel.",
+        proficiency: "core",
+      },
+      {
+        id: "llm-apis",
+        name: "LLM API Integration",
+        description:
+          "Function calling, structured output and streaming behind a typed service boundary.",
+        proficiency: "working",
+      },
+      {
+        id: "ai-search",
+        name: "AI-Powered Search",
+        description:
+          "Built a search service on OpenSearch and ElasticSuite for relevance, shipped to production in a month.",
+        proficiency: "working",
+      },
+      {
+        id: "rag",
+        name: "RAG",
+        description:
+          "Chunking, hybrid retrieval and reranking — with citations, so an answer can be checked.",
         proficiency: "exploring",
+      },
+    ],
+  },
+  {
+    id: "cloud-devops",
+    label: "Cloud & DevOps",
+    summary:
+      "Deploy it, observe it, and be able to explain the bill. Infrastructure as a consequence of the architecture.",
+    icon: Cloud,
+    technologies: [
+      {
+        id: "docker",
+        name: "Docker",
+        description:
+          "Multi-stage builds and containerised services. The isolated AI DevContainer is the one 20 developers use daily.",
+        proficiency: "core",
+      },
+      {
+        id: "devcontainers",
+        name: "DevContainers",
+        description:
+          "Reproducible development environments — the mechanism behind the secure agentic AI rollout.",
+        proficiency: "core",
+      },
+      {
+        id: "aws",
+        name: "AWS",
+        description:
+          "EC2 and S3 for compute and media storage on a streaming backend.",
+        proficiency: "working",
+      },
+      {
+        id: "ci-cd",
+        name: "CI/CD",
+        description:
+          "Pipelines that gate on the checks which actually catch regressions, and reversible deploys.",
+        proficiency: "working",
+      },
+      {
+        id: "jenkins",
+        name: "Jenkins",
+        description: "Build and deploy pipelines for JVM services.",
+        proficiency: "working",
+      },
+      {
+        id: "azure-devops",
+        name: "Azure DevOps",
+        description:
+          "Repos, pipelines and boards on client delivery, with environment parity between staging and production.",
+        proficiency: "working",
+      },
+      {
+        id: "kubernetes",
+        name: "Kubernetes",
+        description:
+          "Deployments, services and probes — learning where an orchestrator earns its operational cost.",
+        proficiency: "exploring",
+      },
+      {
+        id: "maven",
+        name: "Maven",
+        description: "Multi-module builds, dependency management and reproducible artefacts.",
+        proficiency: "core",
+      },
+    ],
+  },
+  {
+    id: "frontend",
+    label: "Frontend & MERN",
+    summary:
+      "Real, and honestly secondary. Enough depth to ship a full-stack feature end to end and build the interface a backend deserves.",
+    icon: MonitorSmartphone,
+    technologies: [
+      {
+        id: "react",
+        name: "React",
+        description:
+          "Full-stack work with a React frontend against Spring Boot and MongoDB in a loosely coupled architecture.",
+        proficiency: "working",
+      },
+      {
+        id: "javascript",
+        name: "JavaScript",
+        description:
+          "The language underneath the frameworks: closures, promises, the event loop and the DOM as it really behaves.",
+        proficiency: "working",
+      },
+      {
+        id: "typescript",
+        name: "TypeScript",
+        description:
+          "Strict mode, discriminated unions and no unchecked index access — types as the first test suite.",
+        proficiency: "working",
+      },
+      {
+        id: "nextjs",
+        name: "Next.js",
+        description:
+          "App Router, server components and streaming. This site is the working example.",
+        proficiency: "working",
+      },
+      {
+        id: "tailwind",
+        name: "Tailwind CSS",
+        description:
+          "Design tokens as CSS custom properties, so a whole theme is one file and zero runtime.",
+        proficiency: "working",
+      },
+      {
+        id: "html-css",
+        name: "HTML & CSS",
+        description:
+          "Semantics first — landmarks, headings and native controls before a single ARIA attribute.",
+        proficiency: "working",
+      },
+    ],
+  },
+  {
+    id: "practices",
+    label: "Practices",
+    summary:
+      "How the work actually gets done. Design discipline, tests that mean something, and review as the place bugs are cheapest.",
+    icon: Wrench,
+    technologies: [
+      {
+        id: "design-patterns",
+        name: "Design Patterns",
+        description:
+          "Applied where they name a problem the code already has, not imposed up front.",
+        proficiency: "core",
+      },
+      {
+        id: "solid",
+        name: "SOLID",
+        description:
+          "Mostly dependency direction and single responsibility, which are the two that keep paying.",
+        proficiency: "core",
+      },
+      {
+        id: "junit",
+        name: "JUnit",
+        description:
+          "Unit and integration tests that assert behaviour, including the failure paths.",
+        proficiency: "core",
+      },
+      {
+        id: "mockito",
+        name: "Mockito",
+        description:
+          "Mocking at the boundary only — a test that mocks the thing under test proves nothing.",
+        proficiency: "working",
+      },
+      {
+        id: "code-reviews",
+        name: "Code Reviews",
+        description:
+          "Small, reviewable changes. Review is the cheapest place a bug can be caught.",
+        proficiency: "core",
+      },
+      {
+        id: "agile",
+        name: "Agile / Scrum",
+        description:
+          "Sprint planning and delivery with client teams in Jira and Workfront.",
+        proficiency: "core",
+      },
+      {
+        id: "production-support",
+        name: "Production Support",
+        description:
+          "On the hook for live payment issues. A midnight PayPal failure resolved with zero downtime.",
+        proficiency: "core",
       },
     ],
   },
   {
     id: "tools",
     label: "Tools",
-    summary:
-      "The daily surface. Chosen for how quickly they let me find the truth about a system.",
-    icon: Wrench,
+    summary: "The daily surface. Chosen for how quickly they get me to the truth about a system.",
+    icon: Terminal,
     technologies: [
       {
         id: "git",
@@ -394,35 +485,34 @@ export const skillCategories: readonly SkillCategory[] = [
         id: "bitbucket",
         name: "Bitbucket",
         description:
-          "Pull request review and branch policy on team delivery, including pipeline gates before merge.",
+          "Pull request review and branch policy on team delivery, with pipeline gates before merge.",
+        proficiency: "core",
+      },
+      {
+        id: "jira",
+        name: "Jira & Workfront",
+        description: "Sprint delivery and production support tracking with client teams.",
         proficiency: "core",
       },
       {
         id: "postman",
         name: "Postman",
         description:
-          "Collections as living API documentation, with environments and tests kept alongside the endpoints.",
+          "Collections as living API documentation, with environments and tests beside the endpoints.",
         proficiency: "core",
       },
       {
-        id: "vscode",
-        name: "VS Code",
+        id: "python",
+        name: "Python",
         description:
-          "Configured deliberately: workspace settings committed, so the whole team formats identically.",
-        proficiency: "core",
-      },
-      {
-        id: "claude-code",
-        name: "Claude Code",
-        description:
-          "Agentic development for refactors, test scaffolding and reading unfamiliar codebases quickly.",
+          "The second language. FastAPI services, the AI search layer and the configurator engine.",
         proficiency: "working",
       },
     ],
   },
 ];
 
-export const DEFAULT_SKILL_CATEGORY = skillCategories[0]?.id ?? "backend";
+export const DEFAULT_SKILL_CATEGORY = skillCategories[0]?.id ?? "core-java";
 
 export function getSkillCategory(id: string): SkillCategory | undefined {
   return skillCategories.find((category) => category.id === id);

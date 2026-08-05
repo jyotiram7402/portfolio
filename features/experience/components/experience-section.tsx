@@ -23,7 +23,7 @@ export function ExperienceSection() {
         badge="Experience"
         headingId="experience-heading"
         title="Shipping on systems that were already live."
-        description="Commerce platforms, marketing automation, payments and search — with real traffic behind them and no maintenance window to hide in."
+        description="Payment gateways, enterprise integrations and AI-powered search — with real traffic behind them and no maintenance window to hide in. Plus a seat on the AI board, leading how the team adopts agentic tooling."
         size="lg"
       />
 

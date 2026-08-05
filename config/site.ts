@@ -3,8 +3,11 @@ import { env } from "@/lib/env";
 /**
  * Single source of truth for identity.
  *
- * Nothing in `components/` or `app/` hardcodes a name, a URL or a tagline —
- * they all read from here, which means rebranding the site is a one-file edit.
+ * Nothing in `components/` or `app/` hardcodes a name, a role or a tagline — they all read from
+ * here, which means repositioning the site is a one-file edit.
+ *
+ * Positioning, in priority order: Java backend, then Java full stack, then MERN. Every string below
+ * leads with the first and mentions the others without diluting it.
  */
 export const siteConfig = {
   /** Full name, used in titles, structured data and the copyright line. */
@@ -18,9 +21,11 @@ export const siteConfig = {
   /** Title of the home page, where the template is not applied. */
   defaultTitle: "Jyotiram Kamble — Java Backend Engineer",
   role: "Java Backend Engineer",
-  tagline: "Engineering the layer you never see, and always feel.",
+  /** Secondary framing, for the résumé header and the OG card. */
+  roleLine: "Java · Spring Boot · Microservices · REST APIs · GenAI",
+  tagline: "Java backends built to survive production.",
   description:
-    "Java backend engineer building Spring Boot services, payment and search integrations, and AI features that earn their place in production.",
+    "Java backend engineer in Pune building Spring Boot microservices, payment integrations, Kafka pipelines and AI-powered search. Board member of Southco's AI team, leading an AI-first approach to development.",
 
   url: env.siteUrl,
   locale: "en_US",
@@ -29,32 +34,37 @@ export const siteConfig = {
 
   /** Contact address surfaced in the footer and structured data. */
   email: "jyotiramkamble7402@gmail.com",
+  phone: "+91 93225 02514",
   location: "Pune, India",
 
   /** Path to the OG image route handled by `app/opengraph-image.tsx`. */
   ogImage: "/opengraph-image",
-  /** Rendered inside the footer's "built with" line. */
   repository: "https://github.com/jyotiram7402/portfolio",
 
+  /**
+   * Ordered for search intent: the roles being targeted come first, the technologies that qualify
+   * for them second, and the secondary stack last.
+   */
   keywords: [
     "java backend engineer",
+    "java backend developer",
     "spring boot developer",
-    "rest api",
-    "microservices",
-    "ai engineer",
-    "rag",
-    "full stack developer",
-    "magento developer",
-    "salesforce marketing cloud",
-    "next.js",
-    "typescript",
-    "portfolio",
+    "java full stack developer",
+    "backend engineer pune",
+    "microservices engineer",
+    "rest api developer",
+    "spring security",
+    "apache kafka",
+    "agentic ai developer",
+    "mern stack developer",
+    "react developer",
+    "software engineer pune",
   ],
 
   /** Drives the "available for work" affordance. Flip when that changes. */
   availability: {
     open: true,
-    label: "Open to new work",
+    label: "Open to Java backend roles",
   },
 } as const;
 

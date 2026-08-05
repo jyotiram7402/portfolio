@@ -1,14 +1,18 @@
 /**
  * Broad buckets the AI assistant, the project filter and the domain inference all query by.
  */
+/**
+ * Ordered by hiring priority: Java and Spring first, then the backend disciplines, then AI, then
+ * the JavaScript stack. The filter renders them in this order too.
+ */
 export type ProjectDomain =
   | "java"
   | "spring"
-  | "ai"
-  | "mern"
+  | "microservices"
   | "backend"
-  | "frontend"
-  | "commerce";
+  | "ai"
+  | "fullstack"
+  | "mern";
 
 export type ProjectStatus = "shipped" | "active" | "prototype";
 

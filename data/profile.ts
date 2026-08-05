@@ -1,16 +1,17 @@
 import {
+  Braces,
   Brain,
-  Cloud,
   Compass,
-  Cpu,
+  Database,
   GitBranch,
   Gauge,
   Layers,
-  Puzzle,
+  Network,
   Rocket,
   Server,
   Sparkles,
   Target,
+  Users,
 } from "lucide-react";
 
 import { skillCategories } from "@/data/skills";
@@ -19,9 +20,11 @@ import type { Highlight, Role, Stat, StoryCard } from "@/types/profile";
 /**
  * Hero, statistics and About copy.
  *
- * This is authored content, not configuration — edit it freely. The one rule:
- * nothing here should be a number nobody could verify or defend. Where a figure
- * can be derived from the codebase it is derived, not typed.
+ * Positioned for Java backend roles first, Java full stack second, MERN third. Every string leads
+ * with the first without pretending the others do not exist.
+ *
+ * Nothing here is a number that could not be defended in an interview. The one figure that carries
+ * real weight — 20 developers on the DevContainer — is a count, not an estimate.
  */
 
 /* -------------------------------------------------------------------------- */
@@ -31,38 +34,45 @@ import type { Highlight, Role, Stat, StoryCard } from "@/types/profile";
 /**
  * Hero headline, one entry per visual line.
  *
- * Authored as lines rather than a sentence because the reveal masks each one
- * separately — the break points are a design decision, not something to leave to
- * the browser. The final line is rendered in the brand gradient.
+ * Authored as lines rather than a sentence because the reveal masks each one separately — the break
+ * points are a design decision, not something to leave to the browser. The final line is rendered in
+ * the brand gradient.
  */
-export const heroLines = ["Engineering the", "layer you never see,", "and always feel."] as const;
+export const heroLines = [
+  "Java backends",
+  "built to survive",
+  "production.",
+] as const;
 
 /** Index of the line that receives the gradient treatment. */
 export const HERO_ACCENT_LINE = heroLines.length - 1;
 
 export const heroSubtitle =
-  "I build Spring Boot services, payment and search integrations, and AI features that hold up in production — the kind of work that stays quiet at 3am and fast under load.";
+  "Software engineer with two years on enterprise backend systems — Spring Boot services, three payment gateways, Kafka event pipelines and AI-powered search. I sit on Southco's AI board, leading the AI-first approach to how we build.";
 
 /* -------------------------------------------------------------------------- */
 /*  Rotating roles                                                            */
 /* -------------------------------------------------------------------------- */
 
+/**
+ * Ordered by hiring priority, and the order is the message: a visitor who reads only the first two
+ * should come away thinking Java backend.
+ */
 export const roles: readonly Role[] = [
-  { id: "java", label: "Java Backend Engineer" },
+  { id: "java-backend", label: "Java Backend Engineer" },
   { id: "spring", label: "Spring Boot Developer" },
-  { id: "ai", label: "AI Application Engineer" },
-  { id: "fullstack", label: "Full Stack Developer" },
-  { id: "integrations", label: "Systems Integrator" },
-  { id: "oss", label: "Open Source Builder" },
+  { id: "java-fullstack", label: "Java Full Stack Developer" },
+  { id: "microservices", label: "Microservices Engineer" },
+  { id: "ai", label: "AI-First Development Lead" },
+  { id: "mern", label: "MERN Stack Developer" },
 ];
 
 /* -------------------------------------------------------------------------- */
-/*  Statistics                                                                */
+/*  Statistics                                                               */
 /* -------------------------------------------------------------------------- */
 
 /**
- * Derived rather than hardcoded, so the claim can never drift from the skills
- * grid immediately below it.
+ * Derived rather than hardcoded, so the claim can never drift from the skills grid below it.
  */
 const technologyCount = skillCategories.reduce(
   (total, category) => total + category.technologies.length,
@@ -71,20 +81,26 @@ const technologyCount = skillCategories.reduce(
 
 export const stats: readonly Stat[] = [
   {
-    id: "projects",
-    value: 20,
-    suffix: "+",
-    label: "Projects shipped",
-    detail: "Client work, internal tools and things built to find out how they work",
-    icon: Layers,
-  },
-  {
     id: "experience",
     value: 2,
     suffix: "+",
     label: "Years building",
-    detail: "Professional delivery on production systems people depend on",
+    detail: "Enterprise backend systems in production since September 2024",
     icon: Gauge,
+  },
+  {
+    id: "ai-adoption",
+    value: 20,
+    label: "Developers on my AI workflow",
+    detail: "The isolated DevContainer I built became the team standard",
+    icon: Users,
+  },
+  {
+    id: "gateways",
+    value: 3,
+    label: "Payment gateways owned",
+    detail: "PayPal, Stripe and AsiaPay — end to end, including the failure paths",
+    icon: Network,
   },
   {
     id: "technologies",
@@ -92,15 +108,7 @@ export const stats: readonly Stat[] = [
     value: Math.floor(technologyCount / 5) * 5,
     suffix: "+",
     label: "Technologies",
-    detail: "In active rotation across backend, cloud, AI and the front end",
-    icon: Cpu,
-  },
-  {
-    id: "commits",
-    value: 500,
-    suffix: "+",
-    label: "Commits pushed",
-    detail: "Small, reviewable changes over large, unreviewable ones",
+    detail: "Marked core, working or exploring — no percentages anywhere",
     icon: GitBranch,
   },
 ];
@@ -110,35 +118,35 @@ export const stats: readonly Stat[] = [
 /* -------------------------------------------------------------------------- */
 
 export const aboutIntro =
-  "I started where most backend engineers do — fixing something that was already broken in production. That turned into a habit: read the system, find the seam, make it simpler than it was before.";
+  "I started where most backend engineers do — on the phone at midnight because a payment had failed in production. That turned into a habit: read the system, find the seam, make it simpler than it was before. These days I do that for Java services, and for how my team adopts AI.";
 
 export const storyCards: readonly StoryCard[] = [
   {
     id: "mission",
     kicker: "Mission",
     title: "Make the invisible layer dependable",
-    body: "Nobody thanks you for an API that stays up. That is exactly the point. I build services that behave predictably under load, fail loudly rather than silently, and are boring to operate.",
+    body: "Nobody thanks you for an API that stays up, and that is exactly the point. I build Spring Boot services that behave predictably under load, fail loudly rather than silently, and are boring to operate at three in the morning.",
     icon: Target,
   },
   {
-    id: "passion",
-    kicker: "Passion",
-    title: "The seam between systems",
-    body: "The interesting problems live where two systems meet — a payment gateway and an order pipeline, a search index and a catalogue, a model and a product. Integration is where correctness is actually decided.",
-    icon: Puzzle,
+    id: "ai-board",
+    kicker: "AI board member",
+    title: "Leading the AI-first approach at Southco",
+    body: "I led the R&D on agentic AI tooling, presented findings to the CTO, and found the risk nobody had asked about — that these tools could read legacy customer data. The DevContainer I built to isolate them is now how all 20 developers work.",
+    icon: Sparkles,
   },
   {
     id: "focus",
     kicker: "Current focus",
-    title: "Java, Spring Boot and applied AI",
-    body: "Deepening Spring Boot and JPA on the backend, while shipping AI features that earn their place: retrieval that cites its sources, prompts under version control, evaluation before deployment.",
+    title: "Java, Spring Boot and event-driven design",
+    body: "Deepening Spring Boot, JPA and Kafka on the backend — service boundaries drawn around data ownership, and async messaging where a synchronous call would turn one outage into three.",
     icon: Compass,
   },
   {
     id: "next",
     kicker: "Where next",
-    title: "From features to products",
-    body: "Moving from delivering tickets to owning outcomes — architecture, data modelling and the operational side of a SaaS product, not just the endpoint that serves it.",
+    title: "A Java backend team worth learning from",
+    body: "Looking for a Java backend or Java full-stack role where the architecture is discussed rather than inherited, and where owning a service end to end is expected rather than exceptional.",
     icon: Rocket,
   },
 ];
@@ -149,39 +157,39 @@ export const storyCards: readonly StoryCard[] = [
 
 export const highlights: readonly Highlight[] = [
   {
-    id: "backend",
-    title: "Backend architecture",
-    body: "Domain-first modelling, clean layering, and REST surfaces that stay stable while the internals change.",
-    icon: Server,
+    id: "core-java",
+    title: "Core Java",
+    body: "Collections, Streams, Optional and the concurrency model — plus enough of the JVM and GC to read a heap profile rather than guess at one.",
+    icon: Braces,
   },
   {
     id: "spring",
-    title: "Spring & microservices",
-    body: "Spring Boot, Security and Data JPA — service boundaries drawn around ownership, not around convenience.",
+    title: "Spring ecosystem",
+    body: "Spring Boot, MVC, Security with JWT and OAuth2, Hibernate and JPA. Authorisation at the method boundary, so a new endpoint is closed by default.",
     icon: Layers,
   },
   {
-    id: "cloud",
-    title: "Cloud & delivery",
-    body: "Azure and AWS with containerised builds and CI that gates on the checks that actually catch regressions.",
-    icon: Cloud,
+    id: "microservices",
+    title: "Microservices & Kafka",
+    body: "Independent services over REST and Kafka event streams, with boundaries drawn around data ownership rather than around team structure.",
+    icon: Network,
+  },
+  {
+    id: "data",
+    title: "Data & performance",
+    body: "MySQL, PostgreSQL, MongoDB and Redis. Execution plans read before indexes are added, and the migration written in the same pull request as the query.",
+    icon: Database,
   },
   {
     id: "ai",
-    title: "Applied AI",
-    body: "RAG pipelines, prompt engineering and vector search wired into real products, with evaluation before rollout.",
+    title: "Applied GenAI",
+    body: "Claude Code, MCP and secure AI tooling in production use — plus an AI search service shipped in one month with zero post-release defects.",
     icon: Brain,
   },
   {
-    id: "performance",
-    title: "Performance",
-    body: "Measure, then change one thing. Query plans, indexing strategy, caching layers and payload discipline.",
-    icon: Gauge,
-  },
-  {
-    id: "problems",
-    title: "Problem solving",
-    body: "Reproduce it, isolate it, write the failing test, then fix the cause instead of the symptom.",
-    icon: Sparkles,
+    id: "production",
+    title: "Production ownership",
+    body: "Single point of contact for payment issues on a live platform. Reproduce it, isolate it, write the failing test, then fix the cause rather than the symptom.",
+    icon: Server,
   },
 ];

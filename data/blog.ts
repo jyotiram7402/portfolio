@@ -49,6 +49,11 @@ export const blogCategories: readonly BlogCategory[] = [
     description: "Trade-offs stated explicitly instead of assumed away.",
   },
   {
+    id: "kafka",
+    label: "Kafka",
+    description: "Event streams, partitioning and the ordering the domain requires.",
+  },
+  {
     id: "career",
     label: "Career",
     description: "Notes on getting better at the job, not at interviewing for it.",
@@ -57,12 +62,6 @@ export const blogCategories: readonly BlogCategory[] = [
     id: "interview",
     label: "Interview",
     description: "Questions worth being able to answer, and why.",
-  },
-  { id: "magento", label: "Magento", description: "Platform work on a live catalogue." },
-  {
-    id: "sfmc",
-    label: "SFMC",
-    description: "Salesforce Marketing Cloud, journeys and the SQL behind them.",
   },
 ];
 

@@ -54,7 +54,7 @@ const RINGS: readonly OrbitRing[] = [
     spinClass: "animate-[orbit-spin_52s_linear_infinite]",
     labelSpinClass: "animate-[orbit-spin_52s_linear_infinite_reverse]",
     offset: 0,
-    items: ["Java", "Spring Boot", "PostgreSQL", "Docker", "Azure", "React"],
+    items: ["Java", "Spring Boot", "Kafka", "MySQL", "Docker", "React"],
   },
   {
     id: "middle",
@@ -63,7 +63,7 @@ const RINGS: readonly OrbitRing[] = [
     spinClass: "animate-[orbit-spin_38s_linear_infinite_reverse]",
     labelSpinClass: "animate-[orbit-spin_38s_linear_infinite]",
     offset: 36,
-    items: ["REST", "JPA", "Redis", "OpenSearch", "Next.js"],
+    items: ["REST API", "JPA", "Redis", "AWS", "Spring Security"],
   },
   {
     id: "inner",
@@ -72,7 +72,7 @@ const RINGS: readonly OrbitRing[] = [
     spinClass: "animate-[orbit-spin_26s_linear_infinite]",
     labelSpinClass: "animate-[orbit-spin_26s_linear_infinite_reverse]",
     offset: 45,
-    items: ["RAG", "LLMs", "CI/CD", "Git"],
+    items: ["Claude Code", "MCP", "CI/CD", "Git"],
   },
 ];
 

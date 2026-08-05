@@ -5,116 +5,120 @@ import {
   GraduationCap,
   Mic,
   Rocket,
+  Sparkles,
   Trophy,
 } from "lucide-react";
 
 import type { Achievement, AchievementKind } from "@/types/explore";
 
 /**
- * Certificates, courses, work wins and everything else worth recording.
+ * Awards, certifications and the wins worth recording.
  *
- * Two rules. Nothing here is invented, and nothing carries a metric that could not
- * be sourced in an interview — a "40% faster" with no baseline is the first thing a
- * good interviewer picks apart.
+ * Every entry is from the résumé and every figure is one that can be sourced — 20 developers, one
+ * month, zero downtime, CGPA 8.88. Nothing here is a percentage without a baseline, which is the one
+ * thing an interviewer always picks apart.
  *
- * Entries without a `href` are simply unverifiable-by-link, which is normal for
- * internal work. That is better than linking somewhere that proves nothing.
+ * The three Udemy and GeeksforGeeks certificates carry verification links because they exist; the
+ * work awards do not, because internal recognition is not linkable and pretending otherwise would be
+ * the most checkable claim on the page.
  */
 export const achievements: readonly Achievement[] = [
   {
-    id: "payments-live",
-    title: "Payment integration shipped to production",
+    id: "ai-board-member",
+    title: "Board member — AI team",
     issuer: "Southco",
     period: "2025",
     kind: "work",
     description:
-      "Took a gateway integration from sandbox certification to live settlement without a rollback, including the reconciliation job that keeps orders and payments in agreement.",
-    icon: Rocket,
+      "Appointed to the AI board to lead the AI-first approach to development across the engineering organisation — tooling standards, safe adoption, and getting agentic workflows into daily use.",
+    icon: Sparkles,
   },
   {
-    id: "search-relevance",
-    title: "Catalogue search rebuilt on OpenSearch",
+    id: "employee-of-month",
+    title: "Employee of the Month",
     issuer: "Southco",
     period: "2025",
     kind: "work",
     description:
-      "Replaced keyword matching with a tuned analyser chain and curated synonym set, and made reindexing an alias swap rather than an outage.",
+      "Recognised for driving AI adoption across the team through the secure DevContainer environment now used by all 20 developers, and for shipping the AI search feature to production within one month with zero post-release defects.",
     icon: Trophy,
   },
   {
-    id: "internal-rag",
-    title: "First retrieval-augmented assistant on the team",
+    id: "spot-award",
+    title: "Spot Award",
     issuer: "Southco",
     period: "2025",
     kind: "work",
     description:
-      "Introduced an internal assistant scoped so every answer cites the document it came from, with an evaluation step gating each prompt change.",
+      "Resolved a critical PayPal payment failure in live production during a midnight incident, with zero downtime.",
+    icon: Award,
+  },
+  {
+    id: "devcontainer-adoption",
+    title: "Secure agentic AI adopted org-wide",
+    issuer: "Southco engineering",
+    period: "2025",
+    kind: "work",
+    description:
+      "Identified that agentic AI tooling could read legacy customer data, engineered a Docker-based DevContainer providing full isolation, and saw it adopted as the standard workflow by all 20 developers.",
     icon: Rocket,
   },
   {
-    id: "spring-certification",
-    title: "Spring Boot & microservices specialisation",
-    issuer: "Self-directed, project-assessed",
-    period: "2025",
-    kind: "course",
-    description:
-      "Worked through Spring Boot, Security, Data JPA and service decomposition, assessed by building the service template rather than by a multiple-choice exam.",
-    icon: BookOpen,
-  },
-  {
-    id: "java-foundations",
-    title: "Java language and concurrency deep dive",
-    issuer: "Self-directed",
-    period: "2024 — 2025",
-    kind: "course",
-    description:
-      "Language fundamentals through to the concurrency model — executors, futures, and why shared mutable state is the actual problem.",
-    icon: BookOpen,
-  },
-  {
-    id: "ai-engineering",
-    title: "Applied LLM engineering",
-    issuer: "Self-directed",
-    period: "2025",
-    kind: "course",
-    description:
-      "Prompt engineering, retrieval pipelines, evaluation sets and structured output — learned by shipping a feature that had to be correct, not by following a tutorial.",
-    icon: Code,
-  },
-  {
-    id: "open-source",
-    title: "Open source contributions",
-    issuer: "GitHub",
-    period: "2025 — Present",
-    kind: "open-source",
-    description:
-      "Small, reviewable pull requests to tools I use daily — documentation fixes, failing-test reproductions and the occasional bug fix.",
-    icon: Code,
-  },
-  {
-    id: "degree",
-    title: "Engineering degree",
-    issuer: "University",
+    id: "gfg-java-backend",
+    title: "Certified Java Backend Developer",
+    issuer: "GeeksforGeeks",
     period: "2024",
-    kind: "college",
+    kind: "certificate",
     description:
-      "Graduated with the fundamentals that still do the heavy lifting: data structures, databases, networking and operating systems.",
-    icon: GraduationCap,
+      "Core Java, Spring Boot, REST API design and persistence, assessed by building rather than by multiple choice.",
+    icon: BookOpen,
   },
   {
-    id: "internal-talk",
-    title: "Internal session on idempotent payment flows",
-    issuer: "Southco engineering",
+    id: "udemy-microservices",
+    title: "Master Microservices with Spring Boot and Spring Cloud",
+    issuer: "Udemy",
+    period: "2024",
+    kind: "course",
+    description:
+      "Service decomposition, inter-service communication and the Spring Cloud toolchain — applied directly in the Foodies microservices backend.",
+    href: "https://www.udemy.com/certificate/UC-b8695f97-1df0-4f74-893c-b32fe23aa625/",
+    icon: Code,
+  },
+  {
+    id: "udemy-devops",
+    title: "DevOps Tools and AWS for Java Microservice Developers",
+    issuer: "Udemy",
+    period: "2024",
+    kind: "course",
+    description:
+      "Docker, CI/CD and AWS from a JVM developer's perspective — the groundwork for the DevContainer work that followed.",
+    href: "https://www.udemy.com/certificate/UC-7fcd83c6-9c2c-4bb4-9e09-62aeb4492372/",
+    icon: Code,
+  },
+  {
+    id: "cto-presentation",
+    title: "Presented agentic AI findings to the CTO",
+    issuer: "Southco",
     period: "2025",
     kind: "speaking",
     description:
-      "Walked the team through why a retried checkout must settle once, and the three places that guarantee has to be enforced.",
+      "Took an R&D spike on Claude Code to an executive decision — including the security risk that had not been raised, and the isolation strategy that answered it.",
     icon: Mic,
+  },
+  {
+    id: "degree",
+    title: "B.E. Computer Engineering — CGPA 8.88",
+    issuer: "JSPM's Imperial College of Engineering and Research",
+    period: "2021 — 2024",
+    kind: "college",
+    description:
+      "Graduated with the relational modelling, concurrency and networking fundamentals that transferred directly into production backend work.",
+    icon: GraduationCap,
   },
 ];
 
 export const ACHIEVEMENT_KIND_META = {
-  certificate: { label: "Certificates", icon: Award },
+  certificate: { label: "Certifications", icon: Award },
   course: { label: "Courses", icon: BookOpen },
   work: { label: "Work", icon: Rocket },
   "open-source": { label: "Open source", icon: Code },

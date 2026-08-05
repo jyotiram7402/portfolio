@@ -8,30 +8,34 @@ import type { AtsCheck, ResumeRevision, ResumeVariant } from "@/types/hiring";
 /**
  * The résumé centre's content.
  *
- * Three variants of the same history, each ordered for a different reader. `files` is absent on
- * all three because the PDFs are not committed yet — the UI reads that and offers the on-page
- * preview plus an email route instead of a download that 404s. Committing
+ * Three variants of the same history, each ordered for a different reader — and ordered here by
+ * priority, so Backend is the default a recruiter lands on.
+ *
+ * `files` is absent on all three because no PDF is committed yet. The UI reads that and offers the
+ * on-page preview plus an email route rather than a download that 404s. Committing
  * `public/resume/backend.pdf` and adding the path here is the whole activation step.
  */
 export const resumeVariants: readonly ResumeVariant[] = [
   {
     id: "backend",
-    label: "Backend",
+    label: "Java Backend",
     positioning:
-      "For Java and Spring Boot roles. Leads with service design, data modelling and the payment and search work.",
+      "The default, and the one to send for Java and Spring Boot roles. Leads with Core Java, the Spring ecosystem, payments and event-driven design.",
     emphasis: [
-      "Payment gateway integration, including idempotency and reconciliation",
-      "OpenSearch relevance tuning on a large catalogue",
-      "Spring Boot, Security and Data JPA with an eye on generated SQL",
+      "Core Java — Collections, Streams, Optional, concurrency, JVM and GC",
+      "Spring Boot, Spring MVC, Spring Security with JWT and OAuth2, Hibernate and JPA",
+      "Three payment gateways owned end to end, including webhooks, retries and failure paths",
+      "Microservices over REST and Apache Kafka event streams",
       "MySQL and PostgreSQL schema design, index strategy and query plans",
     ],
     headlineStack: [
-      "Java",
+      "Java 8/17",
       "Spring Boot",
-      "Spring Data JPA",
+      "Spring Security",
+      "Hibernate / JPA",
       "REST API",
+      "Apache Kafka",
       "MySQL",
-      "PostgreSQL",
       "Redis",
       "Docker",
     ],
@@ -39,47 +43,51 @@ export const resumeVariants: readonly ResumeVariant[] = [
   },
   {
     id: "full-stack",
-    label: "Full stack",
+    label: "Java Full Stack",
     positioning:
-      "For product teams where the same person ships the endpoint and the interface. Backend first, front end credible.",
+      "For teams where the same person ships the endpoint and the interface. Backend first, front end credible — not the other way round.",
     emphasis: [
-      "End-to-end delivery on a live commerce stack",
-      "Next.js App Router, server components and Core Web Vitals discipline",
-      "Magento storefront and module work under real traffic",
-      "Azure delivery with containerised builds and environment parity",
+      "Spring Boot services with a documented REST contract at the boundary",
+      "React frontends against Spring Boot and MongoDB, deliberately loosely coupled",
+      "End-to-end feature ownership on a live enterprise platform",
+      "Next.js, TypeScript and Tailwind — this portfolio is the working example",
+      "Docker and CI/CD delivery with environment parity between staging and production",
     ],
     headlineStack: [
       "Java",
       "Spring Boot",
+      "React",
       "TypeScript",
       "Next.js",
-      "React",
-      "Tailwind CSS",
+      "MongoDB",
       "MySQL",
-      "Azure",
+      "REST API",
+      "Docker",
     ],
     icon: Layers,
   },
   {
     id: "ai",
-    label: "AI engineering",
+    label: "AI Engineering",
     positioning:
-      "For teams putting models into production. Leads with retrieval, evaluation and the parts that have to be defensible.",
+      "For teams putting models into production. Leads with the AI board role, the secure tooling work and the search service that shipped.",
     emphasis: [
-      "Retrieval-augmented assistant with mandatory citations",
-      "Hybrid retrieval, reranking and chunking tuned to document structure",
-      "Prompts under version control with a gating evaluation set",
-      "Spring Boot services behind the model, not notebooks in front of it",
+      "Board member of the AI team at Southco, leading the AI-first development approach",
+      "Secure agentic AI — the isolation risk found, and the DevContainer adopted by 20 developers",
+      "Claude Code and MCP in daily production use, presented to the CTO",
+      "AI-powered search on OpenSearch, in production within one month with zero defects",
+      "Java and Spring Boot services behind the model, not notebooks in front of it",
     ],
     headlineStack: [
-      "Java",
-      "Spring Boot",
-      "RAG",
-      "Vector Databases",
-      "OpenAI API",
-      "Claude API",
+      "Claude Code",
+      "MCP",
       "Prompt Engineering",
-      "Python-adjacent tooling",
+      "LLM APIs",
+      "OpenSearch",
+      "Python",
+      "FastAPI",
+      "Docker",
+      "Java",
     ],
     icon: Brain,
   },
@@ -94,30 +102,30 @@ export function getResumeVariant(id: string): ResumeVariant | undefined {
 /**
  * Revision history, newest first.
  *
- * Published because a résumé with a visible changelog is a résumé someone believes is current —
- * and because it commits me to keeping it so.
+ * Published because a résumé with a visible changelog is one someone believes is current — and
+ * because it commits me to keeping it so.
  */
 export const resumeRevisions: readonly ResumeRevision[] = [
   {
     version: "2026.3",
-    date: "2026-07-14",
+    date: "2026-08-05",
     summary:
-      "Split into three audience-specific variants. Added the retrieval assistant and the evaluation-set detail.",
+      "Repositioned for Java backend roles. Promoted the AI board role and the DevContainer adoption; removed platform-specific commerce framing.",
     variants: ["backend", "full-stack", "ai"],
   },
   {
     version: "2026.2",
-    date: "2026-04-02",
+    date: "2026-05-20",
     summary:
-      "Reordered the backend variant to lead with the payment integration. Removed every unsourceable percentage.",
-    variants: ["backend"],
+      "Added the AI-powered search service and the Cable Part Number Configurator. Removed every unsourceable percentage.",
+    variants: ["backend", "ai"],
   },
   {
     version: "2026.1",
-    date: "2026-01-20",
+    date: "2026-02-11",
     summary:
-      "Added OpenSearch relevance work and the Azure delivery pipeline. Trimmed to one page.",
-    variants: ["backend", "full-stack"],
+      "Split into three audience-specific variants and trimmed each to one page.",
+    variants: ["backend", "full-stack", "ai"],
   },
 ];
 
@@ -125,8 +133,8 @@ export const resumeRevisions: readonly ResumeRevision[] = [
  * ATS readiness, as a checklist rather than a score.
  *
  * A single number out of 100 would be unsourceable — no applicant tracking system publishes its
- * rubric — while each of these is a property of the file that anyone can verify by opening it.
- * That is the difference between a claim and a demonstration.
+ * rubric — while each of these is a property of the file anyone can verify by opening it. That is
+ * the difference between a claim and a demonstration.
  */
 export const atsChecks: readonly AtsCheck[] = [
   {
@@ -140,20 +148,20 @@ export const atsChecks: readonly AtsCheck[] = [
     id: "selectable-text",
     label: "Selectable text, not an image",
     detail:
-      "Exported from the source document rather than scanned, so every word is extractable.",
+      "Typeset in LaTeX and exported from source, so every word is extractable rather than scanned.",
     status: "pass",
   },
   {
     id: "standard-headings",
     label: "Standard section headings",
     detail:
-      "Experience, Skills, Education, Projects. Creative headings are what a parser silently skips.",
+      "Professional Summary, Technical Skills, Experience, Projects, Education, Certifications. Creative headings are what a parser silently skips.",
     status: "pass",
   },
   {
     id: "no-tables",
     label: "No tables or graphics for content",
-    detail: "Skills are a comma-separated list, not a grid of rating bars.",
+    detail: "Skills are comma-separated lists, not a grid of rating bars.",
     status: "pass",
   },
   {
@@ -166,13 +174,14 @@ export const atsChecks: readonly AtsCheck[] = [
     id: "keywords",
     label: "Keywords match the target role",
     detail:
-      "Each variant leads with the stack that role screens for, which is the entire reason there are three.",
+      "Each variant leads with the stack that role screens for — Java and Spring first on the backend version. That is the entire reason there are three.",
     status: "pass",
   },
   {
     id: "file-naming",
     label: "Predictable file naming",
-    detail: "jyotiram-kamble-backend.pdf — name, then variant. Never `resume_final_v3`.",
+    detail:
+      "jyotiram-kamble-java-backend.pdf — name, then variant. Never `resume_final_v3`.",
     status: "partial",
   },
   {
@@ -191,14 +200,14 @@ export const atsChecks: readonly AtsCheck[] = [
 /**
  * Figures for the résumé preview.
  *
- * Derived from the same modules the rest of the site renders, so the preview cannot claim a
- * different project count from the projects section.
+ * Derived from the same modules the rest of the site renders, so the preview cannot claim a different
+ * project count from the projects section.
  */
 export const resumeSummary = {
   role: currentExperience?.role ?? "",
   company: currentExperience?.company ?? "",
   period: currentExperience?.period ?? "",
-  positions: experience.length,
+  positions: experience.filter((entry) => entry.kind === "work").length,
   projectCount: projects.length,
   technologyCount: allTechnologies.length,
   categoryCount: skillCategories.length,

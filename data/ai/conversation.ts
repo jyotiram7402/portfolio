@@ -48,19 +48,19 @@ export const greeting: readonly ResponseBlock[] = [
  */
 export const suggestedIntentIds: readonly string[] = [
   "about.who",
-  "projects.ai",
-  "skills.backend",
-  "about.experience",
   "projects.java",
+  "skills.backend",
+  "about.ai-leadership",
+  "about.experience",
   "contact.how",
 ];
 
 /** Shown once the visitor has sent something, to keep exploration going. */
 export const followUpIntentIds: readonly string[] = [
   "projects.all",
+  "projects.microservices",
   "about.roadmap",
   "credentials.achievements",
-  "credentials.writing",
   "skills.all",
   "links.github",
 ];

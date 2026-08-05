@@ -4,8 +4,8 @@ import {
   Braces,
   Layers,
   MonitorSmartphone,
+  Network,
   Server,
-  ShoppingCart,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -25,12 +25,12 @@ import type { ProjectDomain } from "@/types/projects";
  */
 const DOMAIN_ICONS: readonly (readonly [ProjectDomain, LucideIcon])[] = [
   ["ai", Bot],
-  ["commerce", ShoppingCart],
+  ["microservices", Network],
   ["spring", Layers],
   ["java", Braces],
   ["backend", Server],
   ["mern", MonitorSmartphone],
-  ["frontend", MonitorSmartphone],
+  ["fullstack", MonitorSmartphone],
 ];
 
 /** Fallback by primary language, for a repository with no recognised domain. */
@@ -40,7 +40,6 @@ const LANGUAGE_ICONS: Readonly<Record<string, LucideIcon>> = {
   typescript: MonitorSmartphone,
   javascript: MonitorSmartphone,
   python: Bot,
-  php: ShoppingCart,
   go: Server,
   rust: Server,
 };

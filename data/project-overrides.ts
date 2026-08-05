@@ -3,51 +3,72 @@ import type { ProjectOverride } from "@/types/projects";
 /**
  * Per-repository curation.
  *
- * Automatic discovery gets you the facts — name, description, language, stars, last push. It cannot
- * get you the one thing a reader actually wants: what was hard, and what you decided.
+ * Automatic discovery gets the facts — name, description, language, stars, last push. It cannot get
+ * the one thing a reader wants: what was hard, and what was decided.
  *
- * So this file is optional and additive. A repository tagged with the discovery topic appears with
- * or without an entry here. Adding one lets you replace the GitHub description with a real tagline
- * and list the two or three decisions worth defending in an interview.
+ * The three entries below match the repositories in `data/projects.ts` by exact name, so tagging
+ * them `portfolio-project` on GitHub attaches live figures to this copy rather than replacing it.
+ * Adding a new repository needs nothing here — it appears with its GitHub description until you
+ * decide it deserves a better one.
  *
- * `repo` must match the repository name exactly (case is ignored). Everything else is optional and
- * falls back to what the API returned.
- *
- * ---------------------------------------------------------------------------
- * The entries below are examples using plausible repository names. Rename `repo` to match your
- * actual repositories, or delete an entry — nothing breaks either way, and an override for a
- * repository that does not exist is silently ignored.
- * ---------------------------------------------------------------------------
+ * `repo` is matched case-insensitively. An override for a repository that does not exist is silently
+ * ignored, so a typo cannot break the section.
  */
 export const projectOverrides: readonly ProjectOverride[] = [
   {
-    repo: "spring-boot-starter",
-    name: "Spring Service Template",
-    tagline: "The Spring Boot starting point I reach for, with the boring parts already right.",
+    repo: "Foodies--Food_Delivery_Application",
+    name: "Foodies — Food Delivery Microservices",
+    tagline:
+      "Event-driven microservices backend with independent driver, merchant and notification services.",
     summary:
-      "An opinionated Spring Boot template: layered package structure, Spring Security with JWT, Flyway migrations, testcontainers-backed integration tests, actuator health checks, and CI that gates on the checks which actually catch regressions.",
-    domains: ["java", "spring", "backend"],
-    highlights: [
-      "Migrations run before the code that needs them, so a deploy is reversible.",
-      "Integration tests against a real database in a container, not an in-memory imitation of one.",
-      "Method-level authorisation rather than controller-level, so a new endpoint is closed by default.",
+      "A microservices backend for food delivery: independent Driver, Merchant and Notification services communicating over REST and Apache Kafka event streams for real-time order updates, with stateless JWT authentication enforced across every service and client endpoint.",
+    domains: ["java", "spring", "microservices", "backend"],
+    stack: [
+      "Java",
+      "Spring Boot",
+      "Spring Security",
+      "Apache Kafka",
+      "MySQL",
+      "JWT",
+      "REST API",
     ],
-    status: "active",
+    highlights: [
+      "Service boundaries drawn around data ownership — driver, merchant and notification each own their own state rather than sharing a schema.",
+      "Kafka event streams for real-time order updates, so a slow notification never blocks an order being accepted.",
+      "Stateless authentication with Spring Security and JWT, applied at the service boundary rather than at the gateway alone.",
+    ],
+    status: "shipped",
     featured: true,
   },
   {
-    repo: "rag-assistant",
-    tagline: "An assistant that answers from documents, with citations — or declines.",
+    repo: "MusicON--MusicApplication",
+    name: "MusicON — Music Streaming Backend",
+    tagline: "Media upload, storage and streaming APIs with Redis caching on the hot path.",
     summary:
-      "A retrieval pipeline over internal documentation: chunking tuned to document structure, hybrid retrieval with reranking, and answers that cite their source. Prompts are versioned in the repository and every change runs against a fixed evaluation set before it ships.",
-    domains: ["ai", "backend"],
+      "A streaming backend built on Spring Boot: REST APIs for media upload, storage and playback backed by AWS S3 and MySQL, with Redis in-memory caching added to cut repeated database reads and hold API response times steady under load.",
+    domains: ["java", "spring", "backend"],
+    stack: ["Java", "Spring Boot", "MySQL", "Redis", "AWS S3", "REST API"],
     highlights: [
-      "Citations are mandatory — an answer with no retrieved source is refused rather than hallucinated.",
-      "Prompts under version control with a regression set, so a prompt edit is reviewable like code.",
-      "Hybrid retrieval combining keyword and vector search, reranked before it reaches the model.",
+      "S3 for media and MySQL for metadata — the split that keeps a streaming path off the database.",
+      "Redis caching with deliberate invalidation, measured against repeated-read latency rather than added by reflex.",
+      "REST APIs designed around the streaming access pattern instead of exposing the table shape.",
     ],
-    status: "active",
+    status: "shipped",
     featured: true,
+  },
+  {
+    repo: "FirstReview-Full-Stack-Movie-Review-Application",
+    name: "FirstReview — Full Stack Movie Reviews",
+    tagline: "React frontend against a Spring Boot and MongoDB backend, loosely coupled.",
+    summary:
+      "A full-stack application pairing a React frontend with a Spring Boot and MongoDB backend over REST. Built deliberately loosely coupled, so the frontend talks to a documented API rather than to the database's shape.",
+    domains: ["java", "spring", "fullstack", "mern"],
+    stack: ["React", "Spring Boot", "MongoDB", "REST API", "JavaScript"],
+    highlights: [
+      "A documented REST contract between the two halves, so either side can be rebuilt without the other.",
+      "MongoDB document modelling chosen for genuinely flexible review data rather than by default.",
+    ],
+    status: "shipped",
   },
 ];
 

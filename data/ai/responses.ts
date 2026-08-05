@@ -156,6 +156,32 @@ export const responseBuilders: Record<string, () => ResponseBlock[]> = {
     return blocks;
   },
 
+  "about.ai-leadership": () => [
+    { type: "text", value: knowledge.narrative.aiLeadership },
+    {
+      type: "facts",
+      facts: [
+        { label: "Role", value: "Board member — AI team" },
+        { label: "Company", value: "Southco" },
+        { label: "Developers on the workflow", value: "20" },
+        { label: "Presented to", value: "CTO" },
+      ],
+    },
+    {
+      type: "text",
+      value:
+        "The part worth knowing: the security question came **before** the rollout. Agentic tooling reads whatever the developer's machine can read — including legacy customer data. Answering that first is why adoption was possible at all.",
+    },
+    { type: "badges", label: "Stack", items: ["Claude Code", "MCP", "Docker", "DevContainers"] },
+    {
+      type: "actions",
+      actions: [
+        { label: "See the achievements", href: `#${SECTIONS.achievements}`, kind: "internal" },
+        { label: "AI skills", href: `#${SECTIONS.skills}`, kind: "internal" },
+      ],
+    },
+  ],
+
   "about.focus": () => [
     { type: "text", value: knowledge.narrative.currentFocus },
     {
@@ -248,10 +274,17 @@ export const responseBuilders: Record<string, () => ResponseBlock[]> = {
       "No AI projects are published yet.",
     ),
 
+  "projects.microservices": () =>
+    projectBlocks(
+      "microservices",
+      "Microservices work — service boundaries drawn around data ownership, talking over REST and Kafka:",
+      "No microservices projects are published yet.",
+    ),
+
   "projects.mern": () =>
     projectBlocks(
       "mern",
-      "JavaScript and React work. Less of it than the backend, and honestly labelled as such:",
+      "React and JavaScript work. Less of it than the backend, and honestly labelled as such:",
       "No MERN-stack projects are published yet.",
     ),
 

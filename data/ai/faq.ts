@@ -73,6 +73,24 @@ export const intents: readonly Intent[] = [
     ],
   },
   {
+    id: "about.ai-leadership",
+    label: "What is his AI leadership role?",
+    group: "about",
+    icon: Sparkles,
+    weight: 1.3,
+    patterns: [
+      "ai board",
+      "board member",
+      "ai team",
+      "ai leadership",
+      "ai first",
+      "ai adoption",
+      "claude code",
+      "devcontainer",
+      "leading ai",
+    ],
+  },
+  {
     id: "about.focus",
     label: "What is he working on now?",
     group: "about",
@@ -155,6 +173,20 @@ export const intents: readonly Intent[] = [
       "rag project",
       "machine learning work",
       "ai",
+    ],
+  },
+  {
+    id: "projects.microservices",
+    label: "Show microservices work",
+    group: "projects",
+    icon: Layers,
+    weight: 1.3,
+    patterns: [
+      "microservices projects",
+      "microservices",
+      "kafka",
+      "event driven",
+      "distributed",
     ],
   },
   {
@@ -323,24 +355,36 @@ export const faqEntries: readonly FaqEntry[] = [
   {
     intentId: "skills.all",
     question: `What technologies does ${identity.firstName} work with?`,
-    answer: `He works across ${knowledge.skillCategories.length} areas — backend, frontend, AI, cloud, DevOps, databases, commerce platforms and tooling — covering ${knowledge.technologyCount} technologies. Java, Spring Boot, TypeScript, MySQL, Magento and Salesforce Marketing Cloud are the daily ones.`,
+    answer: `He works across ${knowledge.skillCategories.length} areas — Core Java, Spring and backend, data and messaging, AI, cloud and DevOps, frontend, practices and tooling — covering ${knowledge.technologyCount} technologies. Java 8/17, Spring Boot, Spring Security, Hibernate, MySQL, Redis and Docker are the daily ones.`,
   },
   {
     intentId: "skills.backend",
     question: `What backend technologies does ${identity.firstName} use?`,
     answer:
-      "Java and Spring Boot as the core, with Spring Security and Spring Data JPA, REST API design, Hibernate, and MySQL, PostgreSQL, MongoDB and Redis on the data side.",
+      "Java 8/17 and Spring Boot as the core, with Spring MVC, Spring Security (JWT and OAuth2), Hibernate and JPA, REST API design and microservices over Apache Kafka. On the data side: MySQL, PostgreSQL, MongoDB and Redis, with query optimisation and HikariCP tuning.",
+  },
+  {
+    intentId: "about.ai-leadership",
+    question: `What is ${identity.firstName}'s role on the AI team?`,
+    answer:
+      "He is a board member of the AI team at Southco, leading the AI-first approach to development. He led the R&D on Claude Code, presented findings to the CTO, identified that agentic tooling could read legacy customer data, and engineered a Docker DevContainer that became the standard workflow for all 20 developers.",
   },
   {
     intentId: "projects.all",
     question: `What has ${identity.firstName} built?`,
-    answer: `${knowledge.projectCount} selected projects, including a production payment gateway integration, OpenSearch catalogue search relevance, a retrieval-augmented internal assistant, and an opinionated Spring Boot service template.`,
+    answer: `${knowledge.projectCount} selected projects: Foodies (a Kafka-based food delivery microservices backend), MusicON (a streaming backend with Redis caching and AWS S3), FirstReview (React with Spring Boot and MongoDB), a secure agentic AI DevContainer adopted by 20 developers, a containerised FastAPI part-number configurator, and end-to-end payment gateway integrations.`,
   },
   {
     intentId: "projects.ai",
     question: `Has ${identity.firstName} worked on AI projects?`,
     answer:
-      "Yes — a retrieval-augmented internal assistant built on Spring Boot that answers from company documents with mandatory citations, versioned prompts and an evaluation set gating every change.",
+      "Yes. He co-developed an AI-powered search service on OpenSearch that shipped in one month with zero post-release defects, and engineered the secure DevContainer that made agentic AI adoption possible across 20 developers. He is a board member of Southco's AI team.",
+  },
+  {
+    intentId: "projects.java",
+    question: `What Java projects has ${identity.firstName} built?`,
+    answer:
+      "Foodies, a microservices food-delivery backend on Spring Boot with Apache Kafka event streams and JWT authentication; MusicON, a streaming backend with AWS S3 storage and Redis caching; and FirstReview, a React frontend against Spring Boot and MongoDB.",
   },
   {
     intentId: "about.roadmap",

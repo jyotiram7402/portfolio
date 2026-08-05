@@ -40,12 +40,15 @@ export const identity = {
 
 export const narrative = {
   /** Answer to "who is he?" — two sentences, third person, no marketing. */
-  introduction: `${identity.firstName} is a ${identity.role.toLowerCase()} based in ${identity.location}. He builds Spring Boot services, payment and search integrations, and AI features that have to hold up in production rather than in a demo.`,
+  introduction: `${identity.firstName} is a ${identity.role.toLowerCase()} based in ${identity.location}, with two years on enterprise backend systems. He builds Spring Boot services, owns three payment gateways end to end, and sits on Southco's AI board leading the AI-first approach to development.`,
 
   /** Answer to "tell me about his experience". */
-  experienceSummary: currentExperience
-    ? `He works as ${currentExperience.role} at ${currentExperience.company} (${currentExperience.period}), across a live commerce stack — Magento storefront work, Salesforce Marketing Cloud, payment gateway integrations, OpenSearch relevance and Azure delivery. Alongside that he has moved the team's newer work towards Java services and AI-assisted internal tooling.`
-    : "Experience details are not configured yet.",
+  experienceSummary:
+    "He is a Junior Web Developer for backend and integrations at Southco (September 2024 to present), and a board member of the company's AI team. The backend work is payment gateway ownership across PayPal, Stripe and AsiaPay, enterprise CRM and marketing data synchronisation over REST, an AI-powered search service on OpenSearch, and a containerised FastAPI configurator built from scratch. As a board member he leads the AI-first development initiative — he found that agentic AI tooling could read legacy customer data, engineered an isolated Docker DevContainer, and saw it adopted as the standard workflow by all 20 developers.",
+
+  /** The differentiator, asked about often enough to deserve its own answer. */
+  aiLeadership:
+    "He is a board member of the AI team at Southco, leading the AI-first approach to development across the engineering organisation. That covers which agentic tools get adopted, what they are permitted to read, and how the team actually moves onto them. He led the R&D on Claude Code, presented the findings to the CTO, and built the secure DevContainer that made adoption possible for all 20 developers.",
 
   /** Answer to "what is he working on / focused on now?". */
   currentFocus:

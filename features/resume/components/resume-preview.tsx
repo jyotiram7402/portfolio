@@ -70,10 +70,12 @@ export function ResumePreview({ variant, className }: ResumePreviewProps) {
           </p>
         </div>
 
-        <p className="text-sm font-medium text-primary">{siteConfig.role}</p>
+        {/* The résumé's own header line, which is denser than the site's role label. */}
+        <p className="text-sm font-medium text-primary">{siteConfig.roleLine}</p>
 
         <ul className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted">
           <li>{siteConfig.email}</li>
+          <li>{siteConfig.phone}</li>
           <li>{siteConfig.location}</li>
           {github ? <li>{getHostname(github.href)}/{github.handle}</li> : null}
           {linkedin ? <li>{getHostname(linkedin.href)}/in/{linkedin.handle}</li> : null}
