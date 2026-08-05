@@ -174,8 +174,10 @@
   --shadow-lg: 0 12px 32px -8px rgb(0 0 0 / 0.44), 0 4px 12px -4px rgb(0 0 0 / 0.3);
   --shadow-xl: 0 24px 64px -16px rgb(0 0 0 / 0.55), 0 8px 24px -8px rgb(0 0 0 / 0.35);
   --shadow-2xl: 0 48px 120px -24px rgb(0 0 0 / 0.7);
-  --shadow-glow: 0 0 0 1px var(--glass-border), 0 8px 32px -8px var(--aurora-1);
-  --shadow-glow-lg: 0 0 48px -8px var(--aurora-1), 0 0 96px -24px var(--aurora-2);
+  /* Restrained on purpose. With a flat background there is nothing for a coloured
+     bloom to sit against, so the "glow" is now mostly a crisper hairline. */
+  --shadow-glow: 0 0 0 1px var(--border-strong), 0 8px 24px -10px var(--glow-soft);
+  --shadow-glow-lg: 0 0 40px -12px var(--glow-soft), 0 0 80px -30px var(--glow-softer);
   --shadow-inset: inset 0 1px 0 0 var(--highlight);
 
   /* ======================================================================
@@ -229,47 +231,15 @@
   /* ======================================================================
      Keyframed animations
      ====================================================================== */
-  --animate-aurora: aurora 22s var(--ease-in-out-quart) infinite;
-  --animate-orb: orb-drift 26s ease-in-out infinite;
+  /* The aurora, orb-drift and float animations were removed with the decorative
+     background layers. What remains is used by loading and hover states only. */
   --animate-float: float 7s ease-in-out infinite;
-  --animate-float-slow: float 13s ease-in-out infinite;
   --animate-shimmer: shimmer 2.4s linear infinite;
-  --animate-glow: glow-pulse 4.5s ease-in-out infinite;
   --animate-spin-slow: spin 14s linear infinite;
   --animate-gradient: gradient-pan 8s linear infinite;
-  --animate-marquee: marquee 32s linear infinite;
   --animate-fade-in: fade-in 480ms var(--ease-out-quint) both;
   --animate-scale-in: scale-in 320ms var(--ease-out-back) both;
   --animate-slide-up: slide-up 520ms var(--ease-out-expo) both;
-
-  @keyframes aurora {
-    0%,
-    100% {
-      transform: translate3d(-6%, -4%, 0) scale(1);
-    }
-    33% {
-      transform: translate3d(8%, 6%, 0) scale(1.14);
-    }
-    66% {
-      transform: translate3d(-4%, 10%, 0) scale(1.06);
-    }
-  }
-
-  @keyframes orb-drift {
-    0%,
-    100% {
-      transform: translate3d(0, 0, 0) scale(1);
-    }
-    25% {
-      transform: translate3d(4%, -7%, 0) scale(1.08);
-    }
-    50% {
-      transform: translate3d(-5%, 5%, 0) scale(0.96);
-    }
-    75% {
-      transform: translate3d(6%, 3%, 0) scale(1.04);
-    }
-  }
 
   @keyframes float {
     0%,
@@ -290,31 +260,12 @@
     }
   }
 
-  @keyframes glow-pulse {
-    0%,
-    100% {
-      opacity: 0.45;
-    }
-    50% {
-      opacity: 1;
-    }
-  }
-
   @keyframes gradient-pan {
     0% {
       background-position: 0% 50%;
     }
     100% {
       background-position: 200% 50%;
-    }
-  }
-
-  @keyframes marquee {
-    0% {
-      transform: translateX(0);
-    }
-    100% {
-      transform: translateX(-50%);
     }
   }
 

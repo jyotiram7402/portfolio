@@ -92,15 +92,6 @@ export const PRELOADER = {
   exitDurationMs: 720,
 } as const;
 
-/**
- * Cursor scale factors only. The dot and ring dimensions live in the component
- * as Tailwind classes, because a size expressed twice is a size that will drift.
- */
-export const CURSOR = {
-  ringHoverScale: 1.7,
-  ringPressScale: 0.85,
-} as const;
-
 export const MAGNETIC = {
   /** Fraction of the pointer offset the element travels. */
   strength: 0.35,
@@ -124,7 +115,6 @@ export const animationConfig = {
   VIEWPORT,
   LENIS_CONFIG,
   PRELOADER,
-  CURSOR,
   MAGNETIC,
   TILT,
 } as const;

@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 export interface GlowBorderProps extends HTMLAttributes<HTMLDivElement> {
   /** Corner radius token. Must match the child's radius or the ring will clip. */
   radius?: "lg" | "xl" | "2xl" | "3xl" | "full";
-  /** Runs the conic sweep continuously instead of only on hover. */
+  /** Shows the ring unconditionally instead of only on hover and focus. */
   always?: boolean;
   /** Ring thickness in pixels. */
   thickness?: 1 | 2;
@@ -20,13 +20,13 @@ const radiusClass = {
 } as const;
 
 /**
- * Animated conic border around its children.
+ * Hairline highlight ring around its children.
  *
- * Implemented as a rotating conic gradient behind an inset child rather than an
- * animated `border-image`, because only the former can travel around a rounded
- * corner smoothly. The gradient layer is marked decorative so the reduced-motion
- * rule in `styles/base.css` removes it outright — a rotating light source is
- * exactly the kind of motion that setting exists for.
+ * This was a rotating conic gradient — a light source travelling the border on
+ * hover. It went with the rest of the decorative layer: the ring's job is to
+ * tell you an element is interactive, and a brightening hairline does that
+ * without asking for attention. What remains is a one-property opacity
+ * transition, so there is nothing left for reduced motion to suppress.
  */
 export function GlowBorder({
   className,
@@ -46,27 +46,18 @@ export function GlowBorder({
       {...props}
     >
       <span
-        data-motion-decorative
         aria-hidden="true"
         className={cn(
-          "pointer-events-none absolute -inset-px -z-10 overflow-hidden",
+          "pointer-events-none absolute -inset-px -z-10 bg-border-strong",
           radiusClass[radius],
-          "opacity-0 transition-opacity duration-[var(--duration-slow)]",
+          "opacity-0 transition-opacity duration-[var(--duration-normal)]",
           always
             ? "opacity-100"
             : "group-hover/glow:opacity-100 group-focus-within/glow:opacity-100",
         )}
-      >
-        <span
-          className={cn(
-            "absolute top-1/2 left-1/2 aspect-square w-[140%] -translate-x-1/2 -translate-y-1/2",
-            "animate-spin-slow",
-            "bg-conic from-primary via-secondary to-accent",
-          )}
-        />
-      </span>
+      />
 
-      {/* Masks the centre of the sweep, leaving only the ring visible. */}
+      {/* Masks the centre of the ring layer, leaving only the hairline visible. */}
       <div
         className={cn(
           "relative h-full bg-card",

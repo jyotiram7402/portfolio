@@ -7,7 +7,7 @@ import { useMediaQuery } from "@/hooks/use-media-query";
  * Viewport-based mobile check (narrower than `lg`).
  *
  * Use this for layout decisions. For deciding whether an *interaction* should
- * exist — custom cursor, magnetic hover, tilt — use `useIsTouchDevice`, because
+ * exist — magnetic hover, tilt, the spotlight — use `useIsTouchDevice`, because
  * a narrow window on a desktop still has a mouse.
  */
 export function useIsMobile(): boolean {

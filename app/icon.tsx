@@ -8,9 +8,9 @@ export const contentType = "image/png";
 /**
  * Favicon, generated at build time.
  *
- * Generated rather than committed as a binary so the mark and the brand colours
- * have a single definition in code. Next emits the `<link rel="icon">` for this
- * route automatically.
+ * Generated rather than committed as a binary so the mark and the palette have a
+ * single definition in code. Next emits the `<link rel="icon">` for this route
+ * automatically.
  *
  * Built from divs, not SVG paths: Satori's SVG support is partial, and a rotated
  * square is exactly the mark anyway.
@@ -35,7 +35,7 @@ export default function Icon() {
             height: 15,
             borderRadius: 3,
             transform: "rotate(45deg)",
-            backgroundImage: `linear-gradient(135deg, ${palette.dark.primary}, ${palette.dark.secondary} 55%, ${palette.dark.accent})`,
+            background: palette.dark.foreground,
           }}
         />
       </div>

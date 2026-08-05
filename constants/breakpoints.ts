@@ -3,7 +3,7 @@
  *
  * CSS should always use the Tailwind variants (`md:`, `3xl:`). These values
  * exist for the handful of cases that must be decided in JS — matchMedia
- * hooks, three.js quality tiers, particle counts.
+ * hooks, and the mobile checks that pick a drawer side or disable Lenis.
  */
 export const BREAKPOINTS = {
   xs: 480,
@@ -34,7 +34,7 @@ export const MEDIA_QUERIES = {
   tablet: `${minWidth("md")} and ${maxWidth("lg")}`,
   desktop: minWidth("lg"),
   ultrawide: minWidth("3xl"),
-  /** A real pointer — the gate for the custom cursor and magnetic hovers. */
+  /** A real pointer — the gate for magnetic hovers, tilt and the card spotlight. */
   finePointer: "(pointer: fine)",
   coarsePointer: "(pointer: coarse)",
   hoverCapable: "(hover: hover)",

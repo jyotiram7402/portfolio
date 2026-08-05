@@ -2,21 +2,18 @@ import { cn } from "@/lib/utils";
 
 export interface LogoMarkProps {
   className?: string;
-  /** Renders the mark in the brand gradient instead of `currentColor`. */
-  gradient?: boolean;
 }
 
 /**
  * The brand mark: a diamond aperture with a solid core.
  *
- * The gradient id is a fixed string rather than a generated one. This component
- * renders in Server Components, where `useId` is unavailable, and because every
- * instance defines an identical gradient, a repeated id resolves to the same
- * paint — there is nothing to collide over.
+ * Painted in `currentColor`, with no gradient and no `<defs>`. It used to carry a
+ * blue → violet → cyan sweep; the palette now has a single accent, so a
+ * three-stop gradient had nowhere to travel. Inheriting text colour is also the
+ * better behaviour: the same mark reads correctly in the navbar, inside a
+ * coloured chat avatar, and on the preloader without a variant prop.
  */
-export function LogoMark({ className, gradient = true }: LogoMarkProps) {
-  const stroke = gradient ? "url(#pf-logo-gradient)" : "currentColor";
-
+export function LogoMark({ className }: LogoMarkProps) {
   return (
     <svg
       viewBox="0 0 32 32"
@@ -25,34 +22,14 @@ export function LogoMark({ className, gradient = true }: LogoMarkProps) {
       focusable="false"
       className={cn("size-8", className)}
     >
-      {gradient ? (
-        <defs>
-          <linearGradient
-            id="pf-logo-gradient"
-            x1="2"
-            y1="2"
-            x2="30"
-            y2="30"
-            gradientUnits="userSpaceOnUse"
-          >
-            <stop stopColor="var(--primary)" />
-            <stop offset="0.55" stopColor="var(--secondary)" />
-            <stop offset="1" stopColor="var(--accent)" />
-          </linearGradient>
-        </defs>
-      ) : null}
-
       <path
         d="M16 2.5 29.5 16 16 29.5 2.5 16Z"
-        stroke={stroke}
+        stroke="currentColor"
         strokeWidth="1.6"
         strokeLinejoin="round"
-        opacity="0.55"
+        opacity="0.4"
       />
-      <path
-        d="M16 9.25 22.75 16 16 22.75 9.25 16Z"
-        fill={stroke}
-      />
+      <path d="M16 9.25 22.75 16 16 22.75 9.25 16Z" fill="currentColor" />
     </svg>
   );
 }

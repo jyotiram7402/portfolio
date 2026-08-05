@@ -63,17 +63,9 @@ export function MapPanel({ className }: MapPanelProps) {
     >
       {/* ------------------------------------------------------------- map -- */}
       <div className="relative h-52 overflow-hidden border-b border-border bg-surface">
-        <span aria-hidden="true" className="absolute inset-0 bg-grid opacity-70" />
-
-        <span
-          aria-hidden="true"
-          data-motion-decorative={reduceMotion ? undefined : true}
-          className={cn(
-            "absolute inset-0",
-            "bg-[radial-gradient(circle_at_50%_55%,var(--aurora-1),transparent_62%)]",
-            !reduceMotion && "animate-glow",
-          )}
-        />
+        {/* A single hairline grid, static. This is the one place a grid still earns
+            its place, because the panel is standing in for a map. */}
+        <span aria-hidden="true" className="absolute inset-0 bg-grid opacity-60" />
 
         {/* Marker. Concentric rings rather than a pin graphic — it reads as a location
             without importing an icon set's idea of one. */}

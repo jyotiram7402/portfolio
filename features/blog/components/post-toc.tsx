@@ -67,7 +67,7 @@ export function PostToc({ articleRef, className }: PostTocProps) {
           <motion.div
             aria-hidden="true"
             style={{ scaleY: progress }}
-            className="absolute inset-0 origin-top bg-linear-to-b from-primary to-accent"
+            className="absolute inset-0 origin-top bg-primary"
           />
         </div>
 

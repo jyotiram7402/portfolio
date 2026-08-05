@@ -19,7 +19,7 @@ export function prefersReducedMotion(): boolean {
   return matchesMedia(MEDIA_QUERIES.reducedMotion);
 }
 
-/** Coarse pointer, i.e. touch. The gate for the cursor and magnetic effects. */
+/** Coarse pointer, i.e. touch. The gate for hover-only affordances. */
 export function isTouchDevice(): boolean {
   if (!isBrowser) return false;
   return matchesMedia(MEDIA_QUERIES.coarsePointer) || navigator.maxTouchPoints > 0;
@@ -29,24 +29,9 @@ export function supportsHover(): boolean {
   return matchesMedia(MEDIA_QUERIES.hoverCapable);
 }
 
-/**
- * Coarse device-capability tier, used to decide particle counts and whether the
- * WebGL layer mounts at all. Deliberately pessimistic when it cannot tell.
- */
-export function getPerformanceTier(): "low" | "medium" | "high" {
-  if (!isBrowser) return "low";
-  if (prefersReducedMotion() || matchesMedia(MEDIA_QUERIES.reducedData)) {
-    return "low";
-  }
-
-  const cores = navigator.hardwareConcurrency ?? 4;
-  // Non-standard but widely available; absence is not a signal either way.
-  const memory = (navigator as Navigator & { deviceMemory?: number }).deviceMemory;
-
-  if (cores <= 4 || (memory !== undefined && memory <= 4)) return "low";
-  if (cores <= 8) return "medium";
-  return "high";
-}
+/* A `getPerformanceTier()` probe lived here to size particle counts and decide
+   whether the WebGL backdrop mounted. Both are gone, and a capability tier with
+   no consumer is just a guess waiting to be trusted, so the probe went with them. */
 
 /** Viewport-space centre of an element. */
 export function getElementCenter(element: Element): Coordinates {

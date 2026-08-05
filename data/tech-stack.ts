@@ -45,12 +45,6 @@ export const techStack: readonly TechStackItem[] = [
     category: "motion",
   },
   {
-    name: "React Three Fiber",
-    href: "https://r3f.docs.pmnd.rs",
-    role: "WebGL particle field, lazily loaded on capable devices",
-    category: "3d",
-  },
-  {
     name: "Radix UI",
     href: "https://www.radix-ui.com",
     role: "Accessibility primitives behind the dialog, drawer and tooltip",

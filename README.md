@@ -69,8 +69,7 @@ components/   Reusable and domain-agnostic
   ui/           Primitives (Button, GlassCard, Modal, …)
   layout/       Page frame (Navbar, Footer, Container, Section, SiteShell)
   animation/    Motion wrappers (Reveal, AnimatedText, TiltCard, …)
-  background/   Ambient layers (Aurora, Particles, WebGL field)
-  common/       Cross-cutting (Preloader, CustomCursor, SkipLink, Analytics)
+  common/       Cross-cutting (Preloader, SkipLink, Analytics, FloatingActions)
   icons/        Brand mark and hand-drawn glyphs
   providers/    Client-side context (theme, Lenis, tooltips)
 features/     Vertical slices — hero, stats, about, experience, skills
@@ -155,22 +154,21 @@ Handled in three places, deliberately redundant:
 2. `useReducedMotion` gates each JS-driven effect.
 3. `useMotionVariants` strips travel and scale from variants, keeping opacity.
 
-Decorative layers marked `data-motion-decorative` are removed outright. Lenis,
-the custom cursor, the WebGL field and the preloader never initialise at all.
+Decorative layers marked `data-motion-decorative` are removed outright. Lenis and
+the preloader never initialise at all.
 
 ---
 
 ## Performance
 
-- **WebGL is opt-in at runtime.** three.js is behind a dynamic import gated on
-  viewport, device tier and motion preference — a phone never downloads it.
-- **Pointer effects bypass React.** Cursor, glow, tilt and magnetic hover write
-  to MotionValues or CSS custom properties. Hovering a grid of cards costs zero
+- **No decorative background and no custom cursor.** The page is a flat
+  `--background`, the way apple.com is. That removed seven composited layers and
+  took `three` out of the dependency tree entirely.
+- **Pointer effects bypass React.** Glow, tilt and magnetic hover write to
+  MotionValues or CSS custom properties. Hovering a grid of cards costs zero
   re-renders.
 - **`useScroll` exposes discrete state only.** Booleans and a direction, not a
   pixel offset, so the header re-renders a handful of times per page.
-- **Canvas over DOM nodes** for particles, delta-time driven, suspended when
-  offscreen or backgrounded.
 - **Server Components by default.** `"use client"` is pushed to the leaf that
   needs it; the root layout mounts exactly one client boundary.
 

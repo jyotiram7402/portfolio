@@ -39,19 +39,8 @@ export function NewsletterSection() {
           surface="elevated"
           className="overflow-hidden"
         >
-          <div className="relative flex flex-col gap-8 p-8 sm:p-12 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
-            {/* Ambient wash. Decorative, and removed under reduced motion by the
-                global rule in styles/base.css. */}
-            <span
-              aria-hidden="true"
-              data-motion-decorative
-              className={cn(
-                "pointer-events-none absolute -top-1/2 -right-1/4 size-[28rem] rounded-full blur-3xl",
-                "bg-[radial-gradient(circle_at_center,var(--aurora-1),transparent_70%)]",
-              )}
-            />
-
-            <div className="relative flex max-w-lg flex-col gap-4">
+          <div className="flex flex-col gap-8 p-8 sm:p-12 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
+            <div className="flex max-w-lg flex-col gap-4">
               <span
                 aria-hidden="true"
                 className={cn(
@@ -76,7 +65,7 @@ export function NewsletterSection() {
               </p>
             </div>
 
-            <div className="relative shrink-0">
+            <div className="shrink-0">
               <SubscribeForm />
             </div>
           </div>

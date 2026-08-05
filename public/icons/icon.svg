@@ -1,12 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Site icon">
-  <defs>
-    <linearGradient id="brand" x1="8" y1="8" x2="56" y2="56" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#3B82F6" />
-      <stop offset="0.55" stop-color="#8B5CF6" />
-      <stop offset="1" stop-color="#06B6D4" />
-    </linearGradient>
-  </defs>
-  <rect width="64" height="64" rx="14" fill="#030712" />
-  <path d="M32 8 56 32 32 56 8 32Z" fill="none" stroke="url(#brand)" stroke-width="2.5" stroke-linejoin="round" opacity="0.55" />
-  <path d="M32 20 44 32 32 44 20 32Z" fill="url(#brand)" />
+  <rect width="64" height="64" rx="14" fill="#000000" />
+  <path d="M32 8 56 32 32 56 8 32Z" fill="none" stroke="#f5f5f7" stroke-width="2.5" stroke-linejoin="round" opacity="0.35" />
+  <path d="M32 20 44 32 32 44 20 32Z" fill="#f5f5f7" />
 </svg>

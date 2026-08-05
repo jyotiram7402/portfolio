@@ -5,7 +5,6 @@ export { Breadcrumbs } from "./breadcrumbs";
 export type { BreadcrumbsProps, Crumb } from "./breadcrumbs";
 export { CommandPalette } from "./command-palette";
 export type { CommandPaletteProps } from "./command-palette";
-export { CustomCursor } from "./custom-cursor";
 export { ErrorState } from "./error-state";
 export type { ErrorStateProps } from "./error-state";
 export { FloatingActions } from "./floating-actions";

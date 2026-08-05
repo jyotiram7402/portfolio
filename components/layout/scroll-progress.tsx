@@ -35,8 +35,7 @@ export function ScrollProgress({ className }: ScrollProgressProps) {
       <motion.div
         style={{ scaleX: smoothProgress }}
         className={cn(
-          "h-full w-full origin-left",
-          "bg-linear-to-r from-primary via-secondary to-accent",
+          "h-full w-full origin-left bg-primary",
         )}
       />
     </div>

@@ -33,9 +33,10 @@ export default function OpengraphImage() {
           width: "100%",
           height: "100%",
           padding: 80,
+          // Flat black, matching the site. The two radial washes that used to
+          // stand in for the aurora went with it — on a card most people see at
+          // 500px wide, they only ever read as blur.
           background: palette.dark.background,
-          // Two offset radial washes stand in for the site's aurora.
-          backgroundImage: `radial-gradient(circle at 12% 0%, ${palette.dark.primary}38, transparent 45%), radial-gradient(circle at 88% 100%, ${palette.dark.secondary}30, transparent 45%)`,
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
@@ -45,7 +46,7 @@ export default function OpengraphImage() {
               height: 28,
               borderRadius: 6,
               transform: "rotate(45deg)",
-              backgroundImage: `linear-gradient(135deg, ${palette.dark.primary}, ${palette.dark.accent})`,
+              background: palette.dark.foreground,
             }}
           />
           <div

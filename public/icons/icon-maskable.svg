@@ -4,14 +4,7 @@
     teardrop), keeping only the central 80% safe zone, so the artwork is inset and
     the background bleeds to the full canvas.
   -->
-  <defs>
-    <linearGradient id="brand-maskable" x1="18" y1="18" x2="46" y2="46" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#3B82F6" />
-      <stop offset="0.55" stop-color="#8B5CF6" />
-      <stop offset="1" stop-color="#06B6D4" />
-    </linearGradient>
-  </defs>
-  <rect width="64" height="64" fill="#030712" />
-  <path d="M32 16 48 32 32 48 16 32Z" fill="none" stroke="url(#brand-maskable)" stroke-width="2" stroke-linejoin="round" opacity="0.55" />
-  <path d="M32 24 40 32 32 40 24 32Z" fill="url(#brand-maskable)" />
+  <rect width="64" height="64" fill="#000000" />
+  <path d="M32 16 48 32 32 48 16 32Z" fill="none" stroke="#f5f5f7" stroke-width="2" stroke-linejoin="round" opacity="0.35" />
+  <path d="M32 24 40 32 32 40 24 32Z" fill="#f5f5f7" />
 </svg>

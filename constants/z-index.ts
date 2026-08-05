@@ -15,8 +15,7 @@ export const Z_INDEX = {
   modal: 70,
   popover: 80,
   toast: 90,
-  cursor: 100,
-  loader: 110,
+  loader: 100,
 } as const;
 
 export type ZLayer = keyof typeof Z_INDEX;
@@ -37,6 +36,5 @@ export const Z_CLASS = {
   modal: "z-[var(--z-modal)]",
   popover: "z-[var(--z-popover)]",
   toast: "z-[var(--z-toast)]",
-  cursor: "z-[var(--z-cursor)]",
   loader: "z-[var(--z-loader)]",
 } as const satisfies Record<ZLayer, string>;

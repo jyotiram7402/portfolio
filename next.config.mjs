@@ -73,7 +73,7 @@ const cspDirectives = {
   // values compile to them too. There is no nonce-based alternative for style attributes.
   "style-src": ["'self'", "'unsafe-inline'"],
 
-  // `data:` covers the inlined noise texture and the generated OG images.
+  // `data:` covers the inline SVG marks; `blob:` the generated OG images.
   "img-src": ["'self'", "data:", "blob:", "https:"],
 
   // Fonts are self-hosted by `next/font`, so no third-party font origin is needed.

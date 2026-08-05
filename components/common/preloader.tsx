@@ -131,14 +131,14 @@ export function Preloader() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, ease: ease.outExpo }}
             >
-              <LogoMark className="size-12 animate-glow" />
+              <LogoMark className="size-12" />
             </motion.div>
 
             <div className="flex w-40 flex-col gap-3">
               <div className="h-px w-full overflow-hidden bg-border">
                 <motion.div
                   style={{ scaleX: barScale, transformOrigin: "left" }}
-                  className="h-full w-full bg-linear-to-r from-primary to-accent"
+                  className="h-full w-full bg-foreground"
                 />
               </div>
 

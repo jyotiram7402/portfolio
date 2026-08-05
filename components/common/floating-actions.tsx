@@ -122,16 +122,6 @@ export function FloatingActions({ className }: FloatingActionsProps) {
                     "hover:bg-primary-hover focus-ring press",
                   )}
                 >
-                  {/* Soft halo. Decorative, so reduced motion removes it entirely. */}
-                  <span
-                    aria-hidden="true"
-                    data-motion-decorative
-                    className={cn(
-                      "absolute inset-0 -z-10 rounded-full bg-primary/40 blur-lg",
-                      !reduceMotion && "animate-glow",
-                    )}
-                  />
-
                   <MessageSquare aria-hidden="true" className="size-5" />
 
                   <span

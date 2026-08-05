@@ -3,124 +3,139 @@
 
    Every colour the product code touches is declared here, exactly once, per
    theme. Components never reference a raw hex; they reference a role
-   (`bg-card`, `text-muted`, `border-border`). Swapping a theme therefore
-   never requires touching a component.
+   (`bg-card`, `text-muted`, `border-border`). Swapping a theme therefore never
+   requires touching a component.
 
-   Dark is the default: it lives on `:root` so the very first paint is dark
-   even before `next-themes` has resolved a preference. `.light` overrides.
+   The palette is Apple's. Not "inspired by" — these are the actual values:
+   #000000 and #f5f5f7 for surfaces, #1d1d1f for near-black text, #86868b and
+   #6e6e73 for the secondary and tertiary greys. They are used because they are
+   the most tested neutral ramp in consumer software, and because a flat neutral
+   background is what makes typography and spacing carry a page.
+
+   Dark is the default: it lives on `:root` so the very first paint is dark even
+   before `next-themes` has resolved a preference. `.light` overrides.
    ========================================================================== */
 
 :root,
 :root.dark {
   color-scheme: dark;
 
-  /* --- Surfaces -------------------------------------------------------- */
-  --background: #030712;
-  --surface: #0f172a;
-  --card: #111827;
-  --elevated: #172033;
-  --overlay: rgb(3 7 18 / 0.78);
+  /* --- Surfaces ---------------------------------------------------------
+     A four-step neutral ramp, no blue tint. The gaps are deliberately small:
+     depth comes from the hairline borders, not from stacked greys. */
+  --background: #000000;
+  --surface: #0a0a0a;
+  --card: #141416;
+  --elevated: #1d1d1f;
+  --overlay: rgb(0 0 0 / 0.72);
 
   /* --- Lines & focus --------------------------------------------------- */
-  --border: rgb(255 255 255 / 0.08);
-  --border-strong: rgb(255 255 255 / 0.16);
+  --border: rgb(255 255 255 / 0.10);
+  --border-strong: rgb(255 255 255 / 0.20);
   --input: rgb(255 255 255 / 0.06);
-  --ring: #3b82f6;
+  --ring: #2997ff;
 
-  /* --- Text ------------------------------------------------------------ */
-  --foreground: #ffffff;
-  --muted: #94a3b8;
-  --subtle: #64748b;
-  --faint: rgb(148 163 184 / 0.55);
+  /* --- Text ------------------------------------------------------------
+     #f5f5f7 rather than pure white: at this contrast ratio on black, #fff
+     produces visible halation on thin type. */
+  --foreground: #f5f5f7;
+  --muted: #a1a1a6;
+  --subtle: #86868b;
+  --faint: rgb(134 134 139 / 0.6);
 
-  /* --- Brand ----------------------------------------------------------- */
-  --primary: #3b82f6;
-  --primary-hover: #60a5fa;
-  --primary-foreground: #030712;
-  --secondary: #8b5cf6;
-  --secondary-hover: #a78bfa;
-  --secondary-foreground: #030712;
-  --accent: #06b6d4;
-  --accent-hover: #22d3ee;
-  --accent-foreground: #030712;
+  /* --- Brand -----------------------------------------------------------
+     #2997ff is Apple's link blue. One accent, used sparingly. */
+  --primary: #2997ff;
+  --primary-hover: #4aa8ff;
+  --primary-foreground: #000000;
+  --secondary: #a1a1a6;
+  --secondary-hover: #c7c7cc;
+  --secondary-foreground: #000000;
+  --accent: #2997ff;
+  --accent-hover: #4aa8ff;
+  --accent-foreground: #000000;
 
   /* --- Status ---------------------------------------------------------- */
-  --success: #10b981;
-  --success-foreground: #022c22;
-  --warning: #f59e0b;
-  --warning-foreground: #271500;
-  --danger: #ef4444;
-  --danger-foreground: #2b0707;
+  --success: #30d158;
+  --success-foreground: #00250d;
+  --warning: #ffd60a;
+  --warning-foreground: #2b2200;
+  --danger: #ff453a;
+  --danger-foreground: #2b0603;
 
-  /* --- Glass / decorative --------------------------------------------- */
-  --glass: rgb(255 255 255 / 0.04);
-  --glass-strong: rgb(255 255 255 / 0.07);
-  --glass-border: rgb(255 255 255 / 0.09);
-  --highlight: rgb(255 255 255 / 0.14);
-  --selection: rgb(59 130 246 / 0.32);
+  /* --- Glass / decorative ---------------------------------------------- */
+  --glass: rgb(255 255 255 / 0.05);
+  --glass-strong: rgb(255 255 255 / 0.08);
+  --glass-border: rgb(255 255 255 / 0.10);
+  --highlight: rgb(255 255 255 / 0.08);
+  --selection: rgb(41 151 255 / 0.30);
   --scrollbar-track: transparent;
-  --scrollbar-thumb: rgb(255 255 255 / 0.14);
-  --scrollbar-thumb-hover: rgb(255 255 255 / 0.24);
+  --scrollbar-thumb: rgb(255 255 255 / 0.16);
+  --scrollbar-thumb-hover: rgb(255 255 255 / 0.26);
 
-  /* --- Ambient light (aurora / orbs / mesh) --------------------------- */
-  --aurora-1: rgb(59 130 246 / 0.28);
-  --aurora-2: rgb(139 92 246 / 0.24);
-  --aurora-3: rgb(6 182 212 / 0.2);
-  --grid-line: rgb(255 255 255 / 0.045);
-  --noise-opacity: 0.035;
-  --spotlight: rgb(255 255 255 / 0.06);
+  /* --- Ambient light ---------------------------------------------------
+     Kept for the two places a soft product glow is still wanted — the hero
+     visual and the elevated card shadows. Deliberately near-invisible: the
+     full-page aurora, mesh and particle layers were removed, so these are no
+     longer background, they are punctuation.
+
+     Setting them to `transparent` disables every remaining glow at once. */
+  --glow-soft: rgb(41 151 255 / 0.10);
+  --glow-softer: rgb(41 151 255 / 0.05);
+  --grid-line: rgb(255 255 255 / 0.05);
+  --spotlight: rgb(255 255 255 / 0.05);
 }
 
 :root.light {
   color-scheme: light;
 
+  /* #f5f5f7 is Apple's page grey; white is reserved for cards, which is what
+     makes a card read as raised without a shadow. */
   --background: #ffffff;
-  --surface: #f8fafc;
+  --surface: #f5f5f7;
   --card: #ffffff;
-  --elevated: #ffffff;
-  --overlay: rgb(2 6 23 / 0.45);
+  --elevated: #f5f5f7;
+  --overlay: rgb(0 0 0 / 0.40);
 
-  --border: rgb(2 6 23 / 0.09);
-  --border-strong: rgb(2 6 23 / 0.18);
-  --input: rgb(2 6 23 / 0.04);
-  --ring: #2563eb;
+  --border: rgb(0 0 0 / 0.10);
+  --border-strong: rgb(0 0 0 / 0.20);
+  --input: rgb(0 0 0 / 0.04);
+  --ring: #0071e3;
 
-  --foreground: #030712;
-  --muted: #475569;
-  --subtle: #64748b;
-  --faint: rgb(71 85 105 / 0.6);
+  --foreground: #1d1d1f;
+  --muted: #6e6e73;
+  --subtle: #86868b;
+  --faint: rgb(110 110 115 / 0.6);
 
-  --primary: #2563eb;
-  --primary-hover: #1d4ed8;
+  --primary: #0071e3;
+  --primary-hover: #0077ed;
   --primary-foreground: #ffffff;
-  --secondary: #7c3aed;
-  --secondary-hover: #6d28d9;
+  --secondary: #6e6e73;
+  --secondary-hover: #1d1d1f;
   --secondary-foreground: #ffffff;
-  --accent: #0891b2;
-  --accent-hover: #0e7490;
+  --accent: #0071e3;
+  --accent-hover: #0077ed;
   --accent-foreground: #ffffff;
 
-  --success: #059669;
+  --success: #1d8f3a;
   --success-foreground: #ffffff;
-  --warning: #b45309;
+  --warning: #9a6700;
   --warning-foreground: #ffffff;
-  --danger: #dc2626;
+  --danger: #d70015;
   --danger-foreground: #ffffff;
 
   --glass: rgb(255 255 255 / 0.72);
   --glass-strong: rgb(255 255 255 / 0.88);
-  --glass-border: rgb(2 6 23 / 0.08);
-  --highlight: rgb(2 6 23 / 0.06);
-  --selection: rgb(37 99 235 / 0.18);
-  --scrollbar-thumb: rgb(2 6 23 / 0.16);
-  --scrollbar-thumb-hover: rgb(2 6 23 / 0.28);
+  --glass-border: rgb(0 0 0 / 0.08);
+  --highlight: rgb(0 0 0 / 0.05);
+  --selection: rgb(0 113 227 / 0.18);
+  --scrollbar-thumb: rgb(0 0 0 / 0.18);
+  --scrollbar-thumb-hover: rgb(0 0 0 / 0.30);
 
-  --aurora-1: rgb(37 99 235 / 0.16);
-  --aurora-2: rgb(124 58 237 / 0.14);
-  --aurora-3: rgb(8 145 178 / 0.12);
-  --grid-line: rgb(2 6 23 / 0.05);
-  --noise-opacity: 0.02;
-  --spotlight: rgb(2 6 23 / 0.05);
+  --glow-soft: rgb(0 113 227 / 0.07);
+  --glow-softer: rgb(0 113 227 / 0.04);
+  --grid-line: rgb(0 0 0 / 0.05);
+  --spotlight: rgb(0 0 0 / 0.04);
 }
 
 /* ==========================================================================
@@ -152,8 +167,7 @@
   --z-modal: 70;
   --z-popover: 80;
   --z-toast: 90;
-  --z-cursor: 100;
-  --z-loader: 110;
+  --z-loader: 100;
 
   /* --- Layout ---------------------------------------------------------- */
   --header-height: 4.5rem;

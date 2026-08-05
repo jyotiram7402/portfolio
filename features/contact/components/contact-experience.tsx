@@ -12,7 +12,6 @@ import { ChannelCards } from "@/features/contact/components/channel-cards";
 import { ContactForm } from "@/features/contact/components/contact-form";
 import { MapPanel } from "@/features/contact/components/map-panel";
 import { SocialGrid } from "@/features/contact/components/social-grid";
-import { cn } from "@/lib/utils";
 
 /**
  * The full contact page.
@@ -38,21 +37,9 @@ export function ContactExperience() {
         as="div"
         spacing="none"
         containerSize="page"
-        className="relative overflow-hidden pt-16 pb-14 lg:pt-20"
+        className="pt-16 pb-14 lg:pt-20"
         innerClassName="flex flex-col gap-10"
       >
-        {/* Page-scoped ambient light. Decorative, so the global reduced-motion rule
-            in styles/base.css removes the animation outright. */}
-        <span
-          aria-hidden="true"
-          data-motion-decorative
-          className={cn(
-            "pointer-events-none absolute -top-1/3 left-1/2 -z-10 size-[42rem]",
-            "-translate-x-1/2 rounded-full blur-3xl animate-glow",
-            "bg-[radial-gradient(circle_at_center,var(--aurora-1),transparent_66%)]",
-          )}
-        />
-
         <Breadcrumbs
           items={[
             { label: "Home", href: ROUTES.home },

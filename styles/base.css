@@ -134,11 +134,6 @@
     max-width: 100%;
   }
 
-  /* Decorative canvases (three.js, particles) must never trap the pointer. */
-  canvas[data-decorative="true"] {
-    pointer-events: none;
-    touch-action: none;
-  }
 }
 
 /* ==========================================================================
@@ -167,20 +162,13 @@ html.lenis body {
 }
 
 /* ==========================================================================
-   Custom cursor — hide the native cursor only where the custom one renders.
+   The native cursor is the cursor.
+
+   A `cursor: none` block lived here to hide it for a custom replacement. Both
+   are gone: the pointer every visitor has already learned is more precise than
+   anything drawn over it, and hiding the OS cursor is a real accessibility cost
+   for anyone relying on a system cursor size or contrast setting.
    ========================================================================== */
-
-@media (pointer: fine) {
-  html[data-cursor="custom"],
-  html[data-cursor="custom"] * {
-    cursor: none;
-  }
-
-  /* Text entry always keeps a real caret cursor. */
-  html[data-cursor="custom"] :is(input, textarea, [contenteditable="true"]) {
-    cursor: text;
-  }
-}
 
 /* ==========================================================================
    Motion policy.

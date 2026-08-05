@@ -4,10 +4,13 @@ import type { ResolvedTheme, ThemeMode } from "@/types/theme";
 /**
  * Theme behaviour, and the palette in a form JavaScript can read.
  *
- * CSS gets its colours from `styles/themes.css`. This file exists for the
- * consumers that cannot read a custom property: three.js materials, the OG
- * image renderer (Satori has no CSS variable support) and `<meta name="theme-color">`.
- * The two must stay in sync — treat this as the mirror, not the source.
+ * CSS gets its colours from `styles/themes.css`. This file exists for the two
+ * consumers that cannot read a custom property: the OG image renderer (Satori
+ * has no CSS variable support) and `<meta name="theme-color">`.
+ *
+ * `styles/themes.css` is the source; this is the mirror. Where the stylesheet
+ * uses an alpha over the background — the borders — this file carries the
+ * flattened hex, because neither consumer composites.
  */
 
 export const themeConfig = {
@@ -32,32 +35,32 @@ export const THEME_CYCLE: readonly ThemeMode[] = ["dark", "light", "system"];
 
 export const palette = {
   dark: {
-    background: "#030712",
-    surface: "#0F172A",
-    card: "#111827",
-    foreground: "#FFFFFF",
-    muted: "#94A3B8",
-    border: "#1E293B",
-    primary: "#3B82F6",
-    secondary: "#8B5CF6",
-    accent: "#06B6D4",
-    success: "#10B981",
-    warning: "#F59E0B",
-    danger: "#EF4444",
+    background: "#000000",
+    surface: "#0a0a0a",
+    card: "#141416",
+    foreground: "#f5f5f7",
+    muted: "#a1a1a6",
+    border: "#1a1a1a",
+    primary: "#2997ff",
+    secondary: "#a1a1a6",
+    accent: "#2997ff",
+    success: "#30d158",
+    warning: "#ffd60a",
+    danger: "#ff453a",
   },
   light: {
-    background: "#FFFFFF",
-    surface: "#F8FAFC",
-    card: "#FFFFFF",
-    foreground: "#030712",
-    muted: "#475569",
-    border: "#E2E8F0",
-    primary: "#2563EB",
-    secondary: "#7C3AED",
-    accent: "#0891B2",
-    success: "#059669",
-    warning: "#B45309",
-    danger: "#DC2626",
+    background: "#ffffff",
+    surface: "#f5f5f7",
+    card: "#ffffff",
+    foreground: "#1d1d1f",
+    muted: "#6e6e73",
+    border: "#e5e5e5",
+    primary: "#0071e3",
+    secondary: "#6e6e73",
+    accent: "#0071e3",
+    success: "#1d8f3a",
+    warning: "#9a6700",
+    danger: "#d70015",
   },
 } as const satisfies Record<ResolvedTheme, Record<string, string>>;
 

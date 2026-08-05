@@ -35,7 +35,7 @@ export default function AppleIcon() {
             height: 108,
             borderRadius: 16,
             transform: "rotate(45deg)",
-            border: `4px solid ${palette.dark.secondary}`,
+            border: `4px solid ${palette.dark.muted}`,
           }}
         >
           {/* Solid core */}
@@ -44,7 +44,7 @@ export default function AppleIcon() {
               width: 52,
               height: 52,
               borderRadius: 8,
-              backgroundImage: `linear-gradient(135deg, ${palette.dark.primary}, ${palette.dark.accent})`,
+              background: palette.dark.foreground,
             }}
           />
         </div>

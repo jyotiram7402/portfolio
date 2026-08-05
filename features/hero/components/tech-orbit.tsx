@@ -100,12 +100,14 @@ export function TechOrbit({ className }: TechOrbitProps) {
 
   const assembly = (
     <>
+      {/* The one soft glow left on the site. It is punctuation behind a product
+          visual, not background — and it is static now, because a pulsing halo on a
+          flat page reads as a notification rather than as depth. */}
       <span
-        data-motion-decorative={reduceMotion ? undefined : true}
+        aria-hidden="true"
         className={cn(
-          "absolute inset-[12%] rounded-full blur-3xl",
-          "bg-[radial-gradient(circle_at_center,var(--aurora-1),transparent_68%)]",
-          !reduceMotion && "animate-glow",
+          "absolute inset-[16%] rounded-full blur-3xl",
+          "bg-[radial-gradient(circle_at_center,var(--glow-soft),transparent_70%)]",
         )}
       />
 

@@ -57,7 +57,7 @@ export function Timeline({ children, label, className }: TimelineProps) {
       {reduceMotion ? (
         <span
           aria-hidden="true"
-          className="absolute top-3 bottom-3 left-3.5 w-px bg-linear-to-b from-primary via-secondary to-accent"
+          className="absolute top-3 bottom-3 left-3.5 w-px bg-linear-to-b from-foreground/60 to-foreground/20"
         />
       ) : (
         <motion.span
@@ -65,7 +65,7 @@ export function Timeline({ children, label, className }: TimelineProps) {
           style={{ scaleY: smoothed }}
           className={cn(
             "absolute top-3 bottom-3 left-3.5 w-px origin-top",
-            "bg-linear-to-b from-primary via-secondary to-accent",
+            "bg-linear-to-b from-foreground/60 to-foreground/20",
           )}
         />
       )}
