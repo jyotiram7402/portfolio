@@ -372,19 +372,19 @@ export const faqEntries: readonly FaqEntry[] = [
   {
     intentId: "projects.all",
     question: `What has ${identity.firstName} built?`,
-    answer: `${knowledge.projectCount} selected projects: Foodies (a Kafka-based food delivery microservices backend), MusicON (a streaming backend with Redis caching and AWS S3), FirstReview (React with Spring Boot and MongoDB), a secure agentic AI DevContainer adopted by 20 developers, a containerised FastAPI part-number configurator, and end-to-end payment gateway integrations.`,
+    answer: `${knowledge.projectCount} selected projects. The one to ask about is SmartShield — an adaptive bot-mitigation system in Python and machine learning, built after bots took our production site down in the 2024 Christmas peak and IP blocking failed. On the Java side: LedgerCore (an event-driven double-entry ledger in Java 21, Spring Boot and Kafka), Foodies (Kafka-based food-delivery microservices), BookShowHere (seat booking under concurrency), Kafka With Java Microservices, and MusicON (streaming with Redis and S3). Then full stack and MERN: OneClick, DevSync, Roadmap Tracker and TrackFit. Plus work with no public repository — the payment gateway integrations and the secure AI DevContainer adopted by 20 developers.`,
   },
   {
     intentId: "projects.ai",
     question: `Has ${identity.firstName} worked on AI projects?`,
     answer:
-      "Yes. He co-developed an AI-powered search service on OpenSearch that shipped in one month with zero post-release defects, and engineered the secure DevContainer that made agentic AI adoption possible across 20 developers. He is a board member of Southco's AI team.",
+      "Yes, and one of them came out of a production incident. SmartShield is an adaptive bot-mitigation and traffic-intelligence system in Python, using an ensemble of machine-learning and deep-learning models to score traffic on behaviour rather than on IP reputation — built after a bot flood took the site down in the 2024 Christmas peak and blocking source ranges simply moved the attack to another country. He also co-developed an AI-powered search service on OpenSearch that shipped in one month with zero post-release defects, engineered the secure DevContainer that made agentic AI adoption possible across 20 developers, and built KnowledgePulse AI, a RAG service with hybrid retrieval and cited answers. He is a board member of Southco's AI team.",
   },
   {
     intentId: "projects.java",
     question: `What Java projects has ${identity.firstName} built?`,
     answer:
-      "Foodies, a microservices food-delivery backend on Spring Boot with Apache Kafka event streams and JWT authentication; MusicON, a streaming backend with AWS S3 storage and Redis caching; and FirstReview, a React frontend against Spring Boot and MongoDB.",
+      "LedgerCore, an event-driven wallet and double-entry ledger in Java 21, Spring Boot, Kafka and PostgreSQL, built around financial correctness; Foodies, a microservices food-delivery backend with Kafka event streams and JWT authentication; BookShowHere, a ticket booking system whose whole difficulty is seat locking under concurrency; Kafka With Java Microservices, a working reference for partitioning, consumer groups and idempotent consumption; MusicON, a streaming backend with AWS S3 and Redis caching; and OneClick, a React frontend against Spring Boot and MongoDB.",
   },
   {
     intentId: "about.roadmap",

@@ -294,6 +294,13 @@ export const skillCategories: readonly SkillCategory[] = [
           "Chunking, hybrid retrieval and reranking — with citations, so an answer can be checked.",
         proficiency: "exploring",
       },
+      {
+        id: "machine-learning",
+        name: "Machine Learning",
+        description:
+          "Feature engineering and model ensembles for classification — built a bot-mitigation system in Python after an attack that IP blocking could not stop. Actively learning.",
+        proficiency: "exploring",
+      },
     ],
   },
   {
@@ -343,6 +350,13 @@ export const skillCategories: readonly SkillCategory[] = [
         description:
           "Repos, pipelines and boards on client delivery, with environment parity between staging and production.",
         proficiency: "working",
+      },
+      {
+        id: "vercel",
+        name: "Vercel",
+        description:
+          "Preview deploys per branch and production on merge — how the Next.js side of my work actually ships.",
+        proficiency: "core",
       },
       {
         id: "kubernetes",
@@ -399,6 +413,20 @@ export const skillCategories: readonly SkillCategory[] = [
         name: "Tailwind CSS",
         description:
           "Design tokens as CSS custom properties, so a whole theme is one file and zero runtime.",
+        proficiency: "working",
+      },
+      {
+        id: "nodejs",
+        name: "Node.js",
+        description:
+          "Express and API routes on the MERN side, plus the JavaScript service work that comes my way at Southco.",
+        proficiency: "working",
+      },
+      {
+        id: "supabase",
+        name: "Supabase",
+        description:
+          "Postgres, auth and realtime as a managed backend — the right trade when the interesting part is the data model, not the plumbing. DevSync and TrackFit both run on it.",
         proficiency: "working",
       },
       {

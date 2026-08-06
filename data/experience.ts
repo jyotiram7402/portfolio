@@ -62,6 +62,7 @@ export const experience: readonly ExperienceEntry[] = [
       "Co-develop an AI-powered search service in Python and FastAPI over OpenSearch, for faster and more relevant product discovery.",
       "Build the Cable Part Number Configurator: a containerised FastAPI application with a rules-based configuration engine, JSON-backed catalog and role-separated public and admin services, embedded via a CSP-secured iframe.",
       "Deliver production support and fixes in an Agile environment (Jira, Workfront), through code review and sprint planning with client teams.",
+      "Pick up the React, JavaScript and Node work when a request needs it — not the majority of my time, but the reason the integration work never has to wait for someone else's queue.",
     ],
     achievements: [
       "Resolved a critical PayPal payment failure in live production during a midnight incident with zero downtime — recognised with a Spot Award.",
@@ -77,6 +78,9 @@ export const experience: readonly ExperienceEntry[] = [
       "OpenSearch",
       "MySQL",
       "Docker",
+      "React",
+      "JavaScript",
+      "Node.js",
       "Azure DevOps",
       "Git",
       "Bitbucket",

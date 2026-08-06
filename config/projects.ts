@@ -29,10 +29,26 @@ export const projectsConfig = {
   includeArchived: false,
 
   /**
-   * Never shown, regardless of topics. The portfolio's own repository is here because it is already
-   * described by the site it builds — listing it is circular.
+   * Never shown, regardless of topics.
+   *
+   * Three kinds of thing live here. This site's own repository, because it is already described by
+   * the site it builds — listing it is circular. Superseded work: an older portfolio, and `fittrack`
+   * which `trackfit` replaced. And learning scaffolding — coursework and template sites are real
+   * commits but they are not evidence of anything a reader is here to assess.
+   *
+   * This matters most before any repository carries `discoveryTopic`: the fallback shows the six
+   * most recently pushed repositories, and without this list it would lead with coursework.
    */
-  excludedRepos: ["portfolio", "jyotiram7402"],
+  excludedRepos: [
+    "portfolio",
+    "jyotiram7402",
+    "jyotiram-portfolio",
+    "gfg-mern-stack-coursework",
+    "fittrack",
+    "US-Hair-Studio",
+    "modern-classes",
+    "studyhub",
+  ],
 
   /**
    * Below this star count a repository is not marked featured automatically. Curation via

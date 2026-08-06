@@ -21,8 +21,10 @@ import {
   Plug,
   Quote,
   Radio,
+  Rocket,
   Route,
   Search,
+  Server,
   Shapes,
   ShieldCheck,
   Siren,
@@ -125,6 +127,7 @@ const BRANDS: Record<string, TechBrand> = {
   "llm-apis": { Glyph: Brain },
   "ai-search": { Glyph: Search, color: "#4A90C4" },
   rag: { Glyph: FileCode2 },
+  "machine-learning": { Glyph: Brain, color: "#EE8C2B" },
 
   /* ------------------------------------------------------- Cloud and DevOps */
   docker: { Glyph: DockerMark, color: "#2496ED" },
@@ -135,6 +138,7 @@ const BRANDS: Record<string, TechBrand> = {
   "azure-devops": { Glyph: Workflow, color: "#0F8ED8" },
   kubernetes: { Glyph: KubernetesMark, color: "#4B7FE8" },
   maven: { Glyph: Package, color: "#C7183C" },
+  vercel: { Glyph: Rocket, color: "#8E8E93" },
 
   /* ---------------------------------------------------------------- Frontend */
   react: { Glyph: ReactMark, color: "#61DAFB" },
@@ -142,6 +146,8 @@ const BRANDS: Record<string, TechBrand> = {
   typescript: { Glyph: TypeScriptMark, color: "#3F8FDC" },
   nextjs: { Glyph: NextMark, color: "#8E8E93" },
   tailwind: { Glyph: TailwindMark, color: "#38BDF8" },
+  nodejs: { Glyph: Server, color: "#5FA04E" },
+  supabase: { Glyph: Zap, color: "#3ECF8E" },
   "html-css": { Glyph: Globe, color: "#E4653B" },
 
   /* --------------------------------------------------------------- Practices */

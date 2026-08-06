@@ -33,7 +33,7 @@ export const journey: readonly JourneyEntry[] = [
     id: "java-projects",
     period: "2024",
     title: "Learned Java by building backends",
-    body: "Three projects, each chosen to force a different lesson — Kafka and service boundaries in Foodies, S3 and Redis caching in MusicON, a decoupled React and Spring Boot contract in FirstReview.",
+    body: "Projects chosen to force a different lesson each — Kafka and service boundaries in Foodies, seat-locking under concurrency in BookShowHere, S3 and Redis caching in MusicON, a decoupled React and Spring Boot contract in OneClick.",
     icon: Braces,
   },
   {

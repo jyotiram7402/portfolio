@@ -10,7 +10,7 @@ import { WritingSection } from "@/features/blog";
 import { ContactSection } from "@/features/contact";
 import { ExperienceSection } from "@/features/experience";
 import { GithubSection } from "@/features/github";
-import { HeroSection } from "@/features/hero";
+import { HeroSection, StatementBand } from "@/features/hero";
 import { NewsletterSection } from "@/features/newsletter";
 import { ProjectsSection } from "@/features/projects";
 import { SkillsSection } from "@/features/skills";
@@ -51,10 +51,14 @@ const ResourcesSection = dynamic(() =>
  * A composition, nothing more. Every section is a feature slice with its own data, client
  * boundaries and accessible landmark — the page's only job is to declare reading order.
  *
- * That order is intentional: establish who and what (hero, stats, about, experience), show
- * the work (projects), offer a shortcut through all of it (assistant), then reward
- * exploration (skills, writing, roadmap, achievements, GitHub, resources, speaking) before
- * asking for anything (newsletter).
+ * That order is intentional: state the claim (hero, statement), back it with figures (stats),
+ * establish who and what (about, experience), show the work (projects), offer a shortcut
+ * through all of it (assistant), then reward exploration (skills, writing, roadmap,
+ * achievements, GitHub, resources, speaking) before asking for anything (newsletter).
+ *
+ * `StatementBand` sits second because it reframes everything after it: the projects below are
+ * not a gallery, they are evidence. It is deliberately not part of the hero — see the note in
+ * that component about keeping the hero's calls to action above the fold.
  *
  * Section ids come from `constants/sections.ts` and are set inside each feature, so the
  * navigation anchors, the scroll spy and the search index cannot drift from what renders here.
@@ -82,6 +86,7 @@ export default function HomePage() {
       />
 
       <HeroSection />
+      <StatementBand />
       <StatsBand />
       <AboutSection />
       <ExperienceSection />

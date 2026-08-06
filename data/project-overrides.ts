@@ -1,77 +1,65 @@
+import { projects } from "@/data/projects";
 import type { ProjectOverride } from "@/types/projects";
 
 /**
- * Per-repository curation.
+ * Per-repository curation for **discovered** projects.
  *
- * Automatic discovery gets the facts — name, description, language, stars, last push. It cannot get
- * the one thing a reader wants: what was hard, and what was decided.
+ * Automatic discovery gets the facts — name, description, language, stars, last push. It
+ * cannot get the one thing a reader wants: what was hard, and what was decided.
  *
- * The three entries below match the repositories in `data/projects.ts` by exact name, so tagging
- * them `portfolio-project` on GitHub attaches live figures to this copy rather than replacing it.
- * Adding a new repository needs nothing here — it appears with its GitHub description until you
- * decide it deserves a better one.
+ * **This file no longer holds copy.** It used to, and that was a bug waiting to surface:
+ * `data/projects.ts` described the same three projects, and `toProject()` in
+ * `services/projects.service.ts` reads its copy from *here*. So the moment
+ * `GITHUB_USERNAME` was set and discovery started working, the richer curated copy would
+ * have been silently discarded for exactly the repositories that are publicly
+ * discoverable — the ones a visitor is most likely to look at.
  *
- * `repo` is matched case-insensitively. An override for a repository that does not exist is silently
- * ignored, so a typo cannot break the section.
+ * Instead the overrides are derived from the curated list. Copy is written once, in
+ * `data/projects.ts`, and a project keeps the same description whether the GitHub API
+ * answered or not. The only entries a curated project needs to carry for this to work
+ * are its exact repository name as `id` and a link of kind `repo`.
+ *
+ * `MANUAL` is the escape hatch: a repository that is not in the curated list but still
+ * needs its inferred metadata corrected, or hiding outright. It wins over the derived
+ * entry, so a one-off fix does not require editing the curated copy.
+ *
+ * `repo` is matched case-insensitively. An override for a repository that does not exist
+ * is silently ignored, so a typo cannot break the section.
  */
-export const projectOverrides: readonly ProjectOverride[] = [
-  {
-    repo: "Foodies--Food_Delivery_Application",
-    name: "Foodies — Food Delivery Microservices",
-    tagline:
-      "Event-driven microservices backend with independent driver, merchant and notification services.",
-    summary:
-      "A microservices backend for food delivery: independent Driver, Merchant and Notification services communicating over REST and Apache Kafka event streams for real-time order updates, with stateless JWT authentication enforced across every service and client endpoint.",
-    domains: ["java", "spring", "microservices", "backend"],
-    stack: [
-      "Java",
-      "Spring Boot",
-      "Spring Security",
-      "Apache Kafka",
-      "MySQL",
-      "JWT",
-      "REST API",
-    ],
-    highlights: [
-      "Service boundaries drawn around data ownership — driver, merchant and notification each own their own state rather than sharing a schema.",
-      "Kafka event streams for real-time order updates, so a slow notification never blocks an order being accepted.",
-      "Stateless authentication with Spring Security and JWT, applied at the service boundary rather than at the gateway alone.",
-    ],
-    status: "shipped",
-    featured: true,
-  },
-  {
-    repo: "MusicON--MusicApplication",
-    name: "MusicON — Music Streaming Backend",
-    tagline: "Media upload, storage and streaming APIs with Redis caching on the hot path.",
-    summary:
-      "A streaming backend built on Spring Boot: REST APIs for media upload, storage and playback backed by AWS S3 and MySQL, with Redis in-memory caching added to cut repeated database reads and hold API response times steady under load.",
-    domains: ["java", "spring", "backend"],
-    stack: ["Java", "Spring Boot", "MySQL", "Redis", "AWS S3", "REST API"],
-    highlights: [
-      "S3 for media and MySQL for metadata — the split that keeps a streaming path off the database.",
-      "Redis caching with deliberate invalidation, measured against repeated-read latency rather than added by reflex.",
-      "REST APIs designed around the streaming access pattern instead of exposing the table shape.",
-    ],
-    status: "shipped",
-    featured: true,
-  },
-  {
-    repo: "FirstReview-Full-Stack-Movie-Review-Application",
-    name: "FirstReview — Full Stack Movie Reviews",
-    tagline: "React frontend against a Spring Boot and MongoDB backend, loosely coupled.",
-    summary:
-      "A full-stack application pairing a React frontend with a Spring Boot and MongoDB backend over REST. Built deliberately loosely coupled, so the frontend talks to a documented API rather than to the database's shape.",
-    domains: ["java", "spring", "fullstack", "mern"],
-    stack: ["React", "Spring Boot", "MongoDB", "REST API", "JavaScript"],
-    highlights: [
-      "A documented REST contract between the two halves, so either side can be rebuilt without the other.",
-      "MongoDB document modelling chosen for genuinely flexible review data rather than by default.",
-    ],
-    status: "shipped",
-  },
-];
 
+/**
+ * Curated entries that correspond to a real repository.
+ *
+ * The `repo` link is the test. Work with no public repository — the payment integrations,
+ * the DevContainer — has an empty `links` array and is therefore never a candidate: there
+ * is no repository for discovery to match it against.
+ */
+const DERIVED: readonly ProjectOverride[] = projects
+  .filter((project) => project.links.some((link) => link.kind === "repo"))
+  .map((project) => ({
+    repo: project.id,
+    name: project.name,
+    tagline: project.tagline,
+    summary: project.summary,
+    domains: project.domains,
+    stack: project.stack,
+    highlights: project.highlights,
+    status: project.status,
+    featured: project.featured,
+  }));
+
+/**
+ * Hand-written overrides, applied on top of the derived set.
+ *
+ * Empty by design. Everything currently worth curating is in `data/projects.ts`, which is
+ * where new copy should go — an entry here only earns its place if the repository should
+ * *not* appear in the curated list but still needs correcting or hiding.
+ */
+const MANUAL: readonly ProjectOverride[] = [];
+
+export const projectOverrides: readonly ProjectOverride[] = [...DERIVED, ...MANUAL];
+
+/** Manual entries are inserted last, so they replace the derived entry for the same repo. */
 const overridesByRepo = new Map(
   projectOverrides.map((override) => [override.repo.toLowerCase(), override]),
 );

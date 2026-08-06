@@ -22,10 +22,10 @@ export const siteConfig = {
   defaultTitle: "Jyotiram Kamble — Java Backend Engineer",
   role: "Java Backend Engineer",
   /** Secondary framing, for the résumé header and the OG card. */
-  roleLine: "Java · Spring Boot · Microservices · REST APIs · GenAI",
+  roleLine: "Java · Spring Boot · Microservices · REST APIs · React · GenAI",
   tagline: "Java backends built to survive production.",
   description:
-    "Java backend engineer in Pune building Spring Boot microservices, payment integrations, Kafka pipelines and AI-powered search. Board member of Southco's AI team, leading an AI-first approach to development.",
+    "Java backend engineer in Pune building Spring Boot microservices, payment integrations, Kafka pipelines and AI-powered search — plus React, Node and MongoDB when a feature needs the whole stack. Board member of Southco's AI team, leading an AI-first approach to development.",
 
   url: env.siteUrl,
   locale: "en_US",
@@ -64,7 +64,7 @@ export const siteConfig = {
   /** Drives the "available for work" affordance. Flip when that changes. */
   availability: {
     open: true,
-    label: "Open to Java backend roles",
+    label: "Open to Java & backend roles",
   },
 } as const;
 

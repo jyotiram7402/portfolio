@@ -48,7 +48,35 @@ export const heroLines = [
 export const HERO_ACCENT_LINE = heroLines.length - 1;
 
 export const heroSubtitle =
-  "Software engineer with two years on enterprise backend systems — Spring Boot services, three payment gateways, Kafka event pipelines and AI-powered search. I sit on Southco's AI board, leading the AI-first approach to how we build.";
+  "Software engineer with two years on enterprise backend systems. Java and Spring Boot are where I work and where I go deepest; I also pick up the React, JavaScript and Node work when it lands on my desk. I sit on Southco's AI board, leading the AI-first approach to how we build.";
+
+/* -------------------------------------------------------------------------- */
+/*  The statement band                                                        */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * The argument the site is actually making, stated once and plainly.
+ *
+ * It sits directly under the hero because it reframes everything below it: the projects
+ * are not a gallery, they are evidence of things that got adopted. Authored as a lead
+ * plus supporting paragraphs so the component can give the lead display weight without
+ * shouting the whole block.
+ *
+ * Two claims, both defensible:
+ *
+ * 1. R&D only counts when it ships. The DevContainer is the proof — a security risk
+ *    found, an implementation built, and 20 developers moved onto it.
+ * 2. Backend engineering is principles, not a language. SmartShield is the proof — a
+ *    production bot attack answered in Python and machine learning, because that was
+ *    what the problem needed.
+ */
+export const heroStatement = {
+  lead: "This is not a portfolio. It is a record of what got adopted.",
+  body: [
+    "Anyone can run an R&D spike and write it up. What counts is walking into the room with a working implementation, and having the organisation accept it and put it into production. That is the difference between an interesting experiment and engineering.",
+    "And backend work is not a language. Knowing Java does not mean I only belong on Java. Name the vertical and the stack — if I understand the boundaries, the data model and the failure paths, the language is an implementation detail. The bot-mitigation system on this page is written in Python for exactly that reason: that is what the problem needed.",
+  ],
+} as const;
 
 /* -------------------------------------------------------------------------- */
 /*  Rotating roles                                                            */
@@ -139,14 +167,28 @@ export const storyCards: readonly StoryCard[] = [
     id: "focus",
     kicker: "Current focus",
     title: "Java, Spring Boot and event-driven design",
-    body: "Deepening Spring Boot, JPA and Kafka on the backend — service boundaries drawn around data ownership, and async messaging where a synchronous call would turn one outage into three.",
+    body: "Java and Spring Boot are where I go deepest — JPA, Kafka, service boundaries drawn around data ownership, and async messaging where a synchronous call would turn one outage into three. Day to day that work is integration-shaped, and I take the React, JavaScript and Node requests too when they land.",
     icon: Compass,
+  },
+  {
+    id: "shipping",
+    kicker: "How I ship",
+    title: "From scratch, or with AI — whichever is the right trade",
+    body: "I can build a service from an empty directory, and I can get a working product out in days with AI assistance on Next.js, Supabase and Vercel, wired through Git. Knowing which of the two a problem deserves is the actual skill; the interesting part is never the scaffolding.",
+    icon: GitBranch,
+  },
+  {
+    id: "range",
+    kicker: "Range",
+    title: "Backend principles travel — syntax does not",
+    body: "Java and Spring are my depth. But the bot-mitigation system on this site is Python and machine learning, the streaming work leaned on Redis and S3, and the full-stack work is React, Node and MongoDB. Boundaries, data modelling and failure paths are the same argument in every language.",
+    icon: Layers,
   },
   {
     id: "next",
     kicker: "Where next",
     title: "A Java backend team worth learning from",
-    body: "Looking for a Java backend or Java full-stack role where the architecture is discussed rather than inherited, and where owning a service end to end is expected rather than exceptional.",
+    body: "Looking for a Java backend, Java full-stack or backend role where the architecture is discussed rather than inherited, and where owning a service end to end is expected rather than exceptional. Not looking to be boxed into a single language.",
     icon: Rocket,
   },
 ];
