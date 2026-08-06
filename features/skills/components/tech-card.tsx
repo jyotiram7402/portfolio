@@ -1,9 +1,10 @@
 "use client";
 
-import { useId } from "react";
+import { type CSSProperties, useId } from "react";
 
 import { TiltCard } from "@/components/animation/tilt-card";
 import { PROFICIENCY_META } from "@/data/skills";
+import { getTechBrand } from "@/lib/tech-brand";
 import { cn } from "@/lib/utils";
 import type { Technology } from "@/types/skills";
 
@@ -32,10 +33,15 @@ export interface TechCardProps {
  *
  * `TiltCard` supplies the lean and the pointer highlight and no-ops on touch and
  * under reduced motion, so there are no capability checks here.
+ *
+ * The chip carries a brand mark where one exists and a semantic glyph where the entry
+ * is a concept rather than a product — `lib/tech-brand.ts` owns that decision, and its
+ * header records why the brand colour tints the chip instead of painting the glyph.
  */
 export function TechCard({ technology, pinned, onTogglePin }: TechCardProps) {
   const meta = PROFICIENCY_META[technology.proficiency];
   const descriptionId = useId();
+  const { Glyph, color } = getTechBrand(technology);
 
   const dots = [0, 1, 2];
 
@@ -66,14 +72,18 @@ export function TechCard({ technology, pinned, onTogglePin }: TechCardProps) {
             "group-data-[pinned]/tech:opacity-0",
           )}
         >
+          {/* The brand chip. `--brand` is data, not styling — it varies per
+              technology, which no static class can express. Same justification as
+              the orbit angle in `tech-orbit.tsx`. */}
           <span
             aria-hidden="true"
+            style={color ? ({ "--brand": color } as CSSProperties) : undefined}
             className={cn(
-              "grid size-9 place-items-center rounded-lg border border-border",
-              "bg-elevated font-mono text-xs font-medium text-muted",
+              "brand-chip grid size-9 shrink-0 place-items-center rounded-lg border",
+              "text-foreground",
             )}
           >
-            {technology.name.slice(0, 2).toUpperCase()}
+            <Glyph className="size-4.5" />
           </span>
 
           <span className="text-sm leading-snug font-semibold tracking-tight text-foreground">

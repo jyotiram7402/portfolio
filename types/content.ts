@@ -18,19 +18,3 @@ export interface ContentEntry<TMeta = ContentFrontmatter> {
   readingTime: number;
 }
 
-export interface TechStackItem {
-  name: string;
-  href: string;
-  /** Short reason this dependency earns its place in the bundle. */
-  role: string;
-  category: TechCategory;
-}
-
-export type TechCategory =
-  | "framework"
-  | "language"
-  | "styling"
-  | "motion"
-  | "3d"
-  | "content"
-  | "platform";

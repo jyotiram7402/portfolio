@@ -28,6 +28,18 @@
   box-shadow: var(--shadow-inset);
 }
 
+/* Brand-tinted chip, for the technology explorer's logos.
+
+   `--brand` is set per element by `lib/tech-brand.ts`; a technology with no brand
+   colour falls through to the neutral border, so the chip is never unstyled. The
+   tint is deliberately weak: it is doing identification, not decoration, and it has
+   to hold up on both #000 and #fff without a second palette. The glyph itself is
+   never painted in the brand colour — see the note in `lib/tech-brand.ts`. */
+@utility brand-chip {
+  background-color: color-mix(in oklab, var(--brand, transparent) 20%, var(--elevated));
+  border-color: color-mix(in oklab, var(--brand, transparent) 50%, var(--border));
+}
+
 /* --- Text treatments ----------------------------------------------------- */
 
 @utility text-gradient {

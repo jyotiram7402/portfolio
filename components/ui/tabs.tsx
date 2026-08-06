@@ -107,8 +107,16 @@ export function Tabs({
       onKeyDown={onKeyDown}
       className={cn(
         // Scrolls on narrow viewports rather than wrapping into three ragged rows.
-        "no-scrollbar -mx-6 flex snap-x snap-mandatory gap-2 overflow-x-auto px-6",
+        // The bleed matches `Container`'s gutter at each breakpoint, so the row starts
+        // on the page's left edge instead of 8px inside or outside it.
+        "no-scrollbar -mx-6 flex gap-2 overflow-x-auto px-6 sm:-mx-8 sm:px-8",
         "md:mx-0 md:flex-wrap md:overflow-visible md:px-0",
+        // Two rules that make this row usable on a phone. `overscroll-x-contain`
+        // stops a horizontal swipe from chaining into the browser's back gesture.
+        // Scroll snapping is deliberately absent: `snap-mandatory` here re-snapped
+        // the row on the slightest horizontal component of a vertical swipe, so the
+        // filters visibly jerked sideways while the reader was scrolling the page.
+        "overscroll-x-contain",
         className,
       )}
     >
@@ -127,9 +135,12 @@ export function Tabs({
             tabIndex={isActive ? 0 : -1}
             onClick={() => onSelect(tab.id)}
             className={cn(
-              "relative inline-flex shrink-0 snap-start items-center gap-2 rounded-full",
+              "relative inline-flex shrink-0 items-center gap-2 rounded-full",
               "font-medium whitespace-nowrap transition-colors",
               "duration-[var(--duration-fast)] focus-ring",
+              // 44px minimum touch height on a phone, dropping to the visual size once
+              // there is a pointer. A 32px filter chip is a miss waiting to happen.
+              "min-h-11 md:min-h-0",
               size === "sm" ? "px-3 py-1.5 text-xs" : "px-4 py-2 text-sm",
               isActive ? "text-foreground" : "text-muted hover:text-foreground",
             )}

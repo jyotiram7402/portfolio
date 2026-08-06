@@ -9,7 +9,6 @@ import { Divider } from "@/components/ui/divider";
 import { navigationConfig } from "@/config/navigation";
 import { siteConfig } from "@/config/site";
 import { socialConfig } from "@/config/social";
-import { techStack } from "@/data/tech-stack";
 import { cn } from "@/lib/utils";
 import { externalLinkAttributes } from "@/utils/url";
 
@@ -21,7 +20,6 @@ export function Footer({ className }: FooterProps) {
   // Evaluated at render. On a statically generated page that is build time,
   // which is correct for a copyright line and avoids a client-only re-render.
   const year = new Date().getFullYear();
-  const highlighted = techStack.filter((item) => item.category !== "platform");
 
   return (
     <footer
@@ -72,32 +70,9 @@ export function Footer({ className }: FooterProps) {
         <Divider fade className="my-12" />
 
         <div className="flex flex-col-reverse gap-8 sm:flex-row sm:items-end sm:justify-between">
-          <div className="flex flex-col gap-3">
-            <p className="text-xs text-subtle">
-              © {year} {siteConfig.name}. All rights reserved.
-            </p>
-
-            <p className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-xs text-subtle">
-              <span>Built with</span>
-              {highlighted.map((item, index) => (
-                <span key={item.name} className="inline-flex items-center gap-1.5">
-                  <a
-                    href={item.href}
-                    {...externalLinkAttributes()}
-                    title={item.role}
-                    className="rounded text-muted underline-offset-2 transition-colors hover:text-foreground hover:underline focus-ring"
-                  >
-                    {item.name}
-                  </a>
-                  {index < highlighted.length - 1 ? (
-                    <span aria-hidden="true" className="text-border-strong">
-                      ·
-                    </span>
-                  ) : null}
-                </span>
-              ))}
-            </p>
-          </div>
+          <p className="text-xs text-subtle">
+            © {year} {siteConfig.name}. All rights reserved.
+          </p>
 
           <ul className="flex items-center gap-1">
             {socialConfig.links.map((link) => {
@@ -111,7 +86,10 @@ export function Footer({ className }: FooterProps) {
                     {...(isMail ? {} : externalLinkAttributes())}
                     aria-label={link.label}
                     className={cn(
-                      "inline-flex size-9 items-center justify-center rounded-full",
+                      "inline-flex items-center justify-center rounded-full",
+                      // 44px on touch: ten of these sit shoulder to shoulder, so an
+                      // undersized target here means hitting the wrong network.
+                      "size-11 md:size-9",
                       "text-muted transition-colors duration-[var(--duration-fast)]",
                       "hover:bg-highlight hover:text-foreground focus-ring",
                     )}

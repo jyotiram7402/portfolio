@@ -35,7 +35,9 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
     return (
       <div
         aria-hidden="true"
-        className={cn("size-9 shrink-0", className)}
+        // Must track the `icon-sm` footprint at every breakpoint, or the navbar
+        // shifts the moment the real button replaces this placeholder.
+        className={cn("size-11 shrink-0 md:size-9", className)}
       />
     );
   }

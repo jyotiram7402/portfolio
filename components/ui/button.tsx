@@ -62,7 +62,10 @@ const buttonVariants = cva(
         md: "h-11 px-5 text-sm",
         lg: "h-13 px-7 text-base",
         icon: "size-11",
-        "icon-sm": "size-9",
+        // 44px on touch, 36px once there is a pointer. The dense visual size is right
+        // for a navbar or a dialog corner, but it is under the touch-target minimum,
+        // and these are the controls a phone user reaches for most.
+        "icon-sm": "size-11 md:size-9",
       },
       fullWidth: {
         true: "w-full",

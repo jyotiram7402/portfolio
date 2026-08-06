@@ -31,8 +31,11 @@ export interface CategoryTabsProps {
  * cutting. That is one animated element for the whole list rather than a transition
  * on every tab.
  *
- * Horizontal scroll below `md` uses `no-scrollbar` with `snap` — the row stays one
- * line on a 320px screen instead of wrapping into three.
+ * Horizontal scroll below `md` keeps the row on one line at 320px instead of wrapping
+ * into three. It carries `overscroll-x-contain` so a swipe that runs off the end does
+ * not trigger the browser's back gesture, and it deliberately does *not* snap: with
+ * `snap-mandatory` the row re-snapped on any horizontal component of a vertical swipe,
+ * which made the tabs jerk sideways while the reader was scrolling the page.
  */
 export function CategoryTabs({
   activeId,
@@ -94,8 +97,9 @@ export function CategoryTabs({
       aria-orientation="horizontal"
       onKeyDown={onKeyDown}
       className={cn(
-        "no-scrollbar -mx-6 flex snap-x snap-mandatory gap-2 overflow-x-auto px-6",
+        "no-scrollbar -mx-6 flex gap-2 overflow-x-auto px-6 sm:-mx-8 sm:px-8",
         "md:mx-0 md:flex-wrap md:overflow-visible md:px-0",
+        "overscroll-x-contain",
         className,
       )}
     >
@@ -114,10 +118,12 @@ export function CategoryTabs({
             tabIndex={isActive ? 0 : -1}
             onClick={() => onSelect(category.id)}
             className={cn(
-              "relative shrink-0 snap-start rounded-full px-4 py-2",
+              "relative shrink-0 rounded-full px-4 py-2",
               "inline-flex items-center gap-2 text-sm font-medium whitespace-nowrap",
               "transition-colors duration-[var(--duration-fast)]",
               "focus-ring",
+              // 44px minimum touch height on a phone; the visual size returns on desktop.
+              "min-h-11 md:min-h-0",
               isActive ? "text-foreground" : "text-muted hover:text-foreground",
             )}
           >

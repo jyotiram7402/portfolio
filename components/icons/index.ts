@@ -4,6 +4,12 @@ export { Spinner } from "./spinner";
 export type { SpinnerProps } from "./spinner";
 
 /**
+ * The brand marks are intentionally *not* re-exported here. They have exactly one
+ * consumer — `lib/tech-brand.ts` — and importing them from that module directly keeps
+ * them out of any bundle that only wants `LogoMark`.
+ */
+
+/**
  * Everything else comes from `lucide-react`, imported at the point of use.
  *
  * Re-exporting icons through this barrel would defeat

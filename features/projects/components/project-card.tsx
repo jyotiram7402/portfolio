@@ -143,6 +143,9 @@ export function ProjectCard({ project, featured = false, className }: ProjectCar
                         "inline-flex items-center gap-1.5 rounded-full border border-border",
                         "bg-elevated px-3 py-1.5 text-xs font-medium text-foreground",
                         "transition-colors hover:border-border-strong focus-ring",
+                        // These are the only outbound links on the card, so they have to
+                        // clear the 44px touch minimum on a phone.
+                        "min-h-11 md:min-h-0",
                       )}
                     >
                       {link.kind === "repo" ? (

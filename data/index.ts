@@ -63,7 +63,6 @@ export {
   skillCategories,
 } from "./skills";
 export { TALK_KIND_META, speakingTopics, talkKinds, talks } from "./speaking";
-export { getTechByCategory, techStack } from "./tech-stack";
 
 /**
  * `data/` holds typed, hand-authored content that the UI renders — the kind of thing
