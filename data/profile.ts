@@ -14,6 +14,7 @@ import {
   Users,
 } from "lucide-react";
 
+import { siteConfig } from "@/config/site";
 import { skillCategories } from "@/data/skills";
 import type { Highlight, Role, Stat, StoryCard } from "@/types/profile";
 
@@ -32,19 +33,25 @@ import type { Highlight, Role, Stat, StoryCard } from "@/types/profile";
 /* -------------------------------------------------------------------------- */
 
 /**
- * Hero headline, one entry per visual line.
+ * Hero headline: the name, one entry per visual line.
  *
- * Authored as lines rather than a sentence because the reveal masks each one separately — the break
- * points are a design decision, not something to leave to the browser. The final line is rendered in
- * the brand gradient.
+ * Derived from `siteConfig.name` rather than written out again, so the site has one place a
+ * name is spelled. Split on whitespace because the reveal masks each line separately — the
+ * break points are a design decision, not something to leave to the browser.
+ *
+ * The headline used to be the tagline ("Java backends built to survive production."). That
+ * line has not gone anywhere — it is still `siteConfig.tagline`, and it still carries the
+ * footer and the social card. But a portfolio's `h1` is the person, and the rotating role
+ * beneath it now does the positioning work the tagline was doing.
  */
-export const heroLines = [
-  "Java backends",
-  "built to survive",
-  "production.",
-] as const;
+export const heroLines: readonly string[] = siteConfig.name.split(" ");
 
-/** Index of the line that receives the gradient treatment. */
+/**
+ * Index of the line that receives the gradient treatment.
+ *
+ * The surname, so the first name stays at full contrast and the second falls away — which
+ * reads as one deliberate mark rather than as two words at different opacities.
+ */
 export const HERO_ACCENT_LINE = heroLines.length - 1;
 
 export const heroSubtitle =
@@ -83,15 +90,22 @@ export const heroStatement = {
 /* -------------------------------------------------------------------------- */
 
 /**
- * Ordered by hiring priority, and the order is the message: a visitor who reads only the first two
- * should come away thinking Java backend.
+ * The rotating line under the name.
+ *
+ * Ordered by hiring priority, and the order is the message: the name is the `h1`, so this
+ * list is what tells a visitor what to hire me as. Whoever reads only the first entry — and
+ * a crawler reads exactly that, since the rotation is client-side — should come away with
+ * "Java backend".
+ *
+ * Kept to titles a job posting would actually use. "AI-First Development Lead" was accurate
+ * about the board role but is not a role anyone searches for; "AI Engineer" is.
  */
 export const roles: readonly Role[] = [
   { id: "java-backend", label: "Java Backend Engineer" },
-  { id: "spring", label: "Spring Boot Developer" },
   { id: "java-fullstack", label: "Java Full Stack Developer" },
-  { id: "microservices", label: "Microservices Engineer" },
-  { id: "ai", label: "AI-First Development Lead" },
+  { id: "backend", label: "Backend Engineer" },
+  { id: "spring", label: "Spring Boot Developer" },
+  { id: "ai", label: "AI Engineer" },
   { id: "mern", label: "MERN Stack Developer" },
 ];
 

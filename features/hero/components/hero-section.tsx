@@ -58,36 +58,42 @@ export function HeroSection() {
           </Badge>
         </Reveal>
 
-        <TextReveal
-          as="h1"
-          id="hero-heading"
-          immediate
-          delay={0.1}
-          stagger={0.11}
-          className="text-display font-semibold tracking-tightest text-balance text-foreground"
-          lines={heroLines.map((line, index) =>
-            index === HERO_ACCENT_LINE ? (
-              <span key={line} className="text-gradient-brand">
-                {line}
-              </span>
-            ) : (
-              line
-            ),
-          )}
-        />
+        {/* Name and role are one unit, so they get their own tighter gap rather than the
+            column's `gap-8`. The role sits immediately under the name and above the
+            subtitle: the name is who, this is what, and separating the two with a
+            paragraph put the answer to the more urgent question third. */}
+        <div className="flex flex-col gap-3">
+          <TextReveal
+            as="h1"
+            id="hero-heading"
+            immediate
+            delay={0.1}
+            stagger={0.11}
+            className="text-display font-semibold tracking-tightest text-balance text-foreground"
+            lines={heroLines.map((line, index) =>
+              index === HERO_ACCENT_LINE ? (
+                <span key={line} className="text-gradient-brand">
+                  {line}
+                </span>
+              ) : (
+                line
+              ),
+            )}
+          />
+
+          <Reveal effect="up" distance={12} delay={0.4}>
+            <AnimatedRoles size="lg" />
+          </Reveal>
+        </div>
 
         <Reveal
           effect="up"
           distance={16}
-          delay={0.45}
+          delay={0.5}
           as="p"
           className="max-w-xl text-lg leading-relaxed text-muted"
         >
           {heroSubtitle}
-        </Reveal>
-
-        <Reveal effect="up" distance={12} delay={0.55}>
-          <AnimatedRoles />
         </Reveal>
 
         <Reveal
