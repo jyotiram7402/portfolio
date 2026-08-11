@@ -73,8 +73,7 @@ export function TechCard({ technology, pinned, onTogglePin }: TechCardProps) {
           )}
         >
           {/* The brand chip. `--brand` is data, not styling — it varies per
-              technology, which no static class can express. Same justification as
-              the orbit angle in `tech-orbit.tsx`. */}
+              technology, which no static class can express. */}
           <span
             aria-hidden="true"
             style={color ? ({ "--brand": color } as CSSProperties) : undefined}

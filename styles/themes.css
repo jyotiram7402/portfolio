@@ -139,6 +139,65 @@
 }
 
 /* ==========================================================================
+   An always-dark subtree.
+
+   The footer is the only user. It marks the end of the document, and its oversized
+   wordmark only reads against a dark field — so it stays dark even in the light theme.
+
+   Implemented by redeclaring the semantic tokens rather than by hardcoding colours in
+   the component. That distinction is the whole point: `Logo`, `NavLink` and `Badge` are
+   shared components that reference `--foreground` and `--muted`, and they retint here
+   without knowing this context exists. Hardcoding `text-white/60` in the footer instead
+   would have left those three unreadable in the light theme.
+
+   Deliberately outside `@layer`, so it beats the base layer while still losing to any
+   utility class a component sets explicitly.
+   ========================================================================== */
+
+.dark-surface {
+  color-scheme: dark;
+
+  --background: #050505;
+  --surface: #0a0a0a;
+  --card: #141416;
+  --elevated: #1d1d1f;
+  --overlay: rgb(0 0 0 / 0.72);
+
+  --border: rgb(255 255 255 / 0.10);
+  --border-strong: rgb(255 255 255 / 0.20);
+  --input: rgb(255 255 255 / 0.06);
+  --ring: #2997ff;
+
+  --foreground: #f5f5f7;
+  --muted: #a1a1a6;
+  --subtle: #86868b;
+  --faint: rgb(134 134 139 / 0.6);
+
+  --primary: #2997ff;
+  --primary-hover: #4aa8ff;
+  --primary-foreground: #000000;
+  --secondary: #a1a1a6;
+  --secondary-hover: #c7c7cc;
+  --secondary-foreground: #000000;
+  --accent: #2997ff;
+  --accent-hover: #4aa8ff;
+  --accent-foreground: #000000;
+
+  --success: #30d158;
+  --success-foreground: #00250d;
+  --warning: #ffd60a;
+  --warning-foreground: #2b2200;
+  --danger: #ff453a;
+  --danger-foreground: #2b0603;
+
+  --glass: rgb(255 255 255 / 0.05);
+  --glass-strong: rgb(255 255 255 / 0.08);
+  --glass-border: rgb(255 255 255 / 0.10);
+  --highlight: rgb(255 255 255 / 0.08);
+  --selection: rgb(41 151 255 / 0.30);
+}
+
+/* ==========================================================================
    Non-colour runtime tokens.
 
    These are not part of a Tailwind namespace, so they are consumed either in

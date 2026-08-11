@@ -292,32 +292,6 @@
   user-select: none;
 }
 
-/* --- Orbit geometry ------------------------------------------------------
-   Used by the hero's technology orbit. Three nested transforms, one per
-   element, because a single element cannot hold both a static rotation and a
-   keyframed one:
-
-     orbit-node          places the node on the ring
-     orbit-upright       cancels the placement rotation, so text sits level
-     (animation)         cancels the ring's spin, applied by the caller
-
-   `--orbit-radius` is authored in `cqw`, so the whole assembly scales with its
-   container rather than with the viewport. `--orbit-angle` is per-node data and
-   is the only value passed inline. */
-
-@utility orbit-node {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) rotate(var(--orbit-angle, 0deg))
-    translateY(calc(-1 * var(--orbit-radius, 0px)));
-}
-
-@utility orbit-upright {
-  display: block;
-  transform: rotate(calc(-1 * var(--orbit-angle, 0deg)));
-}
-
 /* Typing caret for the assistant's streaming reply. Declared here rather than in
    `@theme` because it is referenced through an arbitrary `animate-[...]` value,
    which Tailwind cannot trace back to a theme key. */
@@ -329,18 +303,6 @@
   50%,
   100% {
     opacity: 0;
-  }
-}
-
-/* Declared outside `@theme` so it is always emitted, and animating the
-   independent `rotate` property rather than `transform` so it can never clobber
-   a positioning transform on the same element. */
-@keyframes orbit-spin {
-  from {
-    rotate: 0deg;
-  }
-  to {
-    rotate: 360deg;
   }
 }
 

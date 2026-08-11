@@ -16,6 +16,13 @@ export const siteConfig = {
   firstName: "Jyotiram",
   /** Compact form for the logo lockup and the PWA short name. */
   shortName: "JK",
+  /**
+   * Display string for the oversized footer wordmark.
+   *
+   * The first name rather than `shortName` or the full name: two initials are lost at
+   * that size and "Jyotiram Kamble" sets too wide and too thin to read as a mark.
+   */
+  wordmark: "JYOTIRAM",
   /** Appended to every page title: "About — Jyotiram Kamble". */
   titleTemplate: "%s — Jyotiram Kamble",
   /** Title of the home page, where the template is not applied. */

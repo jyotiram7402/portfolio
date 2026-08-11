@@ -11,16 +11,16 @@ import { siteConfig } from "@/config/site";
 import { SECTIONS } from "@/constants/sections";
 import { HERO_ACCENT_LINE, heroLines, heroSubtitle } from "@/data/profile";
 import { AnimatedRoles } from "@/features/hero/components/animated-roles";
+import { HeroPortrait } from "@/features/hero/components/hero-portrait";
 import { ScrollCue } from "@/features/hero/components/scroll-cue";
-import { TechOrbit } from "@/features/hero/components/tech-orbit";
 import { cn } from "@/lib/utils";
 
 /**
  * The first screen.
  *
- * A Server Component. Everything interactive — the rotating role, the orbit, the
- * scroll cue, the magnetic button — is a client leaf, so the copy that matters for
- * SEO and for the largest contentful paint is rendered on the server.
+ * A Server Component. Everything interactive — the rotating role, the scroll cue, the
+ * magnetic button — is a client leaf, so the copy that matters for SEO and for the
+ * largest contentful paint is rendered on the server.
  *
  * Layout: one column below `lg`, a 6/5 split above it. Content comes first in the
  * DOM on every breakpoint. That is the right reading order, it keeps the headline
@@ -125,8 +125,8 @@ export function HeroSection() {
       {/* Right: interactive visual                                        */}
       {/* ---------------------------------------------------------------- */}
       <Reveal effect="scale" delay={0.3}>
-        <Parallax strength={0.08}>
-          <TechOrbit />
+        <Parallax strength={0.06}>
+          <HeroPortrait />
         </Parallax>
       </Reveal>
 
