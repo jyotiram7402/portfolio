@@ -77,6 +77,20 @@ export const mainNav: readonly NavItem[] = [
     icon: FileText,
     description: "Long-form notes on backend engineering and applied AI",
   }),
+  /**
+   * Last in the row, and named for what the visitor wants rather than for what the page is.
+   *
+   * "For recruiters" is the page's own title and stays its heading; as a nav label it asks
+   * the reader to self-identify before clicking. "Hire me" states the intent, which is the
+   * job of a nav item. It sits beside "Get in touch" deliberately — one is the pitch, the
+   * other is the contact form.
+   */
+  routeItem({
+    label: "Hire me",
+    href: ROUTES.recruiters,
+    icon: UserSearch,
+    description: "The short version: availability, notice period and what I'm looking for",
+  }),
 ];
 
 /**

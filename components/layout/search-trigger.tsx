@@ -14,10 +14,14 @@ export interface SearchTriggerProps {
 /**
  * The navbar's search affordance.
  *
- * Two shapes for two contexts. Above `md` it is a wide button showing the shortcut, because a
+ * Two shapes for two contexts. From `xl` it is a wide button showing the shortcut, because a
  * discoverable ⌘K is what turns the palette from a hidden feature into the main way people
- * navigate the site. Below that it collapses to an icon, where a 12rem button would crowd out
- * the logo.
+ * navigate the site. Below that it collapses to an icon.
+ *
+ * The breakpoint is `xl`, not `md`: the main nav appears at `lg`, and at exactly 1024px the
+ * logo, six nav items, a 12rem search box, the theme toggle and the call to action do not
+ * fit in the container. The icon is the thing that gives way there, because the shortcut hint
+ * is worth less than a nav row that does not wrap.
  *
  * The `Kbd` hint is not decoration — it is the entire discovery mechanism for the keyboard
  * path, and hiding it would mean only people who already guessed would find it.
@@ -31,7 +35,7 @@ export function SearchTrigger({ className }: SearchTriggerProps) {
         type="button"
         onClick={() => setOpen(true)}
         className={cn(
-          "hidden items-center gap-2.5 rounded-full border border-border md:flex",
+          "hidden items-center gap-2.5 rounded-full border border-border xl:flex",
           "bg-input py-1.5 pr-2 pl-3.5 text-sm text-subtle",
           "transition-colors duration-[var(--duration-fast)]",
           "hover:border-border-strong hover:text-muted focus-ring",
@@ -48,7 +52,7 @@ export function SearchTrigger({ className }: SearchTriggerProps) {
         variant="ghost"
         size="sm"
         onClick={() => setOpen(true)}
-        className={cn("md:hidden", "text-muted hover:text-foreground")}
+        className={cn("xl:hidden", "text-muted hover:text-foreground")}
       >
         <Search />
       </IconButton>

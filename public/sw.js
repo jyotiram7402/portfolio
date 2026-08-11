@@ -26,7 +26,15 @@
  *   form starts submitting yesterday's data.
  */
 
-const VERSION = "v1";
+/**
+ * Bumping this evicts every cache on the next activation — `activate` deletes anything not in
+ * `expected`. That is the only lever that reaches a visitor whose browser is already holding a
+ * bad entry, so it must be incremented whenever the strategies below change.
+ *
+ * v2: fixed the asset branch turning a transient network failure into a permanent one, and
+ * stopped a new worker from claiming pages loaded by the previous build. See the notes on each.
+ */
+const VERSION = "v2";
 const SHELL_CACHE = `shell-${VERSION}`;
 const ASSET_CACHE = `assets-${VERSION}`;
 const MEDIA_CACHE = `media-${VERSION}`;
@@ -67,14 +75,48 @@ self.addEventListener("activate", (event) => {
         await self.registration.navigationPreload.enable();
       }
 
-      await self.clients.claim();
+      /*
+        `clients.claim()` is deliberately NOT called.
+
+        It used to be, and it is the more destructive half of a real bug. Claiming makes this
+        worker take over pages that are already open — pages served by the *previous* build.
+        Next.js embeds build-specific, content-hashed chunk URLs in its HTML, and a lazily
+        imported chunk is not requested until the visitor interacts. So an open tab from the
+        old build would ask this worker for an old chunk URL that the new deployment no longer
+        serves, get a 404, and the feature behind that chunk would simply never appear.
+
+        On this site the only lazily imported chunks are the command palette and the chat
+        panel, which is exactly the shape of "everything works except search and chat".
+
+        Without claiming, an open tab keeps talking to the worker that matches its own build,
+        and this one takes over on the next navigation — when the HTML and the chunk URLs are
+        from the same deployment.
+      */
     })(),
   );
 });
 
-/** Lets the page tell a waiting worker to activate — used by the update prompt. */
+/**
+ * Lets the page tell a waiting worker to take over — used by the update prompt.
+ *
+ * This is the *only* place `clients.claim()` is called, and that is deliberate. Claiming on
+ * activation swaps assets underneath pages that never asked (see the note in `activate`). Here
+ * the page has explicitly requested the update and is listening for `controllerchange` to
+ * reload itself, so taking over its assets is safe — it is about to discard them anyway.
+ *
+ * Claiming is also what makes `controllerchange` fire. `skipWaiting()` alone activates this
+ * worker without giving it control of the open page, so the prompt's reload would never
+ * trigger.
+ */
 self.addEventListener("message", (event) => {
-  if (event.data === "SKIP_WAITING") self.skipWaiting();
+  if (event.data !== "SKIP_WAITING") return;
+
+  event.waitUntil(
+    (async () => {
+      await self.skipWaiting();
+      await self.clients.claim();
+    })(),
+  );
 });
 
 function isBuildAsset(url) {
@@ -157,12 +199,34 @@ self.addEventListener("fetch", (event) => {
         const cached = await caches.match(request);
         if (cached) return cached;
 
-        const response = await fetch(request);
-        if (response.ok) {
-          const cache = await caches.open(ASSET_CACHE);
-          void cache.put(request, response.clone());
+        try {
+          const response = await fetch(request);
+
+          // Only store a real hit. Caching a 404 from a superseded build would make the
+          // failure outlive the deployment that caused it.
+          if (response.ok) {
+            const cache = await caches.open(ASSET_CACHE);
+            void cache.put(request, response.clone());
+          }
+          return response;
+        } catch {
+          /*
+            The network failed on a build asset.
+
+            This branch matters far more than its size suggests. `event.respondWith()` given a
+            rejected promise fails the request — and for a lazily imported chunk, Next.js and
+            React cache that rejection. The dynamic import never retries, so the feature behind
+            it stays dead for the life of the page even after connectivity comes back.
+
+            A second cache lookup is the only recovery available here; past that, fail so the
+            browser reports a network error rather than the worker inventing a response. The
+            client-side retry in `lib/lazy-retry.ts` is what actually makes the feature
+            recoverable.
+          */
+          const fallback = await caches.match(request);
+          if (fallback) return fallback;
+          throw new Error(`Build asset unavailable: ${url.pathname}`);
         }
-        return response;
       })(),
     );
     return;

@@ -81,13 +81,23 @@ export function ServiceWorker() {
   const applyUpdate = useCallback(() => {
     if (!waiting) return;
 
+    let done = false;
+    const reload = () => {
+      if (done) return;
+      done = true;
+      window.location.reload();
+    };
+
     // The reload is driven by `controllerchange` rather than fired immediately, so the
     // page only reloads once the new worker is genuinely in control.
-    navigator.serviceWorker.addEventListener(
-      "controllerchange",
-      () => window.location.reload(),
-      { once: true },
-    );
+    navigator.serviceWorker.addEventListener("controllerchange", reload, {
+      once: true,
+    });
+
+    // Fallback, because a button that does nothing is worse than one that reloads a beat
+    // early. `controllerchange` depends on the waiting worker calling `clients.claim()`; if
+    // an older worker is still installed and does not, this would otherwise hang forever.
+    window.setTimeout(reload, 2000);
 
     waiting.postMessage("SKIP_WAITING");
   }, [waiting]);

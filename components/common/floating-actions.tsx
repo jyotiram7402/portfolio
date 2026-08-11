@@ -16,14 +16,22 @@ import { useCommandPalette } from "@/hooks/use-command-palette";
 import { useIsMobile } from "@/hooks/use-is-mobile";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { useScroll } from "@/hooks/use-scroll";
+import { lazyRetry } from "@/lib/lazy-retry";
 import { cn } from "@/lib/utils";
 
 /**
  * The chat panel is the heaviest client component on the page. It is only fetched when
  * the drawer is opened, so a visitor who never uses the assistant never downloads it.
+ *
+ * Wrapped in `lazyRetry` for the same reason the command palette is: `dynamic` memoises a
+ * failed import, so one dropped request for this chunk leaves the button doing nothing for
+ * the rest of the page's life, with nothing on screen to say why.
  */
 const ChatPanel = dynamic(
-  () => import("@/features/ai-assistant").then((module) => module.ChatPanel),
+  () =>
+    lazyRetry("chat-panel", () => import("@/features/ai-assistant")).then(
+      (module) => module.ChatPanel,
+    ),
   { ssr: false },
 );
 

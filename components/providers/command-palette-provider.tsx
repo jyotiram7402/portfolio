@@ -4,17 +4,22 @@ import dynamic from "next/dynamic";
 import { type ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 
 import { CommandPaletteContext } from "@/components/providers/command-palette-context";
+import { lazyRetry } from "@/lib/lazy-retry";
 
 /**
  * The palette's chunk — search index, result rows, command handlers — is only fetched
  * the first time it is opened. Most visitors never press ⌘K, and they should not pay for
  * it.
+ *
+ * Wrapped in `lazyRetry` because `dynamic` memoises a failed import: without it, one
+ * dropped request for this chunk means ⌘K silently does nothing for the rest of the page's
+ * life, with no error state to explain why.
  */
 const CommandPalette = dynamic(
   () =>
-    import("@/components/common/command-palette").then(
-      (module) => module.CommandPalette,
-    ),
+    lazyRetry("command-palette", () =>
+      import("@/components/common/command-palette"),
+    ).then((module) => module.CommandPalette),
   { ssr: false },
 );
 
