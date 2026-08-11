@@ -1,16 +1,17 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { FolderSearch } from "lucide-react";
-import { useCallback, useId, useMemo, useState } from "react";
+import { FolderSearch, Search, X } from "lucide-react";
+import { useCallback, useDeferredValue, useId, useMemo, useState } from "react";
 
 import { ease } from "@/animations/easings";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Tabs, type TabDefinition } from "@/components/ui/tabs";
 import { DURATION, STAGGER } from "@/config/animations";
 import { projectDomains } from "@/data/projects";
-import { ProjectCard } from "@/features/projects/components/project-card";
+import { ProjectShowcaseCard } from "@/features/projects/components/project-showcase-card";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
+import { queryProjects } from "@/lib/project-selection";
 import { cn } from "@/lib/utils";
 import type { Project, ProjectDomain } from "@/types/projects";
 
@@ -18,9 +19,10 @@ export interface ProjectGridProps {
   /**
    * The resolved project list, passed down from the server.
    *
-   * Deliberately a prop rather than a module import. Projects are now discovered from the GitHub
-   * API by a server-only service, so this component cannot fetch them itself — and taking them as
-   * a prop is also what makes the grid reusable for a future `/work` page.
+   * Deliberately a prop rather than a module import. Projects are discovered from the
+   * GitHub API by a server-only service, so this component cannot fetch them itself — and
+   * taking them as a prop is what lets the homepage showcase and this library share one
+   * resolution.
    */
   projects: readonly Project[];
   className?: string;
@@ -29,23 +31,33 @@ export interface ProjectGridProps {
 const ALL = "all";
 
 /**
- * Filterable project grid.
+ * The full project library: search, domain filters, and every resolved project.
  *
- * The tab list is built from the projects actually present, so a domain with nothing in it is never
- * offered. That matters more now than it did with a hardcoded list: which domains have entries
- * depends on what is tagged on GitHub, and can change without a deploy.
+ * This is the exploration surface. It lives on `/projects` rather than on the homepage,
+ * which is why the filter bar and the search box can afford the space they take.
  *
- * Only the filtered set is mounted, and each card carries a tilt hook and pointer listeners, so
- * filtering genuinely reduces work rather than hiding nodes with CSS.
+ * The tab list is built from the projects actually present, so a domain with nothing in it
+ * is never offered. That matters more with discovery than it did with a hardcoded list:
+ * which domains have entries depends on what is tagged on GitHub and can change without a
+ * deploy.
  *
- * `layout` on the list animates the reflow when the filter changes — the one place a layout
- * animation earns its cost here, because without it cards teleport and the grid reads as a page
- * change rather than a filter.
+ * Search runs through `queryProjects`, which is the same matcher as the command palette —
+ * so `sprbt` finds Spring Boot here exactly as it does there. `useDeferredValue` keeps
+ * typing responsive: on a long list React renders the stale results while the new ones are
+ * computed, instead of blocking the keystroke.
+ *
+ * Only the filtered set is mounted, so filtering genuinely reduces work rather than hiding
+ * nodes with CSS. `layout` animates the reflow — the one place a layout animation earns its
+ * cost here, because without it cards teleport and the grid reads as a page change.
  */
 export function ProjectGrid({ projects, className }: ProjectGridProps) {
   const idPrefix = useId();
+  const searchId = useId();
   const reduceMotion = useReducedMotion();
+
   const [activeId, setActiveId] = useState<string>(ALL);
+  const [search, setSearch] = useState("");
+  const deferredSearch = useDeferredValue(search);
 
   const tabs = useMemo<TabDefinition[]>(() => {
     const counts = new Map<ProjectDomain, number>();
@@ -70,18 +82,59 @@ export function ProjectGrid({ projects, className }: ProjectGridProps) {
 
   const visible = useMemo(
     () =>
-      activeId === ALL
-        ? projects
-        : projects.filter((project) =>
-            project.domains.includes(activeId as ProjectDomain),
-          ),
-    [activeId, projects],
+      queryProjects(projects, {
+        search: deferredSearch,
+        domain: activeId === ALL ? undefined : (activeId as ProjectDomain),
+      }),
+    [activeId, deferredSearch, projects],
   );
 
   const onSelect = useCallback((id: string) => setActiveId(id), []);
+  const onClear = useCallback(() => setSearch(""), []);
 
   return (
     <div className={cn("flex flex-col gap-8", className)}>
+      {/* ----------------------------------------------------------- search -- */}
+      <div className="relative">
+        <label htmlFor={searchId} className="sr-only">
+          Search projects by name or technology
+        </label>
+        <Search
+          aria-hidden="true"
+          className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-subtle"
+        />
+        <input
+          id={searchId}
+          type="search"
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
+          placeholder="Search projects — try “kafka” or “spring”"
+          className={cn(
+            "h-12 w-full rounded-full border border-border bg-input pr-12 pl-11",
+            "text-sm text-foreground placeholder:text-subtle",
+            "transition-colors duration-[var(--duration-fast)]",
+            "hover:border-border-strong focus-ring",
+            // The native clear affordance is inconsistent across engines and cannot be
+            // styled, so it is suppressed in favour of the button below.
+            "[&::-webkit-search-cancel-button]:appearance-none",
+          )}
+        />
+        {search.length > 0 ? (
+          <button
+            type="button"
+            onClick={onClear}
+            aria-label="Clear search"
+            className={cn(
+              "absolute top-1/2 right-2 grid size-9 -translate-y-1/2 place-items-center",
+              "rounded-full text-subtle transition-colors",
+              "hover:text-foreground focus-ring",
+            )}
+          >
+            <X aria-hidden="true" className="size-4" />
+          </button>
+        ) : null}
+      </div>
+
       <Tabs
         tabs={tabs}
         activeId={activeId}
@@ -89,6 +142,11 @@ export function ProjectGrid({ projects, className }: ProjectGridProps) {
         label="Filter projects by area"
         idPrefix={idPrefix}
       />
+
+      {/* A live count, so a filter that removed most of the list says so. */}
+      <p aria-live="polite" className="font-mono text-2xs tracking-wider text-subtle">
+        {visible.length} {visible.length === 1 ? "project" : "projects"}
+      </p>
 
       <div
         role="tabpanel"
@@ -98,19 +156,13 @@ export function ProjectGrid({ projects, className }: ProjectGridProps) {
         {visible.length === 0 ? (
           <EmptyState
             icon={FolderSearch}
-            title="Nothing published in that area yet"
-            description="The filter is honest — if a category is empty, there is no work to show there. Try another, or ask the assistant what is coming."
+            title="Nothing matches that yet"
+            description="The filter is honest — if a category is empty, there is no work to show there. Try another area, clear the search, or ask the assistant what is coming."
           />
         ) : (
           <motion.ul
             layout={!reduceMotion}
-            className={cn(
-              "grid gap-5",
-              "sm:grid-cols-2 lg:grid-cols-3",
-              // The lead project claims two columns, which is what stops a three-column
-              // grid from reading as three equal things.
-              "[&>li:first-child]:sm:col-span-2 [&>li:first-child]:lg:col-span-2",
-            )}
+            className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3"
           >
             <AnimatePresence mode="popLayout" initial={false}>
               {visible.map((project, index) => (
@@ -123,11 +175,15 @@ export function ProjectGrid({ projects, className }: ProjectGridProps) {
                   transition={{
                     duration: reduceMotion ? 0.01 : DURATION.slow,
                     ease: ease.outExpo,
+                    // Capped, so the twentieth card is not still waiting to appear.
                     delay: reduceMotion ? 0 : Math.min(index, 5) * STAGGER.tight,
                   }}
                   className="h-full"
                 >
-                  <ProjectCard project={project} featured={index === 0} />
+                  <ProjectShowcaseCard
+                    project={project}
+                    sizes="(min-width: 1280px) 30vw, (min-width: 640px) 46vw, 92vw"
+                  />
                 </motion.li>
               ))}
             </AnimatePresence>

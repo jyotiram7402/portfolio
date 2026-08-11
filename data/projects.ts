@@ -8,6 +8,13 @@ import type { Project, ProjectDomain } from "@/types/projects";
  * this list by id, so a mismatch renders the same project twice — once with live stars
  * and once without.
  *
+ * **`order` versus array position.** The three entries carrying `order: 1|2|3` are the ones
+ * the homepage showcases, selected by `getFeaturedProjects()` in `lib/project-selection.ts`.
+ * All three are verified public repositories, which matters — the homepage is the most-read
+ * surface and its cards must not lead to a case study whose Repository button 404s. Array
+ * position still governs the `/projects` library, so the two orderings are independent on
+ * purpose.
+ *
  * Ordering is the argument, and it is deliberate:
  *
  * 1. **SmartShield first.** It is the only project here that began as a production
@@ -59,6 +66,28 @@ export const projects: readonly Project[] = [
       },
     ],
     featured: true,
+    order: 1,
+    caseStudy: {
+      problem:
+        "During the 2024 Christmas peak our production site went down under a flood of bot traffic originating in China. We blocked the source ranges and the site recovered — then within hours the same traffic pattern reappeared from Russian ranges. That was the moment the actual problem became clear: blocking addresses treats the symptom. Rotating source IPs costs an attacker close to nothing, so any defence keyed on where a request came from expires the moment they move.",
+      solution:
+        "The accepted fix at the time was to enable the platform's built-in JavaScript challenge, and it worked. But it left the question I could not drop: how does a system decide which requests are human in the first place? SmartShield is my answer — a traffic-intelligence service that scores requests on behaviour rather than origin. Request cadence, navigation shape, header consistency and session coherence go into an ensemble of machine-learning and deep-learning models, so the decision adapts as traffic changes instead of expiring with an IP range.",
+      architecture:
+        "A Python scoring service sitting in front of the application, with a feature-extraction layer that turns a raw request and its session history into a vector, an ensemble of classifiers producing a score, and a policy layer that maps that score onto an action — allow, challenge or block. The ensemble is deliberate: a single classifier's blind spot becomes the whole system's blind spot, and with adversarial traffic that blind spot is exactly what gets found. A TypeScript dashboard reads the decisions so the scoring is inspectable rather than a black box.",
+      challenges: [
+        "The feature set had to come from real traffic, not a tutorial dataset. The signals that mattered were the ones we actually saw during the incident, which meant working out what was observable per request before anything could be modelled.",
+        "Distinguishing a fast human from a slow bot is genuinely hard, and the cost of the two errors is not symmetric. Blocking a real customer during a Christmas peak is far more expensive than letting a bot through, so the policy layer has to be tuned around that asymmetry rather than around raw accuracy.",
+        "Anything keyed on origin is defeated by rotation. That constraint is what forced the whole design toward behaviour, and it is the reason the project exists at all.",
+      ],
+      lessons: [
+        "The first fix and the right fix are not always the same thing, and both can be correct. Turning on the JavaScript challenge was the right call under an active incident; understanding the classification problem underneath it was the right call afterwards.",
+        "I am still learning this domain, and I would rather say so than present it as finished. The model work is the part I am least experienced in, and it is the part I am actively reading into.",
+      ],
+      future: [
+        "Proper evaluation against labelled traffic, so the score can be reported with a confidence interval instead of a claim.",
+        "Latency budget work — a scoring service in the request path is only viable if it stays well inside single-digit milliseconds.",
+      ],
+    },
     source: "curated",
   },
 
@@ -90,6 +119,22 @@ export const projects: readonly Project[] = [
       },
     ],
     featured: true,
+    order: 2,
+    caseStudy: {
+      problem:
+        "Money systems fail quietly. A single-sided write, a replayed message or two operations applied out of order will not throw — the service returns 200 and the books are wrong, often for weeks before anyone reconciles. I wanted to build the case where correctness is the requirement rather than a quality attribute bolted on afterwards.",
+      solution:
+        "A wallet and double-entry ledger in Java 21 and Spring Boot, with Kafka carrying the events and PostgreSQL holding the ledger. Every movement of money is two matching entries, and the invariant is enforced in the domain model rather than by convention — there is no code path that can write one side. Everything else about the design follows from that: idempotency, ordering and transaction boundaries had to be decided before the first endpoint, not after the first bug.",
+      architecture:
+        "Commands enter through a Spring Boot API, are validated against the account's current state, and produce events onto a Kafka topic partitioned by wallet id. Projections build the balance and the statement views. Partitioning by wallet is the ordering guarantee: Kafka only orders within a partition, so two operations on one wallet land in sequence while unrelated wallets stay parallel.",
+      challenges: [
+        "At-least-once delivery is the default, which means a consumer will see the same message twice and must not move money twice. Every handler carries a deduplication key, and that requirement shapes the event schema rather than sitting beside it.",
+        "Deciding what belongs in a database transaction and what belongs in an event. Too much in one transaction and throughput collapses; too little and a partial failure leaves the ledger unbalanced, which is the one outcome the project exists to prevent.",
+      ],
+      lessons: [
+        "Encoding an invariant in types and in the schema is worth more than any amount of test coverage over a model that permits the invalid state. The tests confirm behaviour; the model is what makes the bad write unrepresentable.",
+      ],
+    },
     source: "curated",
   },
   {
@@ -325,6 +370,27 @@ export const projects: readonly Project[] = [
         kind: "repo",
       },
     ],
+    featured: true,
+    order: 3,
+    caseStudy: {
+      problem:
+        "You copy a token, a command or a URL on your laptop and need it on your phone thirty seconds later. The universal workaround is messaging it to yourself, which is slow, leaves a trail, and is a genuinely bad idea for anything sensitive. Every developer has this problem and almost nobody fixes it.",
+      solution:
+        "Cross-device clipboard and snippet sync across three clients — web, a browser extension and Android — against one realtime Supabase backend. The sync rules live in the backend rather than being reimplemented three times, which is the only way three clients stay consistent as the feature set grows.",
+      features: [
+        "Realtime propagation, so a copy appears on the other device without a refresh",
+        "Snippet history, because the thing you wanted is often not the last thing you copied",
+        "Device identity, so you can see where an entry came from",
+        "One data model shared by web, extension and Android",
+      ],
+      challenges: [
+        "Two devices can copy at the same moment, and last-write-wins is the wrong answer when one of those writes is the thing the user is reaching for. Ordering and conflict handling had to be explicit rather than inherited from the database's defaults.",
+        "Three clients with very different lifecycles — a always-on tab, an extension background worker, and an Android app the OS will kill — mean reconnection and backfill are the hard parts, not the happy path.",
+      ],
+      lessons: [
+        "Leaning on Supabase and Vercel here was the right trade. The interesting problem was the data model and the sync semantics; hand-rolling auth, realtime transport and hosting would have consumed the whole project without improving the part that mattered.",
+      ],
+    },
     source: "curated",
   },
   {

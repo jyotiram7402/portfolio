@@ -58,7 +58,8 @@ export const mainNav: readonly NavItem[] = [
   sectionItem(SECTIONS.projects, {
     label: "Projects",
     icon: Boxes,
-    description: "Selected build work, filterable by area",
+    // The homepage section is a three-card showcase now; the filtering lives on /projects.
+    description: "Selected work — three projects, then the full library",
   }),
   sectionItem(SECTIONS.assistant, {
     label: "Assistant",
@@ -127,8 +128,9 @@ export const footerNav: readonly FooterColumn[] = [
       routeItem({ label: "Contact", href: ROUTES.contact, icon: Mail }),
       sectionItem(SECTIONS.speaking, { label: "Speaking", icon: Mic }),
       sectionItem(SECTIONS.newsletter, { label: "Newsletter", icon: Send }),
-      // `soon` is derived, so this becomes a live link the moment the page ships.
-      routeItem({ label: "Case studies", href: ROUTES.work, icon: FolderGit2 }),
+      // Was `ROUTES.work`, which never shipped and therefore rendered as "soon". The
+      // project library is that page, so this is now a live link.
+      routeItem({ label: "All projects", href: ROUTES.projects, icon: FolderGit2 }),
     ],
   },
 ];

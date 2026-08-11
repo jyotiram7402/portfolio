@@ -31,6 +31,31 @@ export interface ProjectLink {
  */
 export type ProjectSource = "github" | "curated" | "merged";
 
+/**
+ * The long-form blocks on `/projects/[slug]`.
+ *
+ * Every field is optional and every block renders only when present. That is deliberate:
+ * a case study is written, not generated, and a "Challenges" heading above an empty div
+ * is worse than no heading. A project with none of this still gets a complete page from
+ * `summary`, `highlights`, `stack` and its live GitHub figures.
+ */
+export interface ProjectCaseStudy {
+  /** The situation before the work existed. */
+  problem?: string;
+  /** What was built, and the shape of the approach. */
+  solution?: string;
+  /** What it does, as short phrases. Not a feature matrix. */
+  features?: readonly string[];
+  /** How it is put together. Prose, because a diagram per project is not maintainable. */
+  architecture?: string;
+  /** What went wrong and what it cost to fix. The most-read section on any case study. */
+  challenges?: readonly string[];
+  /** What would be done differently. Honest, not humble-bragging. */
+  lessons?: readonly string[];
+  /** Known next steps. Absent means "no plans", which is a legitimate answer. */
+  future?: readonly string[];
+}
+
 export interface Project {
   /** Repository name for discovered entries, a hand-chosen id for curated ones. */
   id: string;
@@ -40,6 +65,24 @@ export interface Project {
   tagline: string;
   /** Two or three sentences. Shown on featured cards and in the assistant. */
   summary: string;
+  /**
+   * Cover image, served from `/public/projects/`.
+   *
+   * Leave it **undefined** unless the file actually exists — `ProjectCover` renders a
+   * generated visual in that case, and a path to a missing file renders a broken image
+   * instead. Undefined is the safe default, not a missing feature.
+   */
+  image?: string;
+  /**
+   * Homepage ordering. Lower comes first; entries without one sort after those with one.
+   *
+   * Separate from `featured` on purpose. `featured` says "this is good enough for the
+   * homepage", which discovery can infer from stars. `order` says "this is the one I want
+   * read first", which only a human can decide.
+   */
+  order?: number;
+  /** Long-form content for the detail page. Absent for most entries. */
+  caseStudy?: ProjectCaseStudy;
   /** Buckets this project answers for, e.g. "Show Java projects". */
   domains: readonly ProjectDomain[];
   /** Technology names, matched against `data/skills.ts` where they overlap. */
@@ -85,6 +128,11 @@ export interface ProjectOverride {
   highlights?: readonly string[];
   status?: ProjectStatus;
   featured?: boolean;
+  /** Homepage ordering. See `Project.order`. */
+  order?: number;
+  /** Cover image path. See `Project.image` — only set it if the file exists. */
+  image?: string;
+  caseStudy?: ProjectCaseStudy;
   /** Extra links beyond the repository itself — a live URL, a case study. */
   links?: readonly ProjectLink[];
   /** Keeps a repository out of the grid without untagging it on GitHub. */

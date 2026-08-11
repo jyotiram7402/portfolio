@@ -1,6 +1,9 @@
 import type { ReactNode } from "react";
 
-import { AnimatedHeading } from "@/components/animation/animated-heading";
+import {
+  AnimatedHeading,
+  type HeadingLevel,
+} from "@/components/animation/animated-heading";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
@@ -12,8 +15,15 @@ export interface SectionHeaderProps {
   description?: ReactNode;
   /** Id for the heading, so the parent `<Section>` can reference it. */
   headingId?: string;
-  /** Heading level. Choose from the document outline, not the desired size. */
-  as?: "h2" | "h3";
+  /**
+   * Heading level. Choose from the document outline, not the desired size — `size` is the
+   * separate knob for that.
+   *
+   * `h1` is included for standalone pages, where this block *is* the page title and a
+   * document with no `h1` is an outline with no root. On the home page, where the hero
+   * already owns the `h1`, every section header stays at the default `h2`.
+   */
+  as?: HeadingLevel;
   size?: "lg" | "md" | "sm";
   align?: "left" | "center";
   className?: string;

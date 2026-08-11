@@ -7,6 +7,8 @@
 export const ROUTES = {
   home: "/",
   about: "/about",
+  /** The full project library. `/projects/[slug]` is a case study under it. */
+  projects: "/projects",
   work: "/work",
   blog: "/blog",
   contact: "/contact",
@@ -27,6 +29,7 @@ export type Route = (typeof ROUTES)[RouteKey];
  */
 export const IMPLEMENTED_ROUTES: readonly Route[] = [
   ROUTES.home,
+  ROUTES.projects,
   ROUTES.blog,
   ROUTES.contact,
   ROUTES.resume,
