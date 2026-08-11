@@ -1,14 +1,21 @@
-import { Building2, GraduationCap, Sparkles } from "lucide-react";
+import { BookOpen, Braces, Building2, GraduationCap, Sparkles } from "lucide-react";
 
 import type { ExperienceEntry } from "@/types/profile";
 
 /**
- * Professional history, newest first.
+ * Professional history, newest first — ordered by start date, so the two 2023 positions sit
+ * between Southco and the degree they overlapped with.
  *
  * Written for Java backend and platform roles. The commerce platform the work sits on is described
  * by what it is — an enterprise commerce platform — rather than by its vendor name, because the
  * transferable engineering is the payment integration, the event handling and the search service,
  * not the CMS underneath.
+ *
+ * **The ProAzure internship carries more weight than its length suggests.** The day job at Southco
+ * is backend and integrations rather than Java, so this is the entry that makes the Java claim
+ * professional rather than personal — and it is the pre-Boot stack specifically: JDBC, Servlets,
+ * JSP, Spring. That is the layer Spring Boot abstracts, which is a better answer to "how well do
+ * you actually know Spring" than any framework project.
  *
  * Achievements carry only figures that can be sourced: 20 developers on the DevContainer, three
  * gateways, one month to production. Nothing here is a percentage without a baseline.
@@ -88,6 +95,58 @@ export const experience: readonly ExperienceEntry[] = [
     ],
     current: true,
     icon: Building2,
+  },
+  {
+    id: "zensar",
+    kind: "work",
+    company: "Zensar Technologies",
+    monogram: "ZT",
+    role: "ESD Trainee — Apprenticeship",
+    period: "Aug 2023 — Dec 2023",
+    location: "Pune, India · Hybrid",
+    summary:
+      "Five months on Zensar's Employment Skills Development programme, the industry-readiness track that sits between a degree and a delivery team. Database design and object-oriented programming were the technical core.",
+    responsibilities: [
+      "Worked through the Employment Skills Development curriculum, structured around what a services engineer is expected to be able to do on a client project.",
+      "Studied database management systems from relational basics to the advanced material — modelling, normalisation and query construction.",
+      "Built on Java and Python, and on object-oriented design as the way to structure a system rather than as a syntax feature.",
+      "Practised the communication and aptitude side deliberately, which on a client-facing team is not a soft extra.",
+    ],
+    achievements: [
+      "Came out of the programme with the DBMS grounding that the payment and integration work at Southco leans on directly — the schema decisions were the ones that mattered later.",
+    ],
+    technologies: ["Java", "Python", "SQL", "DBMS", "OOP"],
+    icon: BookOpen,
+  },
+  {
+    id: "proazure",
+    kind: "work",
+    company: "ProAzure Software Solutions Pvt. Ltd.",
+    monogram: "PA",
+    role: "Java Back End Developer — Internship",
+    period: "Jan 2023 — Jun 2023",
+    location: "Pune, India · On-site",
+    summary:
+      "Six months writing Java on the server for a living, on the generation of the stack that Spring Boot is built on top of — JDBC, Servlets, JSP and the Spring framework. My first professional backend work, and the reason Spring internals read as familiar rather than magical.",
+    responsibilities: [
+      "Developed applications and services in Java, on industry-level projects rather than exercises.",
+      "Worked directly with JDBC — connections, statements and result sets by hand, which is what makes an ORM's cost visible later.",
+      "Built request handling with Servlets and JSP, the layer Spring MVC abstracts, and Hibernate for persistence.",
+      "Wrote unit tests against the behaviour rather than the implementation.",
+    ],
+    achievements: [
+      "Learned the Java web stack from underneath. Having written a Servlet by hand is why Spring Boot's auto-configuration and its proxying behaviour are legible to me rather than something to be trusted.",
+    ],
+    technologies: [
+      "Java",
+      "JDBC",
+      "Servlets",
+      "JSP",
+      "Spring",
+      "Hibernate",
+      "Unit Testing",
+    ],
+    icon: Braces,
   },
   {
     id: "education",

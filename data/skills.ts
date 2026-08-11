@@ -144,6 +144,13 @@ export const skillCategories: readonly SkillCategory[] = [
         proficiency: "core",
       },
       {
+        id: "jdbc-servlets",
+        name: "JDBC & Servlets",
+        description:
+          "The layer Spring Boot sits on. Six months writing JDBC, Servlets and JSP by hand at ProAzure is why auto-configuration and proxying read as mechanism rather than magic.",
+        proficiency: "working",
+      },
+      {
         id: "hibernate-jpa",
         name: "Hibernate & JPA",
         description:

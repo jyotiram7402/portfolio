@@ -6,6 +6,7 @@ import {
   Network,
   Rocket,
   Search,
+  Server,
   Sparkles,
   Terminal,
 } from "lucide-react";
@@ -30,9 +31,16 @@ export const journey: readonly JourneyEntry[] = [
     icon: GraduationCap,
   },
   {
+    id: "first-java-job",
+    period: "2023",
+    title: "First Java on the server, professionally",
+    body: "Six months at ProAzure writing Java back ends on the pre-Boot stack — JDBC, Servlets, JSP and Spring — then five months on Zensar's ESD apprenticeship, where the DBMS material turned out to be the part that transferred.",
+    icon: Server,
+  },
+  {
     id: "java-projects",
     period: "2024",
-    title: "Learned Java by building backends",
+    title: "Went deeper on Java, project by project",
     body: "Projects chosen to force a different lesson each — Kafka and service boundaries in Foodies, seat-locking under concurrency in BookShowHere, S3 and Redis caching in MusicON, a decoupled React and Spring Boot contract in OneClick.",
     icon: Braces,
   },

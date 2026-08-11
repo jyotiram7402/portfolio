@@ -104,6 +104,7 @@ const BRANDS: Record<string, TechBrand> = {
   "spring-mvc": { Glyph: SpringMark, color: "#6DB33F" },
   "spring-security": { Glyph: ShieldCheck, color: "#6DB33F" },
   "rest-api": { Glyph: Route },
+  "jdbc-servlets": { Glyph: Plug, color: "#E76F00" },
   "hibernate-jpa": { Glyph: Layers, color: "#BCAE79" },
   microservices: { Glyph: Network },
   "event-driven": { Glyph: Radio },
