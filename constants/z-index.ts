@@ -10,8 +10,15 @@ export const Z_INDEX = {
   content: 20,
   sticky: 30,
   header: 40,
-  drawer: 50,
-  overlay: 60,
+  /**
+   * The scrim, and therefore below every panel that uses it.
+   *
+   * Ordering here is load-bearing, not cosmetic: `overlay` above `drawer` put the
+   * backdrop on top of the drawer panel, which blurred the chat and swallowed every
+   * click aimed at it. Any new layer that dims the page belongs at this level or below.
+   */
+  overlay: 50,
+  drawer: 60,
   modal: 70,
   popover: 80,
   toast: 90,
@@ -31,8 +38,8 @@ export const Z_CLASS = {
   content: "z-[var(--z-content)]",
   sticky: "z-[var(--z-sticky)]",
   header: "z-[var(--z-header)]",
-  drawer: "z-[var(--z-drawer)]",
   overlay: "z-[var(--z-overlay)]",
+  drawer: "z-[var(--z-drawer)]",
   modal: "z-[var(--z-modal)]",
   popover: "z-[var(--z-popover)]",
   toast: "z-[var(--z-toast)]",
