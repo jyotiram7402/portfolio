@@ -9,6 +9,13 @@ export const ROUTES = {
   about: "/about",
   /** The full project library. `/projects/[slug]` is a case study under it. */
   projects: "/projects",
+  /**
+   * The full certification library.
+   *
+   * No `[slug]` route under it on purpose: a certificate is one image and six fields, which
+   * does not justify a page each. They open in a dialog from the grid instead.
+   */
+  certifications: "/certifications",
   work: "/work",
   blog: "/blog",
   contact: "/contact",
@@ -30,6 +37,7 @@ export type Route = (typeof ROUTES)[RouteKey];
 export const IMPLEMENTED_ROUTES: readonly Route[] = [
   ROUTES.home,
   ROUTES.projects,
+  ROUTES.certifications,
   ROUTES.blog,
   ROUTES.contact,
   ROUTES.resume,

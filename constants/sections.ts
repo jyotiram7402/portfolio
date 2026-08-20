@@ -16,6 +16,7 @@ export const SECTIONS = {
   assistant: "assistant",
   writing: "writing",
   roadmap: "roadmap",
+  certifications: "certifications",
   achievements: "achievements",
   github: "github",
   resources: "resources",
@@ -56,7 +57,14 @@ export const SECTION_INDEX: readonly { id: SectionId; label: string; hint: strin
   { id: SECTIONS.skills, label: "Skills", hint: "Technology explorer" },
   { id: SECTIONS.writing, label: "Writing", hint: "Latest articles" },
   { id: SECTIONS.roadmap, label: "Roadmap", hint: "What I am learning next" },
-  { id: SECTIONS.achievements, label: "Achievements", hint: "Certificates and wins" },
+  {
+    id: SECTIONS.certifications,
+    label: "Certifications",
+    hint: "Credentials, with the scans attached",
+  },
+  // Reworded: certificates moved to their own section, so this is awards and production
+  // wins now. The hint feeds the command palette, where a stale one is a wrong answer.
+  { id: SECTIONS.achievements, label: "Achievements", hint: "Awards and production wins" },
   { id: SECTIONS.github, label: "GitHub", hint: "Live repository activity" },
   { id: SECTIONS.resources, label: "Resources", hint: "Books, courses and tools" },
   { id: SECTIONS.speaking, label: "Speaking", hint: "Talks and workshops" },

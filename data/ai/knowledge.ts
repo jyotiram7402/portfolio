@@ -2,6 +2,7 @@ import { siteConfig } from "@/config/site";
 import { socialConfig } from "@/config/social";
 import { achievements } from "@/data/achievements";
 import { publishedPosts } from "@/data/blog";
+import { ISSUER_META, certifications } from "@/data/certifications";
 import { currentExperience, experience } from "@/data/experience";
 import { aboutIntro, storyCards } from "@/data/profile";
 import { projects } from "@/data/projects";
@@ -60,7 +61,7 @@ export const narrative = {
 
   /** Used when a question is understood but out of scope. */
   scope:
-    "I only know what is on this site — his background, experience, projects, skills, roadmap, achievements and writing. For anything else, email is the fastest route.",
+    "I only know what is on this site — his background, experience, projects, skills, certifications, roadmap, achievements and writing. For anything else, email is the fastest route.",
 } as const;
 
 /* -------------------------------------------------------------------------- */
@@ -83,6 +84,9 @@ export const knowledge = {
 
   achievements,
   achievementCount: achievements.length,
+
+  certifications,
+  certificationCount: certifications.length,
 
   roadmapTracks,
   roadmapTotals,
@@ -150,6 +154,19 @@ export function serialiseKnowledge(): string {
       `Stack: ${project.stack.join(", ")}`,
       "Highlights:",
       ...project.highlights.map((item) => `- ${item}`),
+    );
+  }
+
+  lines.push("", "## Certifications");
+  for (const entry of certifications) {
+    lines.push(
+      "",
+      `### ${entry.title} — ${ISSUER_META[entry.issuer].label} (${entry.issued})`,
+      entry.summary,
+      `Covered: ${entry.skills.join(", ")}`,
+      entry.verifyUrl !== undefined
+        ? `Verifiable at ${entry.verifyUrl}`
+        : "No public verification link from this issuer.",
     );
   }
 

@@ -8,10 +8,11 @@ import {
   Library,
 } from "lucide-react";
 
-import { blogPostPath } from "@/constants/routes";
+import { ROUTES, blogPostPath } from "@/constants/routes";
 import { SECTION_INDEX } from "@/constants/sections";
 import { achievements } from "@/data/achievements";
 import { getCategory } from "@/data/blog";
+import { ISSUER_META, certifications } from "@/data/certifications";
 import { experience } from "@/data/experience";
 import { projects } from "@/data/projects";
 import { resourceGroups } from "@/data/resources";
@@ -140,6 +141,32 @@ function achievementDocuments(): SearchDocument[] {
   }));
 }
 
+/**
+ * Certificates are indexed by title, issuer and the skills they cover.
+ *
+ * `href` points at the library page rather than the homepage strip, because the strip shows
+ * three and a searched-for certificate is usually not one of them.
+ */
+function certificationDocuments(): SearchDocument[] {
+  return certifications.map((entry) => ({
+    id: `certification:${entry.id}`,
+    kind: "achievement",
+    title: entry.title,
+    description: `${ISSUER_META[entry.issuer].label} · ${entry.issued}`,
+    href: ROUTES.certifications,
+    keywords: [
+      ISSUER_META[entry.issuer].label,
+      ...entry.skills,
+      ...entry.tracks,
+      "certificate",
+      "certification",
+      "course",
+      "credential",
+    ],
+    icon: Award,
+  }));
+}
+
 function resourceDocuments(): SearchDocument[] {
   return resourceGroups.flatMap((group) =>
     group.items.map(
@@ -163,6 +190,7 @@ export const searchIndex: readonly SearchDocument[] = [
   ...skillDocuments(),
   ...experienceDocuments(),
   ...achievementDocuments(),
+  ...certificationDocuments(),
   ...resourceDocuments(),
 ];
 

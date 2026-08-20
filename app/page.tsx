@@ -7,6 +7,7 @@ import { projects } from "@/data/projects";
 import { AboutSection } from "@/features/about";
 import { AssistantSection } from "@/features/ai-assistant";
 import { WritingSection } from "@/features/blog";
+import { CertificationsSection } from "@/features/certifications";
 import { ContactSection } from "@/features/contact";
 import { ExperienceSection } from "@/features/experience";
 import { GithubSection } from "@/features/github";
@@ -53,8 +54,12 @@ const ResourcesSection = dynamic(() =>
  *
  * That order is intentional: state the claim (hero, statement), back it with figures (stats),
  * establish who and what (about, experience), show the work (projects), offer a shortcut
- * through all of it (assistant), then reward exploration (skills, writing, roadmap,
- * achievements, GitHub, resources, speaking) before asking for anything (newsletter).
+ * through all of it (assistant), then reward exploration (skills, certifications, writing,
+ * roadmap, achievements, GitHub, resources, speaking) before asking for anything (newsletter).
+ *
+ * Certifications sit directly after skills, which is the one place they belong: the skills grid
+ * is the claim and the certificates are the receipts, so a reader who has just questioned the
+ * former finds the latter immediately.
  *
  * `StatementBand` sits second because it reframes everything after it: the projects below are
  * not a gallery, they are evidence. It is deliberately not part of the hero — see the note in
@@ -93,6 +98,7 @@ export default function HomePage() {
       <ProjectsSection />
       <AssistantSection />
       <SkillsSection />
+      <CertificationsSection />
       <WritingSection />
       <RoadmapSection />
       <AchievementsSection />

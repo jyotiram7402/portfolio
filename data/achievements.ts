@@ -12,15 +12,22 @@ import {
 import type { Achievement, AchievementKind } from "@/types/explore";
 
 /**
- * Awards, certifications and the wins worth recording.
+ * Awards and the wins worth recording.
  *
- * Every entry is from the résumé and every figure is one that can be sourced — 20 developers, one
- * month, zero downtime, CGPA 8.88. Nothing here is a percentage without a baseline, which is the one
- * thing an interviewer always picks apart.
+ * **Certificates are no longer here.** The Udemy and GeeksforGeeks entries moved to
+ * `data/certifications.ts`, which is the dedicated feature: a certificate has a scan, a
+ * credential id, an issuer identity and a verification URL, and modelling that as five
+ * optional fields on `Achievement` — fields that only ever applied to two of nine entries —
+ * was the point at which a shared type stopped being shared. This file is now what it always
+ * described best: recognition that has no document to show.
  *
- * The three Udemy and GeeksforGeeks certificates carry verification links because they exist; the
- * work awards do not, because internal recognition is not linkable and pretending otherwise would be
- * the most checkable claim on the page.
+ * Every entry is from the résumé and every figure is one that can be sourced — 20 developers,
+ * one month, zero downtime, CGPA 8.88. Nothing here is a percentage without a baseline, which
+ * is the one thing an interviewer always picks apart.
+ *
+ * None of these carries a link, and that is correct rather than an omission: internal
+ * recognition is not linkable, and a "Verify" control that goes nowhere is the most checkable
+ * claim on the page.
  */
 export const achievements: readonly Achievement[] = [
   {
@@ -62,38 +69,6 @@ export const achievements: readonly Achievement[] = [
     description:
       "Identified that agentic AI tooling could read legacy customer data, engineered a Docker-based DevContainer providing full isolation, and saw it adopted as the standard workflow by all 20 developers.",
     icon: Rocket,
-  },
-  {
-    id: "gfg-java-backend",
-    title: "Certified Java Backend Developer",
-    issuer: "GeeksforGeeks",
-    period: "2024",
-    kind: "certificate",
-    description:
-      "Core Java, Spring Boot, REST API design and persistence, assessed by building rather than by multiple choice.",
-    icon: BookOpen,
-  },
-  {
-    id: "udemy-microservices",
-    title: "Master Microservices with Spring Boot and Spring Cloud",
-    issuer: "Udemy",
-    period: "2024",
-    kind: "course",
-    description:
-      "Service decomposition, inter-service communication and the Spring Cloud toolchain — applied directly in the Foodies microservices backend.",
-    href: "https://www.udemy.com/certificate/UC-b8695f97-1df0-4f74-893c-b32fe23aa625/",
-    icon: Code,
-  },
-  {
-    id: "udemy-devops",
-    title: "DevOps Tools and AWS for Java Microservice Developers",
-    issuer: "Udemy",
-    period: "2024",
-    kind: "course",
-    description:
-      "Docker, CI/CD and AWS from a JVM developer's perspective — the groundwork for the DevContainer work that followed.",
-    href: "https://www.udemy.com/certificate/UC-7fcd83c6-9c2c-4bb4-9e09-62aeb4492372/",
-    icon: Code,
   },
   {
     id: "cto-presentation",

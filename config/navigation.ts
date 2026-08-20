@@ -138,6 +138,11 @@ export const footerNav: readonly FooterColumn[] = [
     title: "Hiring",
     items: [
       routeItem({ label: "Résumé", href: ROUTES.resume, icon: FileSignature }),
+      routeItem({
+        label: "Certifications",
+        href: ROUTES.certifications,
+        icon: Award,
+      }),
       routeItem({ label: "For recruiters", href: ROUTES.recruiters, icon: UserSearch }),
       routeItem({ label: "Contact", href: ROUTES.contact, icon: Mail }),
       sectionItem(SECTIONS.speaking, { label: "Speaking", icon: Mic }),
