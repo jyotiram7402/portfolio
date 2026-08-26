@@ -1,4 +1,5 @@
 import {
+  Bot,
   Braces,
   Brain,
   CreditCard,
@@ -55,7 +56,7 @@ export const journey: readonly JourneyEntry[] = [
     id: "payments",
     period: "2024 — 2025",
     title: "Took ownership of payments",
-    body: "End-to-end integration of PayPal, Stripe and AsiaPay, and single point of contact for every payment issue in production — validation, webhooks, retries and the failure paths nobody wants to own.",
+    body: "End-to-end integration of PayPal, Stripe, AsiaPay and CCAvenue, and single point of contact for every payment issue in production — validation, webhooks, retries and the failure paths nobody wants to own.",
     icon: CreditCard,
   },
   {
@@ -76,8 +77,15 @@ export const journey: readonly JourneyEntry[] = [
     id: "devcontainer",
     period: "2025",
     title: "Made agentic AI safe to adopt",
-    body: "Led the R&D on Claude Code, presented findings to the CTO, and found the risk nobody had raised — that the tooling could read legacy customer data. The isolated Docker DevContainer I built became the standard for all 20 developers.",
+    body: "Led the R&D on Claude Code, presented the findings to the IT Director and engineering leadership, and found the risk nobody had raised — that the tooling could read legacy customer data. The isolated Docker DevContainer I built became the standard for all 20 developers.",
     icon: Terminal,
+  },
+  {
+    id: "playwright-mcp",
+    period: "2025",
+    title: "Took AI automation to the QA team",
+    body: "Researched Playwright MCP for AI-driven browser automation, built the Docker and YAML setup, demonstrated it to the manager and QA — and they adopted it. The second thing I carried from research to adoption, and the first outside my own team.",
+    icon: Bot,
   },
   {
     id: "ai-board",

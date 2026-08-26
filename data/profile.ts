@@ -139,9 +139,9 @@ export const stats: readonly Stat[] = [
   },
   {
     id: "gateways",
-    value: 3,
+    value: 4,
     label: "Payment gateways owned",
-    detail: "PayPal, Stripe and AsiaPay — end to end, including the failure paths",
+    detail: "PayPal, Stripe, AsiaPay and CCAvenue — end to end, including the failure paths",
     icon: Network,
   },
   {
@@ -174,7 +174,7 @@ export const storyCards: readonly StoryCard[] = [
     id: "ai-board",
     kicker: "AI board member",
     title: "Leading the AI-first approach at Southco",
-    body: "I led the R&D on agentic AI tooling, presented findings to the CTO, and found the risk nobody had asked about — that these tools could read legacy customer data. The DevContainer I built to isolate them is now how all 20 developers work.",
+    body: "I led the R&D on agentic AI tooling and found the risk nobody had asked about — that these tools could reach files outside the project boundary. The DevContainer I built to isolate them is how all 20 developers now work, and the Playwright MCP setup I researched next was taken up by QA. Two things carried from research to adoption.",
     icon: Sparkles,
   },
   {

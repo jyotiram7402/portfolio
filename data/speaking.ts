@@ -3,7 +3,7 @@ import type { Talk, TalkKind } from "@/types/explore";
 /**
  * Talks, workshops and internal sessions.
  *
- * Short and honest. The CTO presentation is real and is the strongest entry here — it is the moment
+ * Short and honest. The leadership presentation is real and is the strongest entry here — it is the moment
  * an R&D spike became an organisation-wide standard. Inventing a conference circuit on top of it
  * would be the single most checkable lie on the site.
  *
@@ -15,7 +15,7 @@ export const talks: readonly Talk[] = [
   {
     id: "agentic-ai-cto",
     title: "Agentic AI in a legacy codebase: the risk nobody asked about",
-    venue: "Southco — presented to the CTO and engineering leadership",
+    venue: "Southco — presented to the IT Director and engineering leadership and engineering leadership",
     date: "2025",
     kind: "talk",
     abstract:
@@ -37,7 +37,7 @@ export const talks: readonly Talk[] = [
     date: "Upcoming",
     kind: "workshop",
     abstract:
-      "The three places idempotency has to be enforced in a payment flow — request, order creation and settlement reconciliation — and what breaks when any one of them is skipped. Drawn from owning three gateways in production.",
+      "The three places idempotency has to be enforced in a payment flow — request, order creation and settlement reconciliation — and what breaks when any one of them is skipped. Drawn from owning four gateways in production.",
     upcoming: true,
   },
 ];

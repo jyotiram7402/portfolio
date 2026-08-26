@@ -80,7 +80,7 @@ export const certifications: readonly Certification[] = [
     verifyUrl: "https://verify.skilljar.com/c/2gwsdm4i9d6k",
     file: "/certificates/anthropic-claude-code-in-action.pdf",
     summary:
-      "Anthropic's own course on agentic development with Claude Code. The direct credential behind the AI board work at Southco — I led the R&D on this tooling, presented it to the CTO, and it became the standard workflow for 20 developers.",
+      "Anthropic's own course on agentic development with Claude Code. The direct credential behind the AI board work at Southco — I led the R&D on this tooling, presented it to the IT Director and engineering leadership, and it became the standard workflow for 20 developers.",
     tracks: ["ai"],
     skills: ["Claude Code", "Agentic AI", "Prompt Engineering", "MCP"],
     featured: true,

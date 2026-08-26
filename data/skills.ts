@@ -256,7 +256,7 @@ export const skillCategories: readonly SkillCategory[] = [
         id: "claude-code",
         name: "Claude Code",
         description:
-          "Agentic development. Led the R&D, presented findings to the CTO, and made it the standard workflow for 20 developers.",
+          "Agentic development. Led the R&D, presented the findings to the IT Director and engineering leadership, and made it the standard workflow for 20 developers.",
         proficiency: "core",
       },
       {
@@ -300,6 +300,13 @@ export const skillCategories: readonly SkillCategory[] = [
         description:
           "Chunking, hybrid retrieval and reranking — with citations, so an answer can be checked.",
         proficiency: "exploring",
+      },
+      {
+        id: "playwright-mcp",
+        name: "Playwright MCP",
+        description:
+          "AI-driven browser automation over MCP — Docker and YAML setup for automated testing workflows. Researched it, demonstrated it, and the QA team took it into their process.",
+        proficiency: "working",
       },
       {
         id: "machine-learning",

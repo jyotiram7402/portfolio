@@ -164,7 +164,7 @@ export const responseBuilders: Record<string, () => ResponseBlock[]> = {
         { label: "Role", value: "Board member — AI team" },
         { label: "Company", value: "Southco" },
         { label: "Developers on the workflow", value: "20" },
-        { label: "Presented to", value: "CTO" },
+        { label: "Presented to", value: "IT Director & leads" },
       ],
     },
     {

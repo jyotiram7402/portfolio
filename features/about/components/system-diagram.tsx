@@ -102,7 +102,7 @@ export function SystemDiagram({ className }: SystemDiagramProps) {
         <svg
           viewBox="0 0 320 422"
           role="img"
-          aria-label="Architecture diagram of a payment request, read top to bottom. A web client calls a Spring Security filter chain handling validation and JWT authentication, which passes to a Spring Boot REST API. The API calls the PayPal, Stripe and AsiaPay gateways through an idempotent handler with bounded retries; the provider's webhook arrives back at that handler from outside the system. Confirmed orders publish to a Kafka topic partitioned by order key, which fans out to a notification service and an enterprise CRM sync. Below a dividing rule, the persistence the API owns: MySQL and a Redis read cache."
+          aria-label="Architecture diagram of a payment request, read top to bottom. A web client calls a Spring Security filter chain handling validation and JWT authentication, which passes to a Spring Boot REST API. The API calls the PayPal, Stripe, AsiaPay and CCAvenue gateways through an idempotent handler with bounded retries; the provider's webhook arrives back at that handler from outside the system. Confirmed orders publish to a Kafka topic partitioned by order key, which fans out to a notification service and an enterprise CRM sync. Below a dividing rule, the persistence the API owns: MySQL and a Redis read cache."
           // Capped and centred rather than filling the column. The drawing is a narrow
           // vertical spine — that is what makes it legible on a phone — and letting it
           // scale to a 700px desktop column would stretch it to 900px tall for no gain.
@@ -182,7 +182,7 @@ export function SystemDiagram({ className }: SystemDiagramProps) {
 
           <Node
             y={ROW.gateways}
-            label="PayPal · Stripe · AsiaPay"
+            label="PayPal · Stripe · AsiaPay · CCAvenue"
             sub="Idempotent handler · retries"
             accent
           />

@@ -453,13 +453,13 @@ export const projects: readonly Project[] = [
     id: "payment-gateway-integrations",
     slug: "payment-gateway-integrations",
     name: "Payment Gateway Integrations",
-    tagline: "PayPal, Stripe and AsiaPay — owned end to end, including the failure paths.",
+    tagline: "PayPal, Stripe, AsiaPay and CCAvenue — owned end to end, including the failure paths.",
     summary:
-      "Work at Southco, not a public repository. End-to-end ownership of three payment gateways on an enterprise platform, and the single point of contact for every payment issue in production. The interesting part is not the happy path — it is transaction validation, webhook and callback processing, retries and failure handling.",
+      "Work at Southco, not a public repository. End-to-end ownership of four payment gateways on an enterprise platform, and the single point of contact for every payment issue in production. The interesting part is not the happy path — it is transaction validation, webhook and callback processing, retries and failure handling.",
     domains: ["backend", "microservices"],
     stack: ["REST API", "Webhooks", "MySQL", "Integrations", "Production Support"],
     highlights: [
-      "Three gateways including AsiaPay for China and APAC, each with its own settlement and callback semantics.",
+      "Four gateways including AsiaPay for China and APAC and CCAvenue for India, each with its own settlement and callback semantics.",
       "Webhook and callback processing built for replay and duplication, because both happen in production.",
       "Resolved a critical PayPal failure during a midnight incident with zero downtime — Spot Award.",
     ],

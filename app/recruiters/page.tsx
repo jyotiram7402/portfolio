@@ -48,12 +48,12 @@ const RECRUITER_FAQ = [
   {
     question: "What is his level of experience?",
     answer:
-      "Two years of professional delivery on production systems since September 2024 — Spring Boot services, three payment gateways owned end to end, enterprise REST integrations and an AI-powered search service. Strongest on Java, Spring Boot and integrations; React and the MERN stack are real but are not where the depth is.",
+      "Two years of professional delivery on production systems since September 2024 — Spring Boot services, four payment gateways owned end to end, enterprise REST integrations and an AI-powered search service. Strongest on Java, Spring Boot and integrations; React and the MERN stack are real but are not where the depth is.",
   },
   {
     question: "What is his AI leadership experience?",
     answer:
-      "He is a board member of the AI team at Southco, leading the AI-first approach to development. He led the R&D on Claude Code, presented findings to the CTO, and engineered the isolated Docker DevContainer now used as the standard workflow by all 20 developers.",
+      "He is a board member of the AI team at Southco, leading the AI-first approach to development. He led the R&D on Claude Code, presented the findings to the IT Director and engineering leadership, and engineered the isolated Docker DevContainer now used as the standard workflow by all 20 developers.",
   },
 ] as const;
 

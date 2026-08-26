@@ -367,7 +367,7 @@ export const faqEntries: readonly FaqEntry[] = [
     intentId: "about.ai-leadership",
     question: `What is ${identity.firstName}'s role on the AI team?`,
     answer:
-      "He is a board member of the AI team at Southco, leading the AI-first approach to development. He led the R&D on Claude Code, presented findings to the CTO, identified that agentic tooling could read legacy customer data, and engineered a Docker DevContainer that became the standard workflow for all 20 developers.",
+      "He is a board member of the AI team at Southco, leading the AI-first approach to development. He led the R&D on Claude Code, presented the findings to the IT Director and engineering leadership, identified that agentic tooling could read legacy customer data, and engineered a Docker DevContainer that became the standard workflow for all 20 developers.",
   },
   {
     intentId: "projects.all",

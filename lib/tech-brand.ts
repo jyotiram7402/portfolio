@@ -128,6 +128,7 @@ const BRANDS: Record<string, TechBrand> = {
   "llm-apis": { Glyph: Brain },
   "ai-search": { Glyph: Search, color: "#4A90C4" },
   rag: { Glyph: FileCode2 },
+  "playwright-mcp": { Glyph: TestTube2, color: "#2EAD33" },
   "machine-learning": { Glyph: Brain, color: "#EE8C2B" },
 
   /* ------------------------------------------------------- Cloud and DevOps */

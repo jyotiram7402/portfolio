@@ -71,13 +71,23 @@ export const achievements: readonly Achievement[] = [
     icon: Rocket,
   },
   {
+    id: "playwright-mcp-qa",
+    title: "Playwright MCP adopted by the QA team",
+    issuer: "Southco QA",
+    period: "2025",
+    kind: "work",
+    description:
+      "Researched MCP-based browser automation, built the Docker and YAML setup for AI-driven testing workflows, demonstrated it to the manager and the QA team, and saw it taken into their process. The second thing I took from research to adoption — and the one that landed outside my own team.",
+    icon: Rocket,
+  },
+  {
     id: "cto-presentation",
-    title: "Presented agentic AI findings to the CTO",
+    title: "Presented agentic AI findings to engineering leadership",
     issuer: "Southco",
     period: "2025",
     kind: "speaking",
     description:
-      "Took an R&D spike on Claude Code to an executive decision — including the security risk that had not been raised, and the isolation strategy that answered it.",
+      "Took an R&D spike on Claude Code to a leadership decision — including the security risk that had not been raised, and the isolation strategy that answered it. Demonstrated live on real development scenarios rather than slides, to the IT Director, managers and team leads.",
     icon: Mic,
   },
   {

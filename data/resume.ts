@@ -24,7 +24,7 @@ export const resumeVariants: readonly ResumeVariant[] = [
     emphasis: [
       "Core Java — Collections, Streams, Optional, concurrency, JVM and GC",
       "Spring Boot, Spring MVC, Spring Security with JWT and OAuth2, Hibernate and JPA",
-      "Three payment gateways owned end to end, including webhooks, retries and failure paths",
+      "Four payment gateways owned end to end, including webhooks, retries and failure paths",
       "Microservices over REST and Apache Kafka event streams",
       "MySQL and PostgreSQL schema design, index strategy and query plans",
     ],
@@ -74,7 +74,8 @@ export const resumeVariants: readonly ResumeVariant[] = [
     emphasis: [
       "Board member of the AI team at Southco, leading the AI-first development approach",
       "Secure agentic AI — the isolation risk found, and the DevContainer adopted by 20 developers",
-      "Claude Code and MCP in daily production use, presented to the CTO",
+      "Claude Code and MCP in daily production use, presented to the IT Director and engineering leadership",
+      "Playwright MCP for AI-driven browser automation — researched, demonstrated, adopted by the QA team",
       "AI-powered search on OpenSearch, in production within one month with zero defects",
       "Java and Spring Boot services behind the model, not notebooks in front of it",
     ],
