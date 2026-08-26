@@ -1,5 +1,6 @@
 import Image from "next/image";
 
+import { getProjectArt } from "@/features/projects/components/project-art";
 import { cn } from "@/lib/utils";
 import type { Project } from "@/types/projects";
 
@@ -18,21 +19,25 @@ export interface ProjectCoverProps {
 /**
  * A project's cover visual: the real screenshot when one exists, a generated one otherwise.
  *
- * **Why the generated path is the default.** No project currently ships a screenshot, and
- * the alternative to generating something was a stock photograph — which says nothing
- * about the work and reads as a template. So the fallback is not a placeholder to be
- * replaced; it is the design, and it has to hold up on its own. Dropping a real file into
- * `public/projects/` and setting `image` on the project switches it over with no other
- * change.
+ * **Why the generated path is the default.** No project ships a screenshot, and most of
+ * these are backend services with no UI to screenshot — a terminal is not a product shot.
+ * The alternative was stock photography, which says nothing about the work and reads as a
+ * template. So the generated cover is not a placeholder; it is the design.
  *
- * **Why it is deterministic.** The hue comes from a hash of the slug, so a project's cover
- * is stable across renders, across deploys and between the server and the client. A random
- * hue would flicker on hydration and would make two adjacent cards occasionally identical.
+ * **The subject is a drawing of the mechanism.** `features/projects/components/project-art.tsx`
+ * holds a bespoke scene per project — a balancing ledger for LedgerCore, a seat grid with
+ * one seat held for BookShowHere, traffic scored and diverted for SmartShield. For a
+ * backend service that diagram *is* the honest image. Projects with no scene fall back to
+ * the monogram, which matters because a repository discovered from GitHub has none until
+ * someone draws one.
  *
- * Four layers, in order: a two-stop gradient wash, a hairline grid, a large ghosted
- * monogram, and the dominant technology set in mono. That last pair is what stops it
- * reading as abstract decoration — the cover tells you which project it belongs to even
- * with the title scrolled out of view.
+ * **Why the frame is deterministic.** The hue comes from a hash of the slug, so a project's
+ * cover is stable across renders, across deploys and between server and client. A random
+ * hue would flicker on hydration and would occasionally make two adjacent cards identical.
+ *
+ * Layers, in order: a hairline grid, a two-stop wash, an off-centre light source, the
+ * scene, and the dominant technology set in mono. Dropping a real file into
+ * `public/projects/` and setting `image` replaces all of it with no other change.
  *
  * A Server Component. There is nothing interactive here; the hover treatment belongs to
  * the card that contains it.
@@ -106,6 +111,7 @@ function GeneratedCover({
   const hue = hueFromSlug(project.slug);
   const technology = primaryTechnology(project);
   const mark = monogram(project.name);
+  const Art = getProjectArt(project.slug);
 
   return (
     <div
@@ -156,27 +162,46 @@ function GeneratedCover({
           className="blur-2xl"
         />
 
-        {/* The monogram, oversized and low-contrast — the cover's subject. */}
-        <text
-          x="56"
-          y="392"
-          fontSize="248"
-          fontWeight="700"
-          letterSpacing="-12"
-          fill="var(--foreground)"
-          fillOpacity="0.07"
-          className="font-sans"
-        >
-          {mark}
-        </text>
+        {/* The subject.
 
-        {/* Three code-ish rules, decreasing in width. Suggests a file without pretending
-            to be a screenshot of one. */}
-        <g stroke="var(--foreground)" strokeOpacity="0.1" strokeWidth="7" strokeLinecap="round">
-          <path d="M56 118h250" />
-          <path d="M56 152h160" />
-          <path d="M56 186h205" />
-        </g>
+            A bespoke scene where one exists — a balancing ledger, a seat grid with one seat
+            held, traffic being scored and diverted. Those say what the project is; the
+            monogram only ever said which letter it started with.
+
+            The fallback is not dead code: a repository discovered from GitHub has no scene
+            until someone draws one, and it still needs a cover that looks deliberate. */}
+        {Art ? (
+          <Art accent={`hsl(${hue} 78% 62%)`} />
+        ) : (
+          <>
+            <text
+              x="56"
+              y="392"
+              fontSize="248"
+              fontWeight="700"
+              letterSpacing="-12"
+              fill="var(--foreground)"
+              fillOpacity="0.07"
+              className="font-sans"
+            >
+              {mark}
+            </text>
+
+            {/* Three code-ish rules, decreasing in width. Suggests a file without
+                pretending to be a screenshot of one. Part of the fallback, not the frame —
+                they occupy the top-left corner that the scenes draw into. */}
+            <g
+              stroke="var(--foreground)"
+              strokeOpacity="0.1"
+              strokeWidth="7"
+              strokeLinecap="round"
+            >
+              <path d="M56 118h250" />
+              <path d="M56 152h160" />
+              <path d="M56 186h205" />
+            </g>
+          </>
+        )}
       </svg>
 
       {/* The technology label. Real DOM text rather than SVG so it inherits the type scale
