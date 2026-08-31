@@ -17,11 +17,15 @@
  * dumping ground — prefer adding the issuer.
  */
 export type CertificationIssuer =
+  | "proazure"
   | "udemy"
   | "anthropic"
   | "geeksforgeeks"
   | "coursera"
   | "linkedin"
+  | "simplilearn"
+  | "forage"
+  | "barclays"
   | "aws"
   | "microsoft"
   | "google"
@@ -32,6 +36,8 @@ export type CertificationIssuer =
 
 /** Broad subject buckets, for the library filter. Mirrors the project domains in spirit. */
 export type CertificationTrack =
+  /** Professional, not a course: an internship or employer credential. Ranks first. */
+  | "professional"
   | "java"
   | "spring"
   | "backend"

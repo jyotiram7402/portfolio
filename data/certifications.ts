@@ -34,18 +34,26 @@ import type {
  * than the card claimed. The IDs are now the ones printed on each document.
  *
  * The six Udemy scans are the JPEGs extracted from their PDFs — a Udemy certificate PDF is a
- * single embedded image, so the JPEG is the document byte for byte, not a re-render. The two
- * Anthropic certificates are real text PDFs with no image to pull, so they ship as `file`
- * and render the generated cover; both carry a live Skilljar verification URL, which is the
- * stronger artefact anyway.
+ * single embedded image, so the JPEG is the document byte for byte, not a re-render. The
+ * Anthropic, ProAzure, LinkedIn Learning and Simplilearn certificates are real text PDFs with
+ * no image to pull, so they ship as `file` and render the generated cover.
+ *
+ * **Ordering is the argument.** `order: 1` is the ProAzure internship, not the longest course,
+ * because it is the only *professional* credential in the set — six months of Java backend
+ * work certified by a registered company, which is worth more to a hiring manager than any
+ * number of hours on Udemy. That is also why `professional` is the first track filter.
  */
 
 export const ISSUER_META = {
+  proazure: { label: "ProAzure Software Solutions", accent: "#3C8FD4" },
   udemy: { label: "Udemy", accent: "#A435F0" },
   anthropic: { label: "Anthropic", accent: "#D97757" },
   geeksforgeeks: { label: "GeeksforGeeks", accent: "#2F8D46" },
   coursera: { label: "Coursera", accent: "#2A73CC" },
   linkedin: { label: "LinkedIn Learning", accent: "#0A66C2" },
+  simplilearn: { label: "Simplilearn SkillUp", accent: "#F0A100" },
+  forage: { label: "Forage", accent: "#5F5BD6" },
+  barclays: { label: "Barclays LifeSkills", accent: "#2AA3E0" },
   aws: { label: "AWS", accent: "#FF9900" },
   microsoft: { label: "Microsoft", accent: "#4F8FE8" },
   google: { label: "Google", accent: "#4285F4" },
@@ -56,7 +64,9 @@ export const ISSUER_META = {
 } as const satisfies Record<CertificationIssuer, IssuerMeta>;
 
 /** Filter labels, in the order the library offers them — subject priority, not alphabetical. */
+
 export const certificationTracks = [
+  { id: "professional", label: "Professional" },
   { id: "java", label: "Java" },
   { id: "spring", label: "Spring" },
   { id: "backend", label: "Backend" },
@@ -68,6 +78,39 @@ export const certificationTracks = [
 ] as const satisfies readonly { id: CertificationTrack; label: string }[];
 
 export const certifications: readonly Certification[] = [
+
+  /* ------------------------------------------------------------- Professional */
+  {
+    id: "proazure-internship",
+    slug: "proazure-java-backend-internship",
+    title: "Java Backend Development Internship — Completion",
+    issuer: "proazure",
+    issued: "Jun 2023",
+    issuedAt: "2023-06-13",
+    credentialId: "INT/23/702",
+    file: "/certificates/proazure-java-backend-internship.pdf",
+    summary:
+      "Six months of Java backend development, Android and AWS at ProAzure Software Solutions, January to June 2023, under Mr. Bapu Arkas. The only credential here that is professional rather than a course — it is the document behind the Java experience on my CV, issued by an ISO 9001 registered company.",
+    tracks: ["professional", "java", "backend"],
+    skills: ["Java", "JDBC", "Servlets", "JSP", "Spring", "Hibernate", "AWS"],
+    featured: true,
+    order: 1,
+  },
+  {
+    id: "proazure-achievement",
+    slug: "proazure-internship-achievement",
+    title: "Certificate of Achievement — 90% Overall Score",
+    issuer: "proazure",
+    issued: "Jun 2023",
+    issuedAt: "2023-06-13",
+    credentialId: "INT/23/702",
+    file: "/certificates/proazure-internship-achievement.pdf",
+    summary:
+      "The assessed half of the same internship: 90% overall score for Java backend development, Android and AWS. Issued alongside the completion certificate under the same credential number.",
+    tracks: ["professional", "java", "backend"],
+    skills: ["Java", "Backend Development", "AWS", "Android"],
+  },
+
   /* ---------------------------------------------------------------- Anthropic */
   {
     id: "anthropic-claude-code",
@@ -120,7 +163,6 @@ export const certifications: readonly Certification[] = [
     tracks: ["cloud-devops", "backend", "java"],
     skills: ["Docker", "CI/CD", "AWS", "Kubernetes", "Maven"],
     featured: true,
-    order: 3,
   },
   {
     id: "udemy-git",
@@ -173,7 +215,7 @@ export const certifications: readonly Certification[] = [
     tracks: ["java", "spring", "backend"],
     skills: ["Spring Boot", "Microservices", "REST API", "Spring Cloud"],
     featured: true,
-    order: 1,
+    order: 3,
   },
   {
     id: "udemy-javascript",
@@ -210,6 +252,62 @@ export const certifications: readonly Certification[] = [
     skills: ["Java", "OOP", "Collections", "Data Structures"],
   },
 
+  /* ------------------------------------------------- Foundations and training */
+  {
+    id: "linkedin-learning-java",
+    slug: "linkedin-learning-java",
+    title: "Learning Java",
+    issuer: "linkedin",
+    issued: "2022",
+    issuedAt: "2022-09-01",
+    file: "/certificates/linkedin-learning-java.pdf",
+    summary:
+      "The language from the ground up — types, classes, inheritance and the standard library. Taken before the ProAzure internship, which is where it stopped being theory.",
+    tracks: ["java", "fundamentals"],
+    skills: ["Java", "OOP"],
+  },
+  {
+    id: "linkedin-databases",
+    slug: "linkedin-programming-foundations-databases",
+    title: "Programming Foundations: Databases",
+    issuer: "linkedin",
+    issued: "2022",
+    issuedAt: "2022-09-01",
+    file: "/certificates/linkedin-programming-foundations-databases.pdf",
+    summary:
+      "Relational modelling, normalisation and query fundamentals. The groundwork under every schema decision in the payment and integration work that followed.",
+    tracks: ["data", "fundamentals"],
+    skills: ["SQL", "MySQL", "DBMS", "Data Modelling"],
+  },
+  {
+    id: "simplilearn-cloud",
+    slug: "simplilearn-intro-cloud-computing",
+    title: "Introduction to Cloud Computing",
+    issuer: "simplilearn",
+    issued: "Dec 2022",
+    issuedAt: "2022-12-12",
+    verifyUrl: "https://simpliweb.app.link/e/r6pR81bZGvb",
+    file: "/certificates/simplilearn-intro-cloud-computing.pdf",
+    summary:
+      "Service models, deployment models and the shared-responsibility split. The vocabulary that made the AWS and Docker work later legible rather than intimidating.",
+    tracks: ["cloud-devops", "fundamentals"],
+    skills: ["Cloud Computing", "AWS"],
+  },
+  {
+    id: "barclays-lifeskills",
+    slug: "barclays-lifeskills",
+    title: "Barclays LifeSkills Program",
+    issuer: "barclays",
+    issued: "Apr 2023",
+    issuedAt: "2023-04-05",
+    image: "/certificates/barclays-lifeskills.jpg",
+    file: "/certificates/barclays-lifeskills.pdf",
+    summary:
+      "Delivered by the GTT Foundation at JSPM's Imperial College of Engineering, Pune. Workplace readiness rather than a technical course — and the one on this list that is honest about being exactly that.",
+    tracks: ["fundamentals"],
+    skills: ["Communication", "Workplace Skills"],
+  },
+
   /* ------------------------------------------------------------ No scan yet */
   {
     id: "gfg-java-backend",
@@ -227,6 +325,7 @@ export const certifications: readonly Certification[] = [
 
 /* -------------------------------------------------------------------------- */
 /*  Selectors                                                                 */
+
 /* -------------------------------------------------------------------------- */
 
 /** Newest first. The comparison is on `issuedAt`; `issued` is display only. */
@@ -248,6 +347,7 @@ function byOrderThenNewest(a: Certification, b: Certification): number {
 }
 
 /** How many the homepage strip shows. A strip, not a library. */
+
 export const HOMEPAGE_CERTIFICATION_COUNT = 3;
 
 export function getFeaturedCertifications(
@@ -260,6 +360,7 @@ export function getFeaturedCertifications(
 }
 
 /** The full library, newest first. */
+
 export const certificationsByDate: readonly Certification[] =
   certifications.toSorted(byNewest);
 
@@ -276,6 +377,7 @@ export function getCertification(slug: string): Certification | undefined {
  * Derived rather than listed, so an issuer with nothing filed under it is never offered as
  * a filter — the same rule the project and achievement filters follow.
  */
+
 export function getIssuerCounts(): readonly {
   id: CertificationIssuer;
   label: string;
@@ -285,7 +387,6 @@ export function getIssuerCounts(): readonly {
   for (const entry of certifications) {
     counts.set(entry.issuer, (counts.get(entry.issuer) ?? 0) + 1);
   }
-
   return [...counts.entries()]
     .map(([id, count]) => ({ id, label: ISSUER_META[id].label, count }))
     .toSorted((a, b) => b.count - a.count || a.label.localeCompare(b.label));
