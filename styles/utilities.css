@@ -62,13 +62,32 @@
    `prefers-reduced-motion` is handled globally in `base.css`, which collapses
    every animation to 0.01ms; these then resolve instantly to their end state. */
 
+/*
+  Every keyframe below declares **both** ends explicitly, and that is the fix rather than
+  a style preference.
+
+  The first attempt wrote only `from { transform: translateX(100%) }` and leaned on
+  `animation-fill-mode: both` to interpolate toward the element's own base style. Measured
+  on the deployed site, the drawer stayed at `translateX(100%)` — `both` includes
+  `backwards`, and with no `to` keyframe the value the animation settles on is not
+  something to rely on. The panel was still opening off-screen.
+
+  With an explicit `to`, the end state is stated rather than inferred, and `forwards` has
+  something unambiguous to hold.
+*/
+
 @keyframes dialog-overlay-in {
   from {
     opacity: 0;
   }
+  to {
+    opacity: 1;
+  }
 }
-
 @keyframes dialog-overlay-out {
+  from {
+    opacity: 1;
+  }
   to {
     opacity: 0;
   }
@@ -79,9 +98,16 @@
     opacity: 0;
     transform: translateY(12px) scale(0.97);
   }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
-
 @keyframes dialog-panel-out {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
   to {
     opacity: 0;
     transform: translateY(8px) scale(0.98);
@@ -92,8 +118,14 @@
   from {
     transform: translateX(100%);
   }
+  to {
+    transform: translateX(0);
+  }
 }
 @keyframes drawer-out-right {
+  from {
+    transform: translateX(0);
+  }
   to {
     transform: translateX(100%);
   }
@@ -102,8 +134,14 @@
   from {
     transform: translateX(-100%);
   }
+  to {
+    transform: translateX(0);
+  }
 }
 @keyframes drawer-out-left {
+  from {
+    transform: translateX(0);
+  }
   to {
     transform: translateX(-100%);
   }
@@ -112,8 +150,14 @@
   from {
     transform: translateY(-100%);
   }
+  to {
+    transform: translateY(0);
+  }
 }
 @keyframes drawer-out-top {
+  from {
+    transform: translateY(0);
+  }
   to {
     transform: translateY(-100%);
   }
@@ -122,32 +166,38 @@
   from {
     transform: translateY(100%);
   }
+  to {
+    transform: translateY(0);
+  }
 }
 @keyframes drawer-out-bottom {
+  from {
+    transform: translateY(0);
+  }
   to {
     transform: translateY(100%);
   }
 }
 
 .dialog-overlay[data-state="open"] {
-  animation: dialog-overlay-in 220ms var(--ease-out-quint) both;
+  animation: dialog-overlay-in 220ms var(--ease-out-quint) forwards;
 }
 .dialog-overlay[data-state="closed"] {
-  animation: dialog-overlay-out 180ms var(--ease-out-quint) both;
+  animation: dialog-overlay-out 180ms var(--ease-out-quint) forwards;
 }
 
 .dialog-panel[data-state="open"] {
-  animation: dialog-panel-in 260ms var(--ease-out-quint) both;
+  animation: dialog-panel-in 260ms var(--ease-out-quint) forwards;
 }
 .dialog-panel[data-state="closed"] {
-  animation: dialog-panel-out 180ms var(--ease-out-quint) both;
+  animation: dialog-panel-out 180ms var(--ease-out-quint) forwards;
 }
 
 .drawer-panel[data-state="open"] {
-  animation: var(--drawer-in) 300ms var(--ease-out-quint) both;
+  animation: var(--drawer-in) 300ms var(--ease-out-quint) forwards;
 }
 .drawer-panel[data-state="closed"] {
-  animation: var(--drawer-out) 220ms var(--ease-out-quart) both;
+  animation: var(--drawer-out) 220ms var(--ease-out-quart) forwards;
 }
 
 /* --- Text treatments ----------------------------------------------------- */

@@ -69,10 +69,6 @@ export function HeroSection() {
             immediate
             delay={0.1}
             stagger={0.11}
-            // The name as one string. Without it the two `block` line spans give the
-            // `h1` a text content of "JyotiramKamble", which is what a screen reader,
-            // a crawler and a link preview all read.
-            label={siteConfig.name}
             className="text-display font-semibold tracking-tightest text-balance text-foreground"
             lines={heroLines.map((line, index) =>
               index === HERO_ACCENT_LINE ? (
