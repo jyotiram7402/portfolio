@@ -72,6 +72,10 @@ export function ChatSuggestions({
                 className={cn(
                   "inline-flex items-center gap-2 rounded-full border border-border",
                   "bg-input px-3 py-1.5 text-xs text-muted",
+                  // These chips are the assistant's primary affordance — on a phone
+                  // they are how the conversation starts — and at 32px they were under
+                  // the 44px touch minimum. The visual size returns on desktop.
+                  "min-h-11 md:min-h-0",
                   "transition-colors duration-[var(--duration-fast)]",
                   "hover:border-primary/40 hover:bg-elevated hover:text-foreground",
                   "focus-ring disabled:pointer-events-none disabled:opacity-45",

@@ -219,44 +219,20 @@ export const pageTransition: Variants = {
 /*  Overlays                                                                  */
 /* -------------------------------------------------------------------------- */
 
-export const overlayVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: transition.base },
-  exit: { opacity: 0, transition: transition.fast },
-};
+/*
+  `overlayVariants`, `modalVariants` and `drawerVariants` lived here and are gone.
 
-export const modalVariants: Variants = {
-  hidden: { opacity: 0, scale: 0.96, y: 12 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    y: 0,
-    transition: transition.springSmooth,
-  },
-  exit: {
-    opacity: 0,
-    scale: 0.98,
-    y: 8,
-    transition: transition.fast,
-  },
-};
+  The overlay, the modal and the drawer are Radix dialogs, and driving their entrance
+  with Framer Motion meant `AnimatePresence` wrapping `Dialog.Portal` with `asChild`
+  and `forceMount`. That combination did not work: `AnimatePresence`'s direct child was
+  the portal rather than a keyed motion component, so Framer applied each panel's
+  `initial` style and never resolved `animate`. In production the drawer sat at
+  `translateX(100%)` — the mobile navigation opened off-screen and took focus with it.
 
-export function drawerVariants(side: "left" | "right" | "top" | "bottom"): Variants {
-  const closed =
-    side === "left"
-      ? { x: "-100%" }
-      : side === "right"
-        ? { x: "100%" }
-        : side === "top"
-          ? { y: "-100%" }
-          : { y: "100%" };
-
-  return {
-    hidden: closed,
-    visible: { x: 0, y: 0, transition: transition.springGentle },
-    exit: { ...closed, transition: { duration: DURATION.normal, ease: ease.outQuart } },
-  };
-}
+  Their motion is now CSS keyframes keyed on Radix's own `data-state`, in
+  `styles/utilities.css`. The decisive property is that the resting state has no
+  transform, so a stalled animation can no longer place a panel outside the viewport.
+*/
 
 /* -------------------------------------------------------------------------- */
 /*  Navigation                                                                */

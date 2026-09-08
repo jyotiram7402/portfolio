@@ -20,8 +20,21 @@ export const projectsConfig = {
   /** Upper bound on discovered repositories. The grid stops being scannable past this. */
   maxRepos: 9,
 
-  /** Show most-recent repositories when nothing carries the topic yet. */
-  fallbackToRecent: true,
+  /**
+   * Show most-recent repositories when nothing carries the topic yet.
+   *
+   * **Off, after seeing what it actually produced.** The account has 58 repositories and
+   * none carries `discoveryTopic`, so this fallback was live — and "six most recently
+   * pushed" put a half-finished `veil`, an unlaunched `budgetflow` and an empty duplicate
+   * `smartshield` on the site, three of them rendering "No description on the repository
+   * yet." That is worse than the curated list, which now carries fifteen entries with
+   * written case studies.
+   *
+   * The fallback made sense when the curated list was thin and an empty grid looked
+   * broken. It is now the weaker of the two. Tagging a repository `portfolio-project`
+   * still switches discovery on within the cache window, which is the intended path.
+   */
+  fallbackToRecent: false,
   /** How many to show in that fallback state. Deliberately fewer than `maxRepos`. */
   fallbackCount: 6,
 
@@ -48,6 +61,14 @@ export const projectsConfig = {
     "US-Hair-Studio",
     "modern-classes",
     "studyhub",
+    /**
+     * An empty duplicate of `SmartShield-AI-Adaptive-Bot-Mitigation-Traffic-Intelligence-System`.
+     * Both existed and both were discovered, so the site rendered SmartShield twice —
+     * once with the written case study and once as a bare "Smartshield" with no
+     * description. Excluding the empty one is the fix; deleting it on GitHub would also
+     * work and is tidier.
+     */
+    "smartshield",
   ],
 
   /**

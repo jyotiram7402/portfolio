@@ -221,6 +221,99 @@ function LedgerCoreArt({ accent }: ProjectArtProps) {
   );
 }
 
+/** BudgetFlow — income split across categories, with a savings goal part-filled. */
+function BudgetFlowArt({ accent }: ProjectArtProps) {
+  // Segments of one income bar. Widths sum to the bar, which is the point being made.
+  const segments = [
+    { w: 210, o: 0.3 },
+    { w: 150, o: 0.22 },
+    { w: 110, o: 0.16 },
+    { w: 90, o: 0.11 },
+  ];
+  let x = 70;
+
+  return (
+    <g color={accent}>
+      <text
+        x="70"
+        y="132"
+        fontSize="18"
+        letterSpacing="2"
+        fill={INK}
+        fillOpacity="0.4"
+        className="font-mono"
+      >
+        INCOME
+      </text>
+
+      {/* The allocation bar. One length, divided — nothing unallocated, nothing double
+          counted. */}
+      {segments.map((s, index) => {
+        const seg = (
+          <rect
+            key={index}
+            x={x}
+            y={158}
+            width={s.w - 6}
+            height={54}
+            rx="8"
+            fill={index === 0 ? "currentColor" : INK}
+            fillOpacity={index === 0 ? 0.55 : s.o}
+          />
+        );
+        x += s.w;
+        return seg;
+      })}
+
+      {/* Categories beneath, as ledger rows. */}
+      <g stroke={INK} strokeOpacity="0.14" strokeWidth="6" strokeLinecap="round">
+        <path d="M70 262h300" />
+        <path d="M70 296h230" />
+        <path d="M70 330h270" />
+      </g>
+      <g fill={INK} fillOpacity="0.28">
+        <rect x="410" y="256" width="70" height="12" rx="6" />
+        <rect x="410" y="290" width="54" height="12" rx="6" />
+        <rect x="410" y="324" width="64" height="12" rx="6" />
+      </g>
+
+      {/* The goal ring, part filled. A dash offset rather than an arc path, so the
+          proportion is one number to change. */}
+      <g transform="translate(620 288)">
+        <circle
+          r="72"
+          fill="none"
+          stroke={INK}
+          strokeOpacity="0.12"
+          strokeWidth="16"
+        />
+        <circle
+          r="72"
+          fill="none"
+          stroke="currentColor"
+          strokeOpacity="0.85"
+          strokeWidth="16"
+          strokeLinecap="round"
+          strokeDasharray="452"
+          strokeDashoffset="158"
+          transform="rotate(-90)"
+        />
+        <text
+          y="9"
+          textAnchor="middle"
+          fontSize="26"
+          fontWeight="700"
+          fill={INK}
+          fillOpacity="0.55"
+          className="font-sans"
+        >
+          GOAL
+        </text>
+      </g>
+    </g>
+  );
+}
+
 /** KnowledgePulse — documents chunked, retrieved, and answered with a citation. */
 function KnowledgePulseArt({ accent }: ProjectArtProps) {
   return (
@@ -928,6 +1021,7 @@ function IsolationArt({ accent }: ProjectArtProps) {
 const ART: Record<string, (props: ProjectArtProps) => ReactElement> = {
   smartshield: SmartShieldArt,
   ledgercore: LedgerCoreArt,
+  budgetflow: BudgetFlowArt,
   "knowledgepulse-ai": KnowledgePulseArt,
   foodies: EventFanArt,
   bookshowhere: SeatMapArt,

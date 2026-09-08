@@ -40,6 +40,116 @@
   border-color: color-mix(in oklab, var(--brand, transparent) 50%, var(--border));
 }
 
+/* --- Dialog motion -------------------------------------------------------
+   Entrance and exit for the overlay, the centred modal and the edge drawer,
+   keyed on Radix's own `data-state`.
+
+   **Why CSS and not Framer Motion.** These three used `AnimatePresence` around
+   `Dialog.Portal` with `asChild` and `forceMount`. `AnimatePresence`'s direct
+   child was the portal — not a keyed motion component — so Framer applied each
+   panel's `initial` style and then never resolved `animate`. Live, that left the
+   drawer permanently at `translateX(100%)`: the mobile navigation opened
+   completely off-screen, took focus, and trapped it there.
+
+   Radix already owns `data-state`, and its `Presence` waits for a running CSS
+   animation before unmounting, so exit still animates without `forceMount`.
+
+   The property that makes this safe is the resting state: every `to` is
+   `transform: none`. If an animation never runs — reduced motion, an old engine,
+   a dropped stylesheet — the panel renders exactly where its `inset` puts it. A
+   panel can no longer be stranded outside the viewport by a motion library.
+
+   `prefers-reduced-motion` is handled globally in `base.css`, which collapses
+   every animation to 0.01ms; these then resolve instantly to their end state. */
+
+@keyframes dialog-overlay-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes dialog-overlay-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes dialog-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.97);
+  }
+}
+
+@keyframes dialog-panel-out {
+  to {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+}
+
+@keyframes drawer-in-right {
+  from {
+    transform: translateX(100%);
+  }
+}
+@keyframes drawer-out-right {
+  to {
+    transform: translateX(100%);
+  }
+}
+@keyframes drawer-in-left {
+  from {
+    transform: translateX(-100%);
+  }
+}
+@keyframes drawer-out-left {
+  to {
+    transform: translateX(-100%);
+  }
+}
+@keyframes drawer-in-top {
+  from {
+    transform: translateY(-100%);
+  }
+}
+@keyframes drawer-out-top {
+  to {
+    transform: translateY(-100%);
+  }
+}
+@keyframes drawer-in-bottom {
+  from {
+    transform: translateY(100%);
+  }
+}
+@keyframes drawer-out-bottom {
+  to {
+    transform: translateY(100%);
+  }
+}
+
+.dialog-overlay[data-state="open"] {
+  animation: dialog-overlay-in 220ms var(--ease-out-quint) both;
+}
+.dialog-overlay[data-state="closed"] {
+  animation: dialog-overlay-out 180ms var(--ease-out-quint) both;
+}
+
+.dialog-panel[data-state="open"] {
+  animation: dialog-panel-in 260ms var(--ease-out-quint) both;
+}
+.dialog-panel[data-state="closed"] {
+  animation: dialog-panel-out 180ms var(--ease-out-quint) both;
+}
+
+.drawer-panel[data-state="open"] {
+  animation: var(--drawer-in) 300ms var(--ease-out-quint) both;
+}
+.drawer-panel[data-state="closed"] {
+  animation: var(--drawer-out) 220ms var(--ease-out-quart) both;
+}
+
 /* --- Text treatments ----------------------------------------------------- */
 
 @utility text-gradient {

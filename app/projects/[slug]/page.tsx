@@ -17,11 +17,22 @@ interface ProjectPageProps {
 /**
  * Case-study routes.
  *
- * Prerendered from the resolved list so the common paths are static HTML. Deliberately not
- * `dynamicParams: false`: the list is discovered from GitHub and revalidates hourly, so a
- * repository tagged after this build has to be reachable on demand rather than 404. Next
- * renders an unlisted slug on first request and caches it from then on.
+ * Prerendered from the resolved list, so every real project is static HTML.
+ *
+ * **`dynamicParams = false`, and that is a correctness fix rather than a preference.**
+ * With on-demand rendering allowed, an unknown slug was answered with HTTP **200** and a
+ * "Project not found" body — a soft 404. Verified live: `/projects/does-not-exist` came
+ * back 200 while a plain unknown path like `/definitely-not-a-page` correctly returned
+ * 404. A search engine treats a 200 as a real page, so an unbounded space of nonsense
+ * URLs was indexable.
+ *
+ * Turning it off makes Next answer anything outside this list with a genuine 404 before
+ * the component runs. The cost is that a repository tagged after a build is not reachable
+ * until the next deploy — acceptable, because the alternative is inviting a crawler to
+ * index infinite pages, and a deploy is cheap.
  */
+export const dynamicParams = false;
+
 export async function generateStaticParams(): Promise<{ slug: string }[]> {
   const { projects } = await projectsService.getProjects();
   return projects.map((project) => ({ slug: project.slug }));

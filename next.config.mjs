@@ -160,10 +160,52 @@ const securityHeaders = [
 ];
 
 /** @type {import('next').NextConfig} */
+/**
+ * The canonical origin, resolved at build time and inlined for both runtimes.
+ *
+ * This exists because of a real defect found in production. `NEXT_PUBLIC_SITE_URL` was
+ * unset, so `lib/env.ts` fell through to `VERCEL_URL` — which is the **per-deployment**
+ * hostname, unique to every build and protected by Vercel's deployment guard. The
+ * consequences were live on the site:
+ *
+ * • `<link rel="canonical">` and `og:url` pointed at a preview hostname that changes on
+ *   every deploy, telling search engines the real URL was not canonical.
+ * • `og:image` and `twitter:image` resolved against that guarded host and returned an
+ *   error, so the site had no social preview image at all.
+ *
+ * `VERCEL_PROJECT_PRODUCTION_URL` is the stable production domain and is present on every
+ * Vercel build, including previews — which is what we want, since a preview should never
+ * declare itself canonical. `VERCEL_URL` survives only as a last resort.
+ *
+ * Injecting it here rather than only reading it in `lib/env.ts` is deliberate:
+ * `VERCEL_PROJECT_PRODUCTION_URL` is server-only, so without this the client fell back to
+ * `http://localhost:3000` — which is what the blog's share buttons were emitting.
+ */
+const canonicalSiteUrl = (() => {
+  const explicit = process.env.NEXT_PUBLIC_SITE_URL;
+  if (explicit) return explicit.replace(/\/$/, "");
+
+  const production = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+  if (production) return `https://${production}`;
+
+  const deployment = process.env.VERCEL_URL;
+  if (deployment) return `https://${deployment}`;
+
+  return "http://localhost:3000";
+})();
+
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   pageExtensions: ["ts", "tsx", "md", "mdx"],
+
+  /**
+   * Inlined so `lib/env.ts` resolves the same origin on the server and in the browser.
+   * Anything already set in the environment wins, so a custom domain needs no code change.
+   */
+  env: {
+    NEXT_PUBLIC_SITE_URL: canonicalSiteUrl,
+  },
 
   eslint: {
     dirs: [

@@ -29,6 +29,9 @@ function ActionButton({ action }: { action: ChatAction }) {
   const base = cn(
     "inline-flex items-center gap-1.5 rounded-full border border-border",
     "bg-elevated px-3 py-1.5 text-xs font-medium text-foreground",
+    // 44px on touch — these are the follow-up actions inside a reply, so they are
+    // tapped mid-conversation. Dense size returns once there is a pointer.
+    "min-h-11 md:min-h-0",
     "transition-colors duration-[var(--duration-fast)]",
     "hover:border-border-strong hover:bg-card focus-ring",
   );

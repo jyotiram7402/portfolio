@@ -138,6 +138,32 @@ export const projects: readonly Project[] = [
     source: "curated",
   },
   {
+    id: "budgetflow",
+    slug: "budgetflow",
+    name: "BudgetFlow — Personal Finance Platform",
+    tagline:
+      "Income, budgets, savings, investments and goals in one Spring Boot and React application.",
+    summary:
+      "A personal finance platform on Spring Boot with a React front end: income and expense tracking, budgets, savings, investments and goals as first-class parts of one domain rather than five loosely related tables. Money software is where a data model earns its keep — every figure has to reconcile against the transactions behind it, and a budget that disagrees with the ledger is worse than no budget. Actively in progress.",
+    domains: ["java", "spring", "backend", "fullstack"],
+    stack: ["Java", "Spring Boot", "React", "REST API", "SQL"],
+    highlights: [
+      "One domain covering income, budgets, savings, investments and goals, rather than separate features that each keep their own idea of a balance.",
+      "Spring Boot on the server and React on the client, meeting at a REST contract — the same separation as OneClick, on a domain with far more invariants.",
+      "Aggregation that has to reconcile: a category total is derived from its transactions, never stored alongside them and allowed to drift.",
+    ],
+    status: "active",
+    period: "2025 — Present",
+    links: [
+      {
+        label: "Repository",
+        href: "https://github.com/jyotiram7402/budgetflow",
+        kind: "repo",
+      },
+    ],
+    source: "curated",
+  },
+  {
     id: "knowledgepulse-ai",
     slug: "knowledgepulse-ai",
     name: "KnowledgePulse AI",

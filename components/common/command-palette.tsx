@@ -1,7 +1,6 @@
 "use client";
 
 import * as Dialog from "@radix-ui/react-dialog";
-import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowUpRight,
   CornerDownLeft,
@@ -25,12 +24,10 @@ import {
   useState,
 } from "react";
 
-import { modalVariants, overlayVariants } from "@/animations/variants";
 import { Kbd } from "@/components/ui/kbd";
 import { siteConfig } from "@/config/site";
 import { socialConfig } from "@/config/social";
 import { SECTIONS } from "@/constants/sections";
-import { useMotionVariants } from "@/hooks/use-motion-variants";
 import { useTheme } from "@/hooks/use-theme";
 import { searchDocuments } from "@/lib/search-index";
 import { cn } from "@/lib/utils";
@@ -87,9 +84,6 @@ export function CommandPalette({
 
   const [query, setQuery] = useState(initialQuery);
   const [activeIndex, setActiveIndex] = useState(0);
-
-  const overlay = useMotionVariants(overlayVariants);
-  const panel = useMotionVariants(modalVariants);
 
   /* ------------------------------------------------------------- commands -- */
   const commands = useMemo<CommandItem[]>(() => {
@@ -276,35 +270,25 @@ export function CommandPalette({
 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
-      <AnimatePresence>
-        {open ? (
-          <Dialog.Portal forceMount>
-            <Dialog.Overlay asChild>
-              <motion.div
-                variants={overlay}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-                className="fixed inset-0 z-[var(--z-overlay)] bg-overlay backdrop-blur-sm"
-              />
-            </Dialog.Overlay>
+      <Dialog.Portal>
+        <Dialog.Overlay
+          className={cn(
+            "dialog-overlay fixed inset-0 z-[var(--z-overlay)]",
+            "bg-overlay backdrop-blur-sm",
+          )}
+        />
 
-            {/* Centring lives on the wrapper, since Framer Motion writes `transform`
-                inline and would overwrite a Tailwind translate. */}
-            <div className="pointer-events-none fixed inset-0 z-[var(--z-modal)] flex items-start justify-center p-4 pt-[12vh]">
-              <Dialog.Content asChild>
-                <motion.div
-                  variants={panel}
-                  initial="hidden"
-                  animate="visible"
-                  exit="exit"
-                  data-lenis-prevent
-                  className={cn(
-                    "pointer-events-auto w-full max-w-2xl overflow-hidden",
-                    "rounded-2xl border border-border bg-card shadow-2xl",
-                    "surface-sheen",
-                  )}
-                >
+        {/* Centring lives on the wrapper so the panel's own transform stays free
+            for the entrance keyframes in `styles/utilities.css`. */}
+        <div className="pointer-events-none fixed inset-0 z-[var(--z-modal)] flex items-start justify-center p-4 pt-[12vh]">
+          <Dialog.Content
+            data-lenis-prevent
+            className={cn(
+              "dialog-panel pointer-events-auto w-full max-w-2xl overflow-hidden",
+              "rounded-2xl border border-border bg-card shadow-2xl",
+              "surface-sheen",
+            )}
+          >
                   <Dialog.Title className="sr-only">
                     Search and commands
                   </Dialog.Title>
@@ -488,12 +472,9 @@ export function CommandPalette({
                       <ArrowUpRight aria-hidden="true" className="size-3" />
                     </Link>
                   </div>
-                </motion.div>
-              </Dialog.Content>
-            </div>
-          </Dialog.Portal>
-        ) : null}
-      </AnimatePresence>
+          </Dialog.Content>
+        </div>
+      </Dialog.Portal>
     </Dialog.Root>
   );
 }

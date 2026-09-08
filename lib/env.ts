@@ -72,12 +72,27 @@ const raw = parsed.success ? parsed.data : {};
 
 const DEFAULT_PORT = 3000;
 
-/** Canonical origin, without a trailing slash. */
+/**
+ * Canonical origin, without a trailing slash.
+ *
+ * `NEXT_PUBLIC_SITE_URL` is normally supplied by `next.config.mjs`, which resolves it at
+ * build time from `VERCEL_PROJECT_PRODUCTION_URL` and inlines it for both runtimes — see
+ * the long note there for the production bug that made that necessary.
+ *
+ * The two fallbacks below are for the case where that injection is absent, and the order
+ * matters: the **production** domain before the per-deployment one. `VERCEL_URL` is unique
+ * to every build and guarded by Vercel, so using it for a canonical tag or an `og:image`
+ * points search engines and social scrapers at a URL that will not resolve for them.
+ */
 function resolveSiteUrl(): string {
   if (raw.NEXT_PUBLIC_SITE_URL) {
     return raw.NEXT_PUBLIC_SITE_URL.replace(/\/$/, "");
   }
-  // Available on the server during Vercel preview deployments.
+  // Stable production domain. Server-only, present on every Vercel build.
+  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
+    return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
+  }
+  // Per-deployment hostname. Last resort — never the right canonical.
   if (process.env.VERCEL_URL) {
     return `https://${process.env.VERCEL_URL}`;
   }

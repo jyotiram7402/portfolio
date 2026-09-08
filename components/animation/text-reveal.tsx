@@ -27,6 +27,16 @@ export interface TextRevealProps {
   immediate?: boolean;
   /** Needed when a `<Section>` references this heading via `aria-labelledby`. */
   id?: string;
+  /**
+   * The text as one continuous string, for assistive tech and crawlers.
+   *
+   * Supply it whenever the lines form a single sentence or name. Line wrappers are
+   * `block` spans with no whitespace between them, so without this the text content
+   * runs together — "Jyotiram" + "Kamble" reads as "JyotiramKamble". When set, this
+   * becomes the element's accessible name and the visual lines are hidden from
+   * assistive tech.
+   */
+  label?: string;
   className?: string;
   lineClassName?: string;
 }
@@ -45,18 +55,33 @@ export function TextReveal({
   delay = 0,
   immediate = false,
   id,
+  label,
   className,
   lineClassName,
 }: TextRevealProps) {
   const Component = motionTags[as];
   const reduceMotion = useReducedMotion();
 
+  /*
+    Splitting a sentence into `block` spans puts no whitespace between them, so the
+    element's text content runs the lines together — the hero's `h1` read
+    "JyotiramKamble" to a screen reader, to a crawler and in a link preview.
+
+    When `label` is supplied it becomes the element's entire accessible name and the
+    visual lines are hidden from assistive tech. `aria-labelledby` on the enclosing
+    `<Section>` still resolves correctly, because it reads this element's accessible
+    name rather than its markup.
+  */
+  const accessibleName = label !== undefined ? <span className="sr-only">{label}</span> : null;
+  const hideVisual = label !== undefined ? { "aria-hidden": true as const } : {};
+
   if (reduceMotion) {
     const Static = as;
     return (
       <Static id={id} className={cn(className)}>
+        {accessibleName}
         {lines.map((line, index) => (
-          <span key={index} className={cn("block", lineClassName)}>
+          <span key={index} {...hideVisual} className={cn("block", lineClassName)}>
             {line}
           </span>
         ))}
@@ -76,9 +101,11 @@ export function TextReveal({
       {...animateProp}
       className={cn(className)}
     >
+      {accessibleName}
       {lines.map((line, index) => (
         <span
           key={index}
+          {...hideVisual}
           className={cn("block overflow-hidden pb-[0.1em]", lineClassName)}
         >
           <motion.span variants={textRevealChild} className="block">
