@@ -28,9 +28,9 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files
+# env files — only the template is committed
 .env
-.env*.local
+.env.*
 !.env.example
 
 # vercel
@@ -44,3 +44,7 @@ yarn-error.log*
 
 # testing / coverage
 /coverage
+
+# Claude Code — personal files, never committed
+CLAUDE.local.md
+.claude/settings.local.json

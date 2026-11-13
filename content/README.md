@@ -1,38 +1,31 @@
 # `content/`
 
-Long-form MDX. Empty in Sprint 0 — the pipeline is wired, the articles are not
-written.
+Long-form MDX. Three articles ship today in `content/blog/`.
 
 ## What lives here
 
 Article and case-study **bodies**. Anything that is prose first and data second.
 
 - `content/blog/*.mdx` — writing
-- `content/work/*.mdx` — case-study long form
+- `content/work/*.mdx` — reserved for long-form case studies (not created yet)
 
 Structured records (a project's stack, links, dates) belong in `data/`, not here.
 Keep the split: MDX for prose, TypeScript for fields the UI needs to filter,
 sort or render into a layout.
 
-## Frontmatter contract
+## Adding an article
 
-Every file must satisfy `ContentFrontmatter` in [`types/content.ts`](../types/content.ts):
+Post metadata is typed TypeScript in [`data/blog.ts`](../data/blog.ts), not frontmatter.
+Four edits, and the type system catches a mismatch between the middle two:
 
-```mdx
----
-title: Interface latency is a design problem
-description: Why perceived performance is decided in the design review, not the profiler.
-date: 2026-03-14
-updated: 2026-03-20
-tags: [performance, design-engineering]
-cover: /images/writing/latency.png
-draft: false
----
+1. `content/blog/<slug>.mdx` — the body
+2. [`content/blog/loaders.ts`](blog/loaders.ts) — a static `import()` for it
+3. [`content/blog/index.ts`](blog/index.ts) — the slug in `postSlugs`. Keep this file
+   import-free: the client-side search index reads it.
+4. [`data/blog.ts`](../data/blog.ts) — the registry entry (`PostMeta` in `types/blog.ts`)
 
-Body starts here.
-```
-
-`draft: true` excludes an entry from listings and from `sitemap.xml`.
+`draft: true` on the registry entry hides a post from listings in production; it still shows
+in development.
 
 ## How it renders
 
@@ -44,8 +37,5 @@ Body starts here.
 - Typography comes from the `.prose-content` class in
   [`styles/prose.css`](../styles/prose.css). Wrap the compiled body in it.
 
-## Remaining work
-
-Reading and validating these files is a Sprint 2 task: a `services/content.service.ts`
-that reads the directory, validates frontmatter with Zod, computes reading time,
-and filters drafts in production.
+- [`services/content.service.ts`](../services/content.service.ts) is the read model:
+  listing, search, related and adjacent posts, and loading a body through `loaders.ts`.

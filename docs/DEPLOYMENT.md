@@ -20,7 +20,8 @@ git add . && git commit -m "Portfolio: sprints 0-4"
 git branch -M main && git remote add origin git@github.com:USERNAME/portfolio.git && git push -u origin main
 ```
 
-`.gitignore` already excludes `.env*.local`, `.next`, `node_modules` and `.vercel`.
+`.gitignore` already excludes every `.env*` file except `.env.example`, plus `.next`,
+`node_modules` and `.vercel`.
 Verify nothing sensitive is staged before the first push:
 
 ```bash
@@ -49,8 +50,8 @@ free.
 
 ### Node version
 
-`.nvmrc` pins Node 22. Vercel reads it, and CI reads the same file, so the three
-environments cannot drift.
+`.nvmrc` pins Node 24 and `engines` in `package.json` says `24.x`. CI reads `.nvmrc`;
+Vercel reads `engines`. Change both together.
 
 ---
 
